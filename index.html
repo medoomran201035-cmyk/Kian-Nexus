@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام كيان - تسجيل الدخول</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans h-screen flex items-center justify-center">
+
+    <!-- 1. شاشة تسجيل الدخول (تظهر افتراضياً) -->
+    <div id="login-screen" class="bg-white p-8 rounded-3xl shadow-xl border border-slate-200 w-full max-w-md">
+        <div class="text-center mb-8">
+            <div class="bg-sky-600 text-white w-14 h-14 rounded-2xl flex items-center justify-center text-2xl mx-auto shadow-lg shadow-sky-600/30 mb-4">
+                <i class="fa-solid fa-building-user"></i>
+            </div>
+            <h1 class="text-2xl font-black text-slate-900">نظام كيان العقاري</h1>
+            <p class="text-xs text-slate-400 mt-1">يرجى تسجيل الدخول للمتابعة إلى لوحة التحكم</p>
+        </div>
+
+        <form id="login-form" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">اسم المستخدم</label>
+                <input type="text" id="username" required placeholder="أدخل اسم المستخدم..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-sky-500 transition">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور</label>
+                <input type="password" id="password" required placeholder="أدخل كلمة المرور..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-sky-500 transition">
+            </div>
+            <div id="error-msg" class="text-rose-500 text-xs font-bold text-center hidden"></div>
+            
+            <button type="submit" class="w-full bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-sky-600/20 text-sm">
+                تسجيل الدخول
+            </button>
+        </form>
+
+        <div class="mt-6 p-4 bg-sky-50 rounded-2xl border border-sky-100 text-xs text-sky-800 space-y-1">
+            <p class="font-bold">بيانات تجريبية للاختبار:</p>
+            <p>مدير النظام (Admin): <span class="font-mono bg-white px-2 py-0.5 rounded border border-sky-200">admin</span> / <span class="font-mono bg-white px-2 py-0.5 rounded border border-sky-200">123</span></p>
+            <p>الموظف (Employee): <span class="font-mono bg-white px-2 py-0.5 rounded border border-sky-200">employee</span> / <span class="font-mono bg-white px-2 py-0.5 rounded border border-sky-200">456</span></p>
+        </div>
+    </div>
+
+    <!-- 2. لوحة التحكم (مخفية حتى يتم تسجيل الدخول بنجاح) -->
+    <div id="dashboard-screen" class="hidden w-full h-screen flex overflow-hidden">
+        <!-- القائمة الجانبية -->
+        <aside class="w-64 bg-white border-l border-slate-200 flex flex-col justify-between shadow-sm">
+            <div>
+                <div class="p-6 border-b border-slate-100 flex items-center space-x-3 space-x-reverse">
+                    <div class="bg-sky-600 text-white p-2.5 rounded-xl">
+                        <i class="fa-solid fa-building text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-extrabold text-slate-900 text-sm">كيان العقارية</h2>
+                        <span id="user-role-badge" class="text-[10px] text-emerald-500 font-semibold">متصل بالنظام</span>
+                    </div>
+                </div>
+                <nav class="p-4 space-y-1.5 text-sm font-medium">
+                    <a href="#" class="flex items-center space-x-3 space-x-reverse bg-sky-50 text-sky-600 px-4 py-3 rounded-xl">
+                        <i class="fa-solid fa-chart-pie w-5"></i><span>الرئيسية</span>
+                    </a>
+                    <a href="#" class="flex items-center space-x-3 space-x-reverse text-slate-600 hover:bg-slate-50 px-4 py-3 rounded-xl">
+                        <i class="fa-solid fa-house-chimney w-5"></i><span>العقارات</span>
+                    </a>
+                </nav>
+            </div>
+            <div class="p-4 border-t border-slate-100 m-4 bg-slate-50 rounded-2xl flex items-center justify-between">
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <div class="w-9 h-9 rounded-full bg-sky-600 text-white flex items-center justify-center font-bold text-xs">م</div>
+                    <div>
+                        <h4 id="logged-user-name" class="text-xs font-bold text-slate-900">محمد فيصل</h4>
+                        <p class="text-[10px] text-slate-500">نشط الآن</p>
+                    </div>
+                </div>
+                <button onclick="logout()" class="text-rose-500 hover:text-rose-700 text-xs font-bold" title="تسجيل خروج">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- المحتوى الرئيسي للداشبورد -->
+        <main class="flex-1 flex flex-col h-screen overflow-y-auto bg-slate-50">
+            <header class="bg-white border-b border-slate-200 px-8 py-4 flex justify-between items-center sticky top-0 z-10 shadow-sm">
+                <h1 class="text-lg font-extrabold text-slate-900">REAL ESTATE DASHBOARD</h1>
+                <span class="bg-emerald-50 text-emerald-600 border border-emerald-100 px-3 py-1.5 rounded-xl text-xs font-bold">
+                    <i class="fa-solid fa-circle-check ml-1"></i> متصل بالسيرفر بنجاح
+                </span>
+            </header>
+            <div class="p-8 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                        <p class="text-slate-400 text-xs font-medium">إجمالي العقارات</p>
+                        <h3 class="text-2xl font-black text-slate-900 mt-2">54 وحدة</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                        <p class="text-slate-400 text-xs font-medium">الوحدات المؤجرة</p>
+                        <h3 class="text-2xl font-black text-slate-900 mt-2">42 وحدة</h3>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                        <p class="text-slate-400 text-xs font-medium">الإيرادات المحصلة</p>
+                        <h3 class="text-2xl font-black text-slate-900 mt-2">320,000 ر.س</h3>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- جافاسكريبت للتحكم في تسجيل الدخول -->
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const loginScreen = document.getElementById('login-screen');
+        const dashboardScreen = document.getElementById('dashboard-screen');
+        const errorMsg = document.getElementById('error-msg');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    loginScreen.classList.add('hidden');
+                    dashboardScreen.classList.remove('hidden');
+                    document.body.classList.remove('h-screen', 'flex', 'items-center', 'justify-center');
+                    document.getElementById('logged-user-name').innerText = username === 'admin' ? 'محمد فيصل (مدير)' : 'موظف النظام';
+                    document.getElementById('user-role-badge').innerText = data.role === 'admin' ? 'مدير النظام (Admin)' : 'موظف دعم (Employee)';
+                } else {
+                    errorMsg.innerText = data.message;
+                    errorMsg.classList.remove('hidden');
+                }
+            } catch (err) {
+                errorMsg.innerText = 'حدث خطأ في الاتصال بالسيرفر';
+                errorMsg.classList.remove('hidden');
+            }
+        });
+
+        function logout() {
+            dashboardScreen.classList.add('hidden');
+            loginScreen.classList.remove('hidden');
+            document.body.classList.add('h-screen', 'flex', 'items-center', 'justify-center');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            errorMsg.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
