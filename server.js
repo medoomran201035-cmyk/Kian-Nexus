@@ -3,18 +3,18 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// السماح بقراءة البيانات المرسلة بصيغة JSON
+// السماح بقراءة بيانات الـ JSON والـ Form
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// تشغيل الواجهة الملفات الثابتة من مجلد public
-app.use(express.static(path.join(__dirname, 'public')));
+// تقديم الملفات الثابتة (مثل index.html) من المجلد الرئيسي مباشرة
+app.use(express.static(__dirname));
 
 // مسار تسجيل الدخول (API Login)
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
     
-    // التحقق من بيانات الدخول للصلاحيات
+    // التحقق من صلاحيات المدير والموظف
     if (username === 'admin' && password === '123') {
         return res.json({ success: true, role: 'admin', message: 'مرحباً بك يا مدير النظام' });
     } else if (username === 'employee' && password === '456') {
