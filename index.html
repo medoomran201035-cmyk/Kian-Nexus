@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kian-Nexus - نظام إدارة العقارات</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js للتحليلات الإحصائية -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans">
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- القائمة الجانبية -->
+        <aside class="w-64 bg-slate-900 text-white hidden md:flex flex-col justify-between p-6">
+            <div>
+                <div class="flex items-center gap-3 mb-10">
+                    <div class="bg-sky-600 p-2.5 rounded-xl text-white font-bold text-xl">
+                        <i class="fa-solid fa-building-shield"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg tracking-wide">Kian-Nexus</h1>
+                        <p class="text-xs text-slate-400">نظام إدارة العقارات</p>
+                    </div>
+                </div>
+                <nav class="space-y-2">
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 bg-sky-600 text-white rounded-xl font-medium"><i class="fa-solid fa-chart-pie"></i> لوحة القيادة</a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-slate-800 rounded-xl transition"><i class="fa-solid fa-city"></i> العقارات والوحدات</a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-slate-800 rounded-xl transition"><i class="fa-solid fa-users"></i> العملاء والمستأجرين</a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-slate-800 rounded-xl transition"><i class="fa-solid fa-file-invoice-dollar"></i> الحسابات والمالية</a>
+                    <a href="#" class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-slate-800 rounded-xl transition"><i class="fa-solid fa-gear"></i> إعدادات النظام</a>
+                </nav>
+            </div>
+            <div class="bg-slate-800 p-4 rounded-xl flex items-center gap-3">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="w-10 h-10 rounded-full object-cover">
+                <div>
+                    <h4 class="text-sm font-semibold">محمد عمران</h4>
+                    <p class="text-xs text-sky-400">مدير النظام</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="flex-1 flex flex-col overflow-y-auto">
+            <!-- الهيدر العلوي -->
+            <header class="bg-white border-b border-slate-200 h-20 px-8 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-4 w-96">
+                    <div class="relative w-full">
+                        <i class="fa-solid fa-search absolute right-3 top-3.5 text-slate-400"></i>
+                        <input type="text" placeholder="بحث عن عقار، عميل، أو عقد..." class="w-full bg-slate-100 pr-10 pl-4 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-600 hover:bg-slate-200"><i class="fa-regular fa-bell"></i></button>
+                    <div class="bg-sky-50 text-sky-600 px-4 py-2 rounded-xl text-sm font-semibold border border-sky-100">
+                        <i class="fa-solid fa-circle text-[8px] text-emerald-500 ml-1.5"></i> النظام السحابي نشط
+                    </div>
+                </div>
+            </header>
+
+            <!-- محتوى الداش بورد -->
+            <div class="p-8 space-y-8">
+                <!-- كروت الإحصائيات -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-slate-500 font-medium">إجمالي العقارات</p>
+                            <h3 class="text-2xl font-bold mt-1 text-slate-800">48 وحدة</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-sky-50 text-sky-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-building"></i></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-slate-500 font-medium">العملاء النشطين</p>
+                            <h3 class="text-2xl font-bold mt-1 text-slate-800">124 عميل</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-users"></i></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-slate-500 font-medium">الإيرادات الشهرية</p>
+                            <h3 class="text-2xl font-bold mt-1 text-slate-800">450,000 ر.س</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-wallet"></i></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-slate-500 font-medium">نسبة الإشغال</p>
+                            <h3 class="text-2xl font-bold mt-1 text-slate-800">88%</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-chart-line"></i></div>
+                    </div>
+                </div>
+
+                <!-- قسم الرسوم البيانية (Chart.js) -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm lg:col-span-2">
+                        <h3 class="font-bold text-lg mb-4 text-slate-800">حركة العائدات العقارية السنوية</h3>
+                        <canvas id="revenueChart" height="110"></canvas>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                        <h3 class="font-bold text-lg mb-4 text-slate-800">توزيع الوحدات العقارية</h3>
+                        <canvas id="propertiesChart" height="220"></canvas>
+                    </div>
+                </div>
+
+                <!-- جدول العقارات الحديثة -->
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-slate-200 flex justify-between items-center">
+                        <h3 class="font-bold text-lg text-slate-800">أحدث الوحدات والمشاريع العقارية</h3>
+                        <button class="bg-sky-600 text-white px-4 py-2 rounded-xl text-sm font-semibold hover:bg-sky-700 transition">إضافة عقار جديد</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-500 text-xs uppercase font-semibold border-b border-slate-200">
+                                    <th class="p-4">اسم المشروع / العقار</th>
+                                    <th class="p-4">نوع الوحدة</th>
+                                    <th class="p-4">القيمة السوقية</th>
+                                    <th class="p-4">الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="propertiesTable" class="divide-y divide-slate-100 text-sm">
+                                <!-- سيتم تعبئتها ديناميكياً -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- جافاسكريبت لربط الرسوم البيانية والبيانات -->
+    <script>
+        // جلب البيانات وعرضها
+        fetch('/api/dashboard')
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.getElementById('propertiesTable');
+                data.properties.forEach(prop => {
+                    const statusClass = prop.status === 'متاح' ? 'bg-emerald-50 text-emerald-600' : prop.status === 'محجوز' ? 'bg-amber-50 text-amber-600' : 'bg-rose-50 text-rose-600';
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50/50 transition">
+                            <td class="p-4 font-semibold text-slate-800">${prop.name}</td>
+                            <td class="p-4 text-slate-600">${prop.type}</td>
+                            <td class="p-4 font-bold text-slate-900">${prop.price}</td>
+                            <td class="p-4"><span class="px-3 py-1 rounded-full text-xs font-semibold ${statusClass}">${prop.status}</span></td>
+                        </tr>
+                    `;
+                });
+            });
+
+        // رسوم بيانية باستخدام Chart.js
+        const ctxRev = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctxRev, {
+            type: 'line',
+            data: {
+                labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر'],
+                datasets: [{
+                    label: 'الإيرادات (ر.س)',
+                    data: [180000, 220000, 290000, 310000, 380000, 420000, 390000, 430000, 450000],
+                    borderColor: '#0284c7',
+                    backgroundColor: 'rgba(2, 132, 199, 0.05)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+
+        const ctxProp = document.getElementById('propertiesChart').getContext('2d');
+        new Chart(ctxProp, {
+            type: 'doughnut',
+            data: {
+                labels: ['متاح للبيع', 'محجوز', 'مؤجر'],
+                datasets: [{
+                    data: [22, 14, 12],
+                    backgroundColor: ['#0284c7', '#f59e0b', '#10b981'],
+                    borderWidth: 0
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+    </script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 {
   "name": "kian-nexus",
   "version": "1.0.0",
+  "description": "Kian-Nexus Real Estate Management Dashboard",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
