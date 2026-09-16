@@ -3,33 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kian-Nexus - لوحة إدارة العقارات</title>
-    <!-- Tailwind CSS -->
+    <title>Kyan IT - Enterprise ERP</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col items-center justify-center p-6">
-
-    <!-- حاوية الترحيب بالبداية الجديدة -->
-    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200/80 text-center max-w-lg w-full">
-        <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner">
-            <i class="fa-solid fa-city"></i>
+<body class="bg-gray-900 text-gray-100 font-sans">
+    <!-- App Container -->
+    <div id="app" class="min-h-screen flex flex-col">
+        <!-- Login View -->
+        <div id="login-view" class="flex-1 flex items-center justify-center p-4">
+            <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md border border-gray-700">
+                <div class="text-center mb-6">
+                    <h1 class="text-2xl font-bold text-indigo-400">Kyan IT - Enterprise ERP</h1>
+                    <p class="text-sm text-gray-400 mt-1">تسجيل الدخول للنظام السحابي الموحد</p>
+                </div>
+                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">اسم المستخدم</label>
+                        <input type="text" id="username" class="w-full bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">رقم التعريف / البصمة (PIN)</label>
+                        <input type="password" id="pin" class="w-full bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded transition">دخول النظام</button>
+                </form>
+            </div>
         </div>
-        <h1 class="text-2xl font-black text-slate-900 mb-2">منصة Kian-Nexus</h1>
-        <p class="text-sm text-slate-500 mb-8 leading-relaxed">تم تهيئة وتنظيف كافة الملفات بنجاح. البيئة الآن جاهزة تماماً لبناء لوحة التحكم من الصفر على نظافة!</p>
-        
-        <div class="grid grid-cols-2 gap-3 text-xs font-semibold">
-            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-slate-600">
-                <i class="fa-solid fa-server ml-1 text-emerald-600"></i> Express Server Ready
-            </div>
-            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-slate-600">
-                <i class="fa-solid fa-paintbrush ml-1 text-sky-600"></i> Tailwind CSS Active
-            </div>
+
+        <!-- Dashboard View (Hidden by default) -->
+        <div id="dashboard-view" class="hidden flex-1 flex flex-col">
+            <header class="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center shadow-md">
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <h2 class="text-xl font-bold text-indigo-400">Kyan IT ERP</h2>
+                    <span id="user-role-badge" class="bg-indigo-900 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold"></span>
+                </div>
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <button onclick="toggleLanguage()" class="bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded text-sm font-medium transition">EN / AR</button>
+                    <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded text-sm font-medium transition">تسجيل خروج</button>
+                </div>
+            </header>
+            
+            <main class="flex-1 p-6 overflow-y-auto space-y-6">
+                <!-- Statistics Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
+                        <h3 class="text-gray-400 text-sm">إجمالي الحضور اليوم</h3>
+                        <p id="stat-attendance" class="text-3xl font-bold mt-2 text-indigo-400">0</p>
+                    </div>
+                    <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
+                        <h3 class="text-gray-400 text-sm">المهام النشطة</h3>
+                        <p id="stat-tasks" class="text-3xl font-bold mt-2 text-green-400">0</p>
+                    </div>
+                    <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
+                        <h3 class="text-gray-400 text-sm">الإعلانات العامة</h3>
+                        <p id="stat-announcements" class="text-3xl font-bold mt-2 text-amber-400">0</p>
+                    </div>
+                </div>
+
+                <!-- Attendance Control Box -->
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow">
+                    <h3 class="text-lg font-semibold mb-4 text-indigo-300"><i class="fa-solid fa-fingerprint ml-2"></i>بصمة الحضور والانصراف السحابية</h3>
+                    <div class="flex space-x-4 space-x-reverse">
+                        <button onclick="recordAttendance('check-in')" class="bg-green-600 hover:bg-green-700 px-5 py-2.5 rounded font-medium transition shadow">تسجيل حضور</button>
+                        <button onclick="recordAttendance('check-out')" class="bg-amber-600 hover:bg-amber-700 px-5 py-2.5 rounded font-medium transition shadow">تسجيل انصراف</button>
+                    </div>
+                </div>
+
+                <!-- Announcements Section -->
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow">
+                    <h3 class="text-lg font-semibold mb-4 text-indigo-300"><i class="fa-solid fa-bullhorn ml-2"></i>لوحة الإعلانات والتعاميم</h3>
+                    <div id="announcements-list" class="space-y-3 text-gray-300"></div>
+                </div>
+            </main>
         </div>
     </div>
 
+    <!-- Application Script Logic -->
+    <script>
+        let currentUser = null;
+        let dbData = { employees: [], attendance: [], tasks: [], announcements: [] };
+
+        async function fetchData() {
+            try {
+                const res = await fetch('/api/data');
+                dbData = await res.json();
+            } catch (err) {
+                console.error('Error fetching data:', err);
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('username').value.trim();
+            const p = document.getElementById('pin').value.trim();
+            await fetchData();
+            const emp = dbData.employees.find(x => x.username === u && x.pin === p);
+            if (emp) {
+                currentUser = emp;
+                document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('dashboard-view').classList.remove('hidden');
+                document.getElementById('user-role-badge').innerText = emp.role.toUpperCase() + ' - ' + emp.name;
+                updateDashboard();
+            } else {
+                alert('خطأ في اسم المستخدم أو رمز البصمة (PIN)!');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('dashboard-view').classList.add('hidden');
+            document.getElementById('login-view').classList.remove('hidden');
+            document.getElementById('login-form').reset();
+        }
+
+        async function updateDashboard() {
+            await fetchData();
+            document.getElementById('stat-attendance').innerText = dbData.attendance.length;
+            document.getElementById('stat-tasks').innerText = dbData.tasks.length;
+            document.getElementById('stat-announcements').innerText = dbData.announcements.length;
+            
+            const annList = document.getElementById('announcements-list');
+            if(dbData.announcements.length === 0) {
+                annList.innerHTML = '<p class="text-gray-500 text-sm">لا توجد إعلانات حالياً.</p>';
+            } else {
+                annList.innerHTML = dbData.announcements.map(a => `
+                    <div class="p-4 bg-gray-900 rounded-lg border border-gray-700 flex justify-between items-center">
+                        <span>${a.text}</span>
+                        <span class="text-xs text-gray-500">${new Date(a.date).toLocaleDateString()}</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function recordAttendance(type) {
+            if (!currentUser) return;
+            const logEntry = { 
+                userId: currentUser.id, 
+                name: currentUser.name, 
+                type: type, 
+                time: new Date().toISOString() 
+            };
+            dbData.attendance.push(logEntry);
+            
+            const res = await fetch('/api/data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dbData)
+            });
+            
+            if(res.ok) {
+                alert(type === 'check-in' ? 'تم تسجيل الحضور بنجاح!' : 'تم تسجيل الانصراف بنجاح!');
+                updateDashboard();
+            } else {
+                alert('حدث خطأ أثناء حفظ البصمة!');
+            }
+        }
+
+        function toggleLanguage() {
+            const html = document.documentElement;
+            if (html.getAttribute('lang') === 'ar') {
+                html.setAttribute('lang', 'en');
+                html.setAttribute('dir', 'ltr');
+            } else {
+                html.setAttribute('lang', 'ar');
+                html.setAttribute('dir', 'rtl');
+            }
+        }
+    </script>
 </body>
 </html>
