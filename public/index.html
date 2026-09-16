@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kyan IT - Enterprise ERP</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans">
-    <!-- App Container -->
     <div id="app" class="min-h-screen flex flex-col">
         <!-- Login View -->
         <div id="login-view" class="flex-1 flex items-center justify-center p-4">
@@ -32,29 +30,33 @@
             </div>
         </div>
 
-        <!-- Dashboard View (Hidden by default) -->
+        <!-- Dashboard View -->
         <div id="dashboard-view" class="hidden flex-1 flex flex-col">
             <header class="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center shadow-md">
                 <div class="flex items-center space-x-4 space-x-reverse">
                     <h2 class="text-xl font-bold text-indigo-400">Kyan IT ERP</h2>
                     <span id="user-role-badge" class="bg-indigo-900 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold"></span>
+                    <span id="welcome-user-name" class="text-sm text-gray-300"></span>
                 </div>
                 <div class="flex items-center space-x-4 space-x-reverse">
-                    <button onclick="toggleLanguage()" class="bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded text-sm font-medium transition">EN / AR</button>
-                    <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded text-sm font-medium transition">تسجيل خروج</button>
+                    <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded text-sm font-medium transition"><i class="fa-solid fa-power-off ml-1"></i>تسجيل خروج</button>
                 </div>
             </header>
             
             <main class="flex-1 p-6 overflow-y-auto space-y-6">
                 <!-- Statistics Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
-                        <h3 class="text-gray-400 text-sm">إجمالي الحضور اليوم</h3>
-                        <p id="stat-attendance" class="text-3xl font-bold mt-2 text-indigo-400">0</p>
+                        <h3 class="text-gray-400 text-sm">إجمالي الموظفين</h3>
+                        <p id="stat-employees" class="text-3xl font-bold mt-2 text-indigo-400">0</p>
+                    </div>
+                    <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
+                        <h3 class="text-gray-400 text-sm">سجلات الحضور</h3>
+                        <p id="stat-attendance" class="text-3xl font-bold mt-2 text-green-400">0</p>
                     </div>
                     <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
                         <h3 class="text-gray-400 text-sm">المهام النشطة</h3>
-                        <p id="stat-tasks" class="text-3xl font-bold mt-2 text-green-400">0</p>
+                        <p id="stat-tasks" class="text-3xl font-bold mt-2 text-cyan-400">0</p>
                     </div>
                     <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
                         <h3 class="text-gray-400 text-sm">الإعلانات العامة</h3>
@@ -66,9 +68,48 @@
                 <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow">
                     <h3 class="text-lg font-semibold mb-4 text-indigo-300"><i class="fa-solid fa-fingerprint ml-2"></i>بصمة الحضور والانصراف السحابية</h3>
                     <div class="flex space-x-4 space-x-reverse">
-                        <button onclick="recordAttendance('check-in')" class="bg-green-600 hover:bg-green-700 px-5 py-2.5 rounded font-medium transition shadow">تسجيل حضور</button>
-                        <button onclick="recordAttendance('check-out')" class="bg-amber-600 hover:bg-amber-700 px-5 py-2.5 rounded font-medium transition shadow">تسجيل انصراف</button>
+                        <button onclick="recordAttendance('حضور')" class="bg-green-600 hover:bg-green-700 px-5 py-2.5 rounded font-medium transition shadow"><i class="fa-solid fa-right-to-bracket ml-2"></i>تسجيل حضور</button>
+                        <button onclick="recordAttendance('انصراف')" class="bg-amber-600 hover:bg-amber-700 px-5 py-2.5 rounded font-medium transition shadow"><i class="fa-solid fa-right-from-bracket ml-2"></i>تسجيل انصراف</button>
                     </div>
+                </div>
+
+                <!-- Admin Only Section: Management Tools -->
+                <div id="admin-section" class="hidden space-y-6">
+                    <!-- Create Employee -->
+                    <div class="bg-gray-800 p-6 rounded-xl border border-indigo-500 shadow">
+                        <h3 class="text-lg font-semibold mb-4 text-indigo-300"><i class="fa-solid fa-user-plus ml-2"></i>إدارة النظام: إضافة موظف جديد</h3>
+                        <form onsubmit="handleCreateEmployee(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <input type="text" id="new-name" placeholder="اسم الموظف" class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
+                            <input type="text" id="new-username" placeholder="اسم المستخدم للدخول" class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
+                            <input type="password" id="new-pin" placeholder="رقم البصمة / PIN" class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
+                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded transition shadow">إنشاء الحساب</button>
+                        </form>
+                    </div>
+
+                    <!-- Create Announcement -->
+                    <div class="bg-gray-800 p-6 rounded-xl border border-amber-500 shadow">
+                        <h3 class="text-lg font-semibold mb-4 text-amber-300"><i class="fa-solid fa-bullhorn ml-2"></i>نشر تعميم أو إعلان عام</h3>
+                        <form onsubmit="handleCreateAnnouncement(event)" class="flex gap-4">
+                            <input type="text" id="new-announcement" placeholder="محتوى الإعلان أو التوجيه..." class="flex-1 bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-500" required>
+                            <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-medium px-6 py-2 rounded transition shadow">نشر الإعلان</button>
+                        </form>
+                    </div>
+
+                    <!-- Assign Task -->
+                    <div class="bg-gray-800 p-6 rounded-xl border border-cyan-500 shadow">
+                        <h3 class="text-lg font-semibold mb-4 text-cyan-300"><i class="fa-solid fa-list-check ml-2"></i>إسناد مهمة جديدة لموظف</h3>
+                        <form onsubmit="handleCreateTask(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <select id="task-employee" class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-cyan-500" required></select>
+                            <input type="text" id="task-title" placeholder="عنوان أو تفاصيل المهمة..." class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-cyan-500" required>
+                            <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 rounded transition shadow">إسناد المهمة</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Tasks List Section -->
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow">
+                    <h3 class="text-lg font-semibold mb-4 text-indigo-300"><i class="fa-solid fa-tasks ml-2"></i>المهام المطلوبة</h3>
+                    <div id="tasks-list" class="space-y-3"></div>
                 </div>
 
                 <!-- Announcements Section -->
@@ -76,11 +117,28 @@
                     <h3 class="text-lg font-semibold mb-4 text-indigo-300"><i class="fa-solid fa-bullhorn ml-2"></i>لوحة الإعلانات والتعاميم</h3>
                     <div id="announcements-list" class="space-y-3 text-gray-300"></div>
                 </div>
+
+                <!-- Attendance Logs Section (Admin View) -->
+                <div id="admin-attendance-box" class="hidden bg-gray-800 p-6 rounded-xl border border-gray-700 shadow">
+                    <h3 class="text-lg font-semibold mb-4 text-indigo-300"><i class="fa-solid fa-clipboard-user ml-2"></i>سجلات حضور وانصراف الموظفين</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-sm text-gray-300">
+                            <thead class="bg-gray-900 text-gray-400 uppercase text-xs">
+                                <tr>
+                                    <th class="px-4 py-3">الموظف</th>
+                                    <th class="px-4 py-3">نوع الحركة</th>
+                                    <th class="px-4 py-3">الوقت والتاريخ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="attendance-table-body" class="divide-y divide-gray-700"></tbody>
+                        </table>
+                    </div>
+                </div>
             </main>
         </div>
     </div>
 
-    <!-- Application Script Logic -->
+    <!-- Script Logic -->
     <script>
         let currentUser = null;
         let dbData = { employees: [], attendance: [], tasks: [], announcements: [] };
@@ -104,7 +162,17 @@
                 currentUser = emp;
                 document.getElementById('login-view').classList.add('hidden');
                 document.getElementById('dashboard-view').classList.remove('hidden');
-                document.getElementById('user-role-badge').innerText = emp.role.toUpperCase() + ' - ' + emp.name;
+                document.getElementById('user-role-badge').innerText = emp.role.toUpperCase();
+                document.getElementById('welcome-user-name').innerText = 'مرحباً، ' + emp.name;
+                
+                if (emp.role === 'admin') {
+                    document.getElementById('admin-section').classList.remove('hidden');
+                    document.getElementById('admin-attendance-box').classList.remove('hidden');
+                    populateEmployeeDropdown();
+                } else {
+                    document.getElementById('admin-section').classList.add('hidden');
+                    document.getElementById('admin-attendance-box').classList.add('hidden');
+                }
                 updateDashboard();
             } else {
                 alert('خطأ في اسم المستخدم أو رمز البصمة (PIN)!');
@@ -120,10 +188,12 @@
 
         async function updateDashboard() {
             await fetchData();
+            document.getElementById('stat-employees').innerText = dbData.employees.length;
             document.getElementById('stat-attendance').innerText = dbData.attendance.length;
-            document.getElementById('stat-tasks').innerText = dbData.tasks.length;
+            document.getElementById('stat-tasks').innerText = dbData.tasks.filter(t => t.status !== 'مكتملة').length;
             document.getElementById('stat-announcements').innerText = dbData.announcements.length;
             
+            // Render Announcements
             const annList = document.getElementById('announcements-list');
             if(dbData.announcements.length === 0) {
                 annList.innerHTML = '<p class="text-gray-500 text-sm">لا توجد إعلانات حالياً.</p>';
@@ -131,44 +201,120 @@
                 annList.innerHTML = dbData.announcements.map(a => `
                     <div class="p-4 bg-gray-900 rounded-lg border border-gray-700 flex justify-between items-center">
                         <span>${a.text}</span>
-                        <span class="text-xs text-gray-500">${new Date(a.date).toLocaleDateString()}</span>
+                        <span class="text-xs text-gray-500">${new Date(a.date).toLocaleString()}</span>
                     </div>
                 `).join('');
             }
+
+            // Render Tasks
+            const tasksList = document.getElementById('tasks-list');
+            let userTasks = currentUser.role === 'admin' ? dbData.tasks : dbData.tasks.filter(t => t.userId === currentUser.id);
+            if(userTasks.length === 0) {
+                tasksList.innerHTML = '<p class="text-gray-500 text-sm">لا توجد مهام مسجلة.</p>';
+            } else {
+                tasksList.innerHTML = userTasks.map(t => `
+                    <div class="p-4 bg-gray-900 rounded-lg border border-gray-700 flex justify-between items-center">
+                        <div>
+                            <p class="font-medium text-white">${t.title}</p>
+                            <span class="text-xs text-gray-400">المسؤول: ${t.assignedToName}</span>
+                        </div>
+                        <div class="flex items-center space-x-3 space-x-reverse">
+                            <span class="px-2.5 py-1 text-xs rounded font-semibold ${t.status === 'مكتملة' ? 'bg-green-900 text-green-300' : 'bg-amber-900 text-amber-300'}">${t.status}</span>
+                            ${currentUser.role !== 'admin' && t.status !== 'مكتملة' ? `<button onclick="completeTask('${t.id}')" class="bg-green-600 hover:bg-green-700 text-xs px-3 py-1.5 rounded transition">إنجاز</button>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Render Attendance Table for Admin
+            if (currentUser.role === 'admin') {
+                const attBody = document.getElementById('attendance-table-body');
+                if (dbData.attendance.length === 0) {
+                    attBody.innerHTML = '<tr><td colspan="3" class="px-4 py-3 text-center text-gray-500">لا توجد سجلات حضور اليوم.</td></tr>';
+                } else {
+                    attBody.innerHTML = dbData.attendance.slice(-10).reverse().map(att => `
+                        <tr class="hover:bg-gray-700/50">
+                            <td class="px-4 py-3 font-medium">${att.name}</td>
+                            <td class="px-4 py-3"><span class="px-2 py-0.5 text-xs rounded ${att.type === 'حضور' ? 'bg-green-900 text-green-300' : 'bg-amber-900 text-amber-300'}">${att.type}</span></td>
+                            <td class="px-4 py-3 text-gray-400">${new Date(att.time).toLocaleString()}</td>
+                        </tr>
+                    `).join('');
+                }
+            }
+        }
+
+        function populateEmployeeDropdown() {
+            const select = document.getElementById('task-employee');
+            select.innerHTML = dbData.employees.map(e => `<option value="${e.id}">${e.name} (${e.department})</option>`).join('');
         }
 
         async function recordAttendance(type) {
             if (!currentUser) return;
-            const logEntry = { 
-                userId: currentUser.id, 
-                name: currentUser.name, 
-                type: type, 
-                time: new Date().toISOString() 
-            };
-            dbData.attendance.push(logEntry);
-            
+            dbData.attendance.push({ userId: currentUser.id, name: currentUser.name, type: type, time: new Date().toISOString() });
+            await saveAndSync();
+            alert(type === 'حضور' ? 'تم تسجيل الحضور بنجاح!' : 'تم تسجيل الانصراف بنجاح!');
+        }
+
+        async function handleCreateEmployee(e) {
+            e.preventDefault();
+            const name = document.getElementById('new-name').value.trim();
+            const username = document.getElementById('new-username').value.trim();
+            const pin = document.getElementById('new-pin').value.trim();
+
+            if (dbData.employees.some(x => x.username === username)) {
+                alert('اسم المستخدم موجود مسبقاً!');
+                return;
+            }
+
+            dbData.employees.push({ id: Date.now().toString(), name, username, pin, role: 'employee', department: 'IT Support' });
+            await saveAndSync();
+            alert('تم إنشاء حساب الموظف بنجاح!');
+            document.getElementById('new-name').value = '';
+            document.getElementById('new-username').value = '';
+            document.getElementById('new-pin').value = '';
+            populateEmployeeDropdown();
+        }
+
+        async function handleCreateAnnouncement(e) {
+            e.preventDefault();
+            const text = document.getElementById('new-announcement').value.trim();
+            dbData.announcements.push({ id: Date.now().toString(), text, date: new Date().toISOString() });
+            await saveAndSync();
+            alert('تم نشر الإعلان بنجاح!');
+            document.getElementById('new-announcement').value = '';
+        }
+
+        async function handleCreateTask(e) {
+            e.preventDefault();
+            const empId = document.getElementById('task-employee').value;
+            const title = document.getElementById('task-title').value.trim();
+            const emp = dbData.employees.find(x => x.id === empId);
+
+            dbData.tasks.push({ id: Date.now().toString(), userId: empId, assignedToName: emp ? emp.name : 'مستخدم', title, status: 'قيد التنفيذ' });
+            await saveAndSync();
+            alert('تم إسناد المهمة بنجاح!');
+            document.getElementById('task-title').value = '';
+        }
+
+        async function completeTask(taskId) {
+            const task = dbData.tasks.find(t => t.id === taskId);
+            if (task) {
+                task.status = 'مكتملة';
+                await saveAndSync();
+                alert('تم تحديث حالة المهمة إلى مكتملة!');
+            }
+        }
+
+        async function saveAndSync() {
             const res = await fetch('/api/data', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dbData)
             });
-            
-            if(res.ok) {
-                alert(type === 'check-in' ? 'تم تسجيل الحضور بنجاح!' : 'تم تسجيل الانصراف بنجاح!');
+            if (res.ok) {
                 updateDashboard();
             } else {
-                alert('حدث خطأ أثناء حفظ البصمة!');
-            }
-        }
-
-        function toggleLanguage() {
-            const html = document.documentElement;
-            if (html.getAttribute('lang') === 'ar') {
-                html.setAttribute('lang', 'en');
-                html.setAttribute('dir', 'ltr');
-            } else {
-                html.setAttribute('lang', 'ar');
-                html.setAttribute('dir', 'rtl');
+                alert('حدث خطأ أثناء حفظ البيانات على السيرفر!');
             }
         }
     </script>

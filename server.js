@@ -11,7 +11,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// إعداد التخزين المرفقات
+// إعداد التخزين للمرفقات
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadDir = path.join(__dirname, 'public', 'uploads');
@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// جلب وحفظ بيانات قاعدة البيانات السحابية
+// جلب وحفظ بيانات النظام السحابي
 function loadData() {
     if (!fs.existsSync(DATA_FILE)) {
         const initial = {
@@ -34,8 +34,7 @@ function loadData() {
             ],
             attendance: [],
             tasks: [],
-            announcements: [{ id: '1', text: 'Welcome to Kyan IT ERP Cloud System!', date: new Date().toISOString() }],
-            widgets: []
+            announcements: [{ id: '1', text: 'Welcome to Kyan IT ERP Cloud System!', date: new Date().toISOString() }]
         };
         fs.writeFileSync(DATA_FILE, JSON.stringify(initial, null, 2));
     }
