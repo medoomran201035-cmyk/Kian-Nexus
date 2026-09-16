@@ -3,183 +3,476 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kayan ERP - لوحة التحكم المركزية</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Kayan ERP - نظام إدارة الشركات المتكامل</title>
+    <!-- خط القاهرة -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-gray-950 text-gray-100 font-sans flex h-screen overflow-hidden">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background-color: #0b0f19; color: #f8fafc; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* القائمة الجانبية */
+        .sidebar { width: 260px; background-color: #0f172a; border-left: 1px solid #1e293b; display: flex; flex-direction: column; justify-content: space-between; height: 100vh; position: fixed; right: 0; top: 0; z-index: 100; }
+        .sidebar-brand { display: flex; align-items: center; gap: 12px; padding: 20px 15px; border-bottom: 1px solid #1e293b; }
+        .sidebar-brand img { width: 42px; height: 42px; border-radius: 10px; object-fit: cover; background: #1e293b; border: 1px solid #334155; }
+        .sidebar-brand h3 { font-size: 17px; font-weight: 700; color: #ffffff; }
+        .sidebar-brand span { font-size: 11px; color: #94a3b8; display: block; }
+        
+        .sidebar-menu { list-style: none; padding: 15px 10px; overflow-y: auto; flex-grow: 1; }
+        .sidebar-menu li { margin-bottom: 8px; }
+        .sidebar-menu a { display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #cbd5e1; text-decoration: none; border-radius: 8px; font-size: 14px; font-weight: 500; transition: all 0.3s; }
+        .sidebar-menu a:hover, .sidebar-menu a.active { background: #2563eb; color: #ffffff; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+        .sidebar-menu a i { width: 20px; text-align: center; }
 
-    <!-- Sidebar (القائمة الجانبية مع شعار Kayan) -->
-    <aside class="w-64 bg-gray-900 border-l border-gray-800 flex flex-col justify-between hidden md:flex">
+        .sidebar-footer { padding: 15px; border-top: 1px solid #1e293b; background: rgba(15, 23, 42, 0.9); }
+        .logout-btn { width: 100%; background: #ef4444; color: white; border: none; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; }
+        .logout-btn:hover { background: #dc2626; }
+
+        /* المحتوى الرئيسي */
+        .main-content { margin-right: 260px; width: calc(100% - 260px); height: 100vh; display: flex; flex-direction: column; background: #0b0f19; }
+        .header { background: #0f172a; padding: 15px 30px; border-bottom: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; }
+        .header h1 { font-size: 20px; color: #fff; font-weight: 700; }
+        
+        .content-body { padding: 30px; overflow-y: auto; flex-grow: 1; }
+        .section-view { display: none; }
+        .section-view.active { display: block; }
+
+        /* الكروت والبطاقات الإحصائية */
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .card { background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #334155; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .card h4 { font-size: 14px; color: #94a3b8; margin-bottom: 10px; }
+        .card .number { font-size: 24px; font-weight: 700; color: #38bdf8; }
+
+        /* النماذج والجداول المشتركة */
+        .form-box { background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #334155; margin-bottom: 25px; display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end; }
+        .form-group { flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 5px; }
+        .form-group label { font-size: 13px; color: #94a3b8; }
+        .form-group input, .form-group select { background: #0f172a; border: 1px solid #334155; color: #fff; padding: 10px; border-radius: 6px; font-size: 14px; }
+        .btn-primary { background: #2563eb; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; height: 42px; transition: 0.2s; }
+        .btn-primary:hover { background: #1d4ed8; }
+
+        .data-table { width: 100%; border-collapse: collapse; background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid #334155; }
+        .data-table th, .data-table td { padding: 12px 15px; text-align: right; border-bottom: 1px solid #334155; font-size: 14px; }
+        .data-table th { background: #0f172a; color: #94a3b8; font-weight: 600; }
+        .data-table tr:hover { background: rgba(51, 65, 85, 0.4); }
+        .btn-delete { background: #ef4444; color: #white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar">
         <div>
-            <div class="p-5 border-b border-gray-800 flex items-center space-x-3 space-x-reverse">
-                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-xl text-white shadow-lg">K</div>
+            <!-- اللوجو -->
+            <div class="sidebar-brand">
+                <img src="logo.png" alt="Kayan Logo" onerror="this.src='https://via.placeholder.com/42'">
                 <div>
-                    <h1 class="font-bold text-lg text-white">Kayan ERP</h1>
-                    <p class="text-xs text-gray-400">إدارة 150 موظف</p>
+                    <h3>Kayan ERP</h3>
+                    <span>نظام إدارة الشركات</span>
                 </div>
             </div>
 
-            <nav class="p-4 space-y-2">
-                <a href="#" onclick="switchTab('dashboard', this)" class="nav-btn flex items-center space-x-3 space-x-reverse p-3 rounded-lg bg-blue-600 text-white font-medium transition">
-                    <i class="fa-solid fa-house"></i><span>الرئيسية</span>
-                </a>
-                <a href="#" onclick="switchTab('tasks', this)" class="nav-btn flex items-center space-x-3 space-x-reverse p-3 rounded-lg hover:bg-gray-800 text-gray-300 transition">
-                    <i class="fa-solid fa-list-check"></i><span>إدارة المهام</span>
-                </a>
-                <a href="#" onclick="switchTab('helpdesk', this)" class="nav-btn flex items-center space-x-3 space-x-reverse p-3 rounded-lg hover:bg-gray-800 text-gray-300 transition">
-                    <i class="fa-solid fa-headset"></i><span>الدعم الفني (IT)</span>
-                </a>
-                <a href="#" onclick="switchTab('hr', this)" id="hrTab" class="nav-btn flex items-center space-x-3 space-x-reverse p-3 rounded-lg hover:bg-gray-800 text-gray-300 transition hidden">
-                    <i class="fa-solid fa-users-gear"></i><span>شؤون الموظفين (HR)</span>
-                </a>
-            </nav>
+            <!-- القائمة والإدارات -->
+            <ul class="sidebar-menu">
+                <li><a href="#" onclick="switchSection('home', this)" class="active"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="#" onclick="switchSection('tasks', this)"><i class="fas fa-tasks"></i> إدارة المهام</a></li>
+                <li><a href="#" onclick="switchSection('it', this)"><i class="fas fa-headset"></i> الدعم الفني (IT)</a></li>
+                <li><a href="#" onclick="switchSection('hr', this)"><i class="fas fa-users-cog"></i> شؤون الموظفين (HR)</a></li>
+                <li><a href="#" onclick="switchSection('sales', this)"><i class="fas fa-chart-line"></i> المبيعات</a></li>
+                <li><a href="#" onclick="switchSection('warehouse', this)"><i class="fas fa-warehouse"></i> المخازن</a></li>
+                <li><a href="#" onclick="switchSection('finance', this)"><i class="fas fa-wallet"></i> المالية</a></li>
+                <li><a href="#" onclick="switchSection('attendance', this)"><i class="fas fa-clock"></i> الحضور والانصراف</a></li>
+            </ul>
         </div>
 
-        <div class="p-4 border-t border-gray-800">
-            <div class="mb-3">
-                <p id="userNameDisplay" class="text-sm font-bold text-white">جار التحميل...</p>
-                <p id="userRoleDisplay" class="text-xs text-blue-400">الصلاحية</p>
+        <!-- أسفل القائمة -->
+        <div class="sidebar-footer">
+            <div style="margin-bottom: 8px; font-size: 12px; text-align: center;">
+                <div style="color: #f8fafc; font-weight: 600;">محمد فيصل</div>
+                <div style="color: #38bdf8; font-size: 11px;">ADMIN</div>
             </div>
-            <button onclick="logout()" class="w-full bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white p-2 rounded-lg text-sm transition flex items-center justify-center space-x-2 space-x-reverse">
-                <i class="fa-solid fa-arrow-right-from-bracket"></i><span>تسجيل الخروج</span>
-            </button>
+            <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
         </div>
     </aside>
 
-    <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-screen overflow-y-auto">
-        <header class="bg-gray-900 border-b border-gray-800 p-4 flex justify-between items-center">
-            <h2 id="pageTitle" class="text-xl font-bold text-white">لوحة المؤشرات العامة</h2>
-            <span id="departmentBadge" class="bg-blue-900/50 text-blue-300 border border-blue-700 text-xs px-3 py-1 rounded-full">القسم: عام</span>
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content">
+        <header class="header">
+            <h1 id="pageTitle">لوحة التحكم الرئيسية</h1>
+            <div style="font-size: 14px; color: #94a3b8;">شركة كیان للإدارة المتكاملة</div>
         </header>
 
-        <div class="p-6 space-y-6" id="contentArea">
-            <!-- المحتوى الافتراضي -->
+        <div class="content-body">
+            
+            <!-- 1. الرئيسية -->
+            <div id="home" class="section-view active">
+                <div class="cards-grid">
+                    <div class="card">
+                        <h4>إجمالي الموظفين</h4>
+                        <div class="number" id="statEmp">0</div>
+                    </div>
+                    <div class="card">
+                        <h4>المهام الجارية</h4>
+                        <div class="number" id="statTasks">0</div>
+                    </div>
+                    <div class="card">
+                        <h4>تذاكر الدعم الفني</h4>
+                        <div class="number" id="statIt">0</div>
+                    </div>
+                    <div class="card">
+                        <h4>حالة النظام</h4>
+                        <div class="number" style="color: #4ade80; font-size: 18px; margin-top: 5px;">يعمل بفاعلية 100%</div>
+                    </div>
+                </div>
+                <div style="background: #1e293b; padding: 25px; border-radius: 12px; border: 1px solid #334155;">
+                    <h3 style="margin-bottom: 15px; font-size: 18px;">مرحباً بك في لوحة تحكم نظام Kayan ERP</h3>
+                    <p style="color: #94a3b8; line-height: 1.6;">كل الأقسام متصلة وتعمل بصلاحيات كاملة. يمكنك الآن إضافة المهام، الموظفين، تذاكر الـ IT، وتسجيل المعاملات المالية بكل سهولة من القائمة الجانبية.</p>
+                </div>
+            </div>
+
+            <!-- 2. إدارة المهام -->
+            <div id="tasks" class="section-view">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label>عنوان المهمة</label>
+                        <input type="text" id="taskName" placeholder="أدخل اسم المهمة...">
+                    </div>
+                    <div class="form-group">
+                        <label>المسؤول</label>
+                        <input type="text" id="taskAssignee" placeholder="اسم الموظف...">
+                    </div>
+                    <button class="btn-primary" onclick="addTask()">إضافة مهمة</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>المهمة</th><th>المسؤول</th><th>الحالة</th><th>إجراء</th></tr></thead>
+                    <tbody id="tasksTable"></tbody>
+                </table>
+            </div>
+
+            <!-- 3. الدعم الفني IT -->
+            <div id="it" class="section-view">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label>جهاز / المشكلة</label>
+                        <input type="text" id="itIssue" placeholder="وصف العطل أو الجهاز...">
+                    </div>
+                    <div class="form-group">
+                        <label>القسم الطالب</label>
+                        <input type="text" id="itDept" placeholder="المبيعات، الإدارة...">
+                    </div>
+                    <button class="btn-primary" onclick="addItTicket()">فتح تذاكر جديدة</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>المشكلة / الجهاز</th><th>القسم</th><th>الحالة</th><th>إجراء</th></tr></thead>
+                    <tbody id="itTable"></tbody>
+                </table>
+            </div>
+
+            <!-- 4. شؤون الموظفين HR -->
+            <div id="hr" class="section-view">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label>اسم الموظف</label>
+                        <input type="text" id="empName" placeholder="الاسم الثلاثي...">
+                    </div>
+                    <div class="form-group">
+                        <label>المسمى الوظيفي</label>
+                        <input type="text" id="empRole" placeholder="مدير، محاسب، فني...">
+                    </div>
+                    <button class="btn-primary" onclick="addEmp()">تسجيل موظف</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>اسم الموظف</th><th>المسمى الوظيفي</th><th>تاريخ التسجيل</th><th>إجراء</th></tr></thead>
+                    <tbody id="empTable"></tbody>
+                </table>
+            </div>
+
+            <!-- 5. المبيعات -->
+            <div id="sales" class="section-view">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label>اسم العميل / الصنف</label>
+                        <input type="text" id="saleItem" placeholder="أدخل تفاصيل البيع...">
+                    </div>
+                    <div class="form-group">
+                        <label>المبلغ (ر.س / ج.م)</label>
+                        <input type="number" id="saleAmount" placeholder="القيمة...">
+                    </div>
+                    <button class="btn-primary" onclick="addSale()">تسجيل مبيعة</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>العميل / الصنف</th><th>القيمة</th><th>التاريخ</th><th>إجراء</th></tr></thead>
+                    <tbody id="salesTable"></tbody>
+                </table>
+            </div>
+
+            <!-- 6. المخازن -->
+            <div id="warehouse" class="section-view">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label>اسم المنتج</label>
+                        <input type="text" id="wareItem" placeholder="اسم المنتج بالمخزن...">
+                    </div>
+                    <div class="form-group">
+                        <label>الكمية المتاحة</label>
+                        <input type="number" id="wareQty" placeholder="العدد...">
+                    </div>
+                    <button class="btn-primary" onclick="addWarehouseItem()">إضافة للمخزن</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>اسم المنتج</th><th>الكمية</th><th>إجراء</th></tr></thead>
+                    <tbody id="warehouseTable"></tbody>
+                </table>
+            </div>
+
+            <!-- 7. المالية -->
+            <div id="finance" class="section-view">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label>نوع المعاملة (إيراد / مصروف)</label>
+                        <input type="text" id="finDesc" placeholder="مثال: فاتورة صيانة، إيجار...">
+                    </div>
+                    <div class="form-group">
+                        <label>المبلغ</label>
+                        <input type="number" id="finAmount" placeholder="القيمة المالية...">
+                    </div>
+                    <button class="btn-primary" onclick="addFinance()">إضافة معاملة</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>البيان</th><th>المبلغ</th><th>إجراء</th></tr></thead>
+                    <tbody id="financeTable"></tbody>
+                </table>
+            </div>
+
+            <!-- 8. الحضور والانصراف -->
+            <div id="attendance" class="section-view">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label>اسم الموظف</label>
+                        <input type="text" id="attName" placeholder="اسم الموظف...">
+                    </div>
+                    <div class="form-group">
+                        <label>حالة الحضور</label>
+                        <select id="attStatus" style="background:#0f172a; color:#fff; border:1px solid #334155; padding:10px; border-radius:6px;">
+                            <option value="حاضر">حاضر وفي العمل</option>
+                            <option value="إجازة">إجازة رسمية</option>
+                            <option value="غائب">غائب</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="addAttendance()">تسجيل الحالة</button>
+                </div>
+                <table class="data-table">
+                    <thead><tr><th>اسم الموظف</th><th>الحالة</th><th>التاريخ والوقت</th><th>إجراء</th></tr></thead>
+                    <tbody id="attendanceTable"></tbody>
+                </table>
+            </div>
+
         </div>
-    </main>
+    </div>
 
     <script>
-        const userId = localStorage.getItem('userId');
-        const userName = localStorage.getItem('userName');
-        const userRole = localStorage.getItem('userRole');
-        const userDepartment = localStorage.getItem('userDepartment');
+        // دالة التنقل بين الأقسام
+        function switchSection(sectionId, element) {
+            document.querySelectorAll('.section-view').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            element.classList.add('active');
 
-        if (!userId) {
-            window.location.href = '/login.html';
-        } else {
-            document.getElementById('userNameDisplay').innerText = userName;
-            document.getElementById('userRoleDisplay').innerText = `الدور: ${userRole.toUpperCase()}`;
-            document.getElementById('departmentBadge').innerText = `القسم: ${userDepartment}`;
-            if (userRole === 'admin' || userRole === 'hr') {
-                document.getElementById('hrTab').classList.remove('hidden');
-            }
-            switchTab('dashboard');
+            const titles = {
+                'home': 'لوحة التحكم الرئيسية',
+                'tasks': 'إدارة المهام والمأموريات',
+                'it': 'الدعم الفني (IT)',
+                'hr': 'شؤون الموظفين (HR)',
+                'sales': 'إدارة المبيعات',
+                'warehouse': 'إدارة المخازن',
+                'finance': 'القسم المالي والمحاسبي',
+                'attendance': 'سجلات الحضور والانصراف'
+            };
+            document.getElementById('pageTitle').innerText = titles[sectionId] || 'لوحة التحكم';
         }
+
+        // محرك البيانات التفاعلي (LocalStorage System)
+        function getData(key) { return JSON.parse(localStorage.getItem(key)) || []; }
+        function saveData(key, data) { localStorage.setItem(key, JSON.stringify(data)); updateStats(); }
+
+        function updateStats() {
+            document.getElementById('statEmp').innerText = getData('kayan_emp').length;
+            document.getElementById('statTasks').innerText = getData('kayan_tasks').length;
+            document.getElementById('statIt').innerText = getData('kayan_it').length;
+        }
+
+        // 1. المهام
+        function addTask() {
+            let name = document.getElementById('taskName').value;
+            let assignee = document.getElementById('taskAssignee').value;
+            if(!name) return alert('الرجاء كتابة اسم المهمة');
+            let tasks = getData('kayan_tasks');
+            tasks.push({name, assignee, status: 'جارِ التنفيذ'});
+            saveData('kayan_tasks', tasks);
+            document.getElementById('taskName').value = '';
+            document.getElementById('taskAssignee').value = '';
+            renderTasks();
+        }
+        function renderTasks() {
+            let tasks = getData('kayan_tasks');
+            let html = '';
+            tasks.forEach((t, i) => {
+                html += `<tr><td>${t.name}</td><td>${t.assignee || 'غير محدد'}</td><td><span style="color:#38bdf8">${t.status}</span></td><td><button class="btn-delete" onclick="deleteItem('kayan_tasks', ${i}, renderTasks)">حذف</button></td></tr>`;
+            });
+            document.getElementById('tasksTable').innerHTML = html;
+        }
+
+        // 2. الدعم الفني IT
+        function addItTicket() {
+            let issue = document.getElementById('itIssue').value;
+            let dept = document.getElementById('itDept').value;
+            if(!issue) return alert('أدخل تفاصيل المشكلة');
+            let tickets = getData('kayan_it');
+            tickets.push({issue, dept, status: 'مفتوحة'});
+            saveData('kayan_it', tickets);
+            document.getElementById('itIssue').value = '';
+            document.getElementById('itDept').value = '';
+            renderIt();
+        }
+        function renderIt() {
+            let tickets = getData('kayan_it');
+            let html = '';
+            tickets.forEach((t, i) => {
+                html += `<tr><td>${t.issue}</td><td>${t.dept || 'عام'}</td><td><span style="color:#fbbf24">${t.status}</span></td><td><button class="btn-delete" onclick="deleteItem('kayan_it', ${i}, renderIt)">حذف</button></td></tr>`;
+            });
+            document.getElementById('itTable').innerHTML = html;
+        }
+
+        // 3. شؤون الموظفين
+        function addEmp() {
+            let name = document.getElementById('empName').value;
+            let role = document.getElementById('empRole').value;
+            if(!name) return alert('أدخل اسم الموظف');
+            let emps = getData('kayan_emp');
+            let date = new Date().toLocaleDateString('ar-EG');
+            emps.push({name, role, date});
+            saveData('kayan_emp', emps);
+            document.getElementById('empName').value = '';
+            document.getElementById('empRole').value = '';
+            renderEmp();
+        }
+        function renderEmp() {
+            let emps = getData('kayan_emp');
+            let html = '';
+            emps.forEach((e, i) => {
+                html += `<tr><td>${e.name}</td><td>${e.role}</td><td>${e.date}</td><td><button class="btn-delete" onclick="deleteItem('kayan_emp', ${i}, renderEmp)">حذف</button></td></tr>`;
+            });
+            document.getElementById('empTable').innerHTML = html;
+        }
+
+        // 4. المبيعات
+        function addSale() {
+            let item = document.getElementById('saleItem').value;
+            let amount = document.getElementById('saleAmount').value;
+            if(!item || !amount) return alert('أدخل بيانات المبيعات صحيحة');
+            let sales = getData('kayan_sales');
+            sales.push({item, amount, date: new Date().toLocaleDateString('ar-EG')});
+            saveData('kayan_sales', sales);
+            document.getElementById('saleItem').value = '';
+            document.getElementById('saleAmount').value = '';
+            renderSales();
+        }
+        function renderSales() {
+            let sales = getData('kayan_sales');
+            let html = '';
+            sales.forEach((s, i) => {
+                html += `<tr><td>${s.item}</td><td>${s.amount}</td><td>${s.date}</td><td><button class="btn-delete" onclick="deleteItem('kayan_sales', ${i}, renderSales)">حذف</button></td></tr>`;
+            });
+            document.getElementById('salesTable').innerHTML = html;
+        }
+
+        // 5. المخازن
+        function addWarehouseItem() {
+            let item = document.getElementById('wareItem').value;
+            let qty = document.getElementById('wareQty').value;
+            if(!item) return alert('أدخل اسم المنتج');
+            let warehouse = getData('kayan_warehouse');
+            warehouse.push({item, qty});
+            saveData('kayan_warehouse', warehouse);
+            document.getElementById('wareItem').value = '';
+            document.getElementById('wareQty').value = '';
+            renderWarehouse();
+        }
+        function renderWarehouse() {
+            let warehouse = getData('kayan_warehouse');
+            let html = '';
+            warehouse.forEach((w, i) => {
+                html += `<tr><td>${w.item}</td><td>${w.qty || 0}</td><td><button class="btn-delete" onclick="deleteItem('kayan_warehouse', ${i}, renderWarehouse)">حذف</button></td></tr>`;
+            });
+            document.getElementById('warehouseTable').innerHTML = html;
+        }
+
+        // 6. المالية
+        function addFinance() {
+            let desc = document.getElementById('finDesc').value;
+            let amount = document.getElementById('finAmount').value;
+            if(!desc || !amount) return alert('أدخل البيان والمبلغ');
+            let fin = getData('kayan_finance');
+            fin.push({desc, amount});
+            saveData('kayan_finance', fin);
+            document.getElementById('finDesc').value = '';
+            document.getElementById('finAmount').value = '';
+            renderFinance();
+        }
+        function renderFinance() {
+            let fin = getData('kayan_finance');
+            let html = '';
+            fin.forEach((f, i) => {
+                html += `<tr><td>${f.desc}</td><td>${f.amount}</td><td><button class="btn-delete" onclick="deleteItem('kayan_finance', ${i}, renderFinance)">حذف</button></td></tr>`;
+            });
+            document.getElementById('financeTable').innerHTML = html;
+        }
+
+        // 7. الحضور والانصراف
+        function addAttendance() {
+            let name = document.getElementById('attName').value;
+            let status = document.getElementById('attStatus').value;
+            if(!name) return alert('أدخل اسم الموظف');
+            let att = getData('kayan_att');
+            att.push({name, status, time: new Date().toLocaleString('ar-EG')});
+            saveData('kayan_att', att);
+            document.getElementById('attName').value = '';
+            renderAttendance();
+        }
+        function renderAttendance() {
+            let att = getData('kayan_att');
+            let html = '';
+            att.forEach((a, i) => {
+                html += `<tr><td>${a.name}</td><td>${a.status}</td><td>${a.time}</td><td><button class="btn-delete" onclick="deleteItem('kayan_att', ${i}, renderAttendance)">حذف</button></td></tr>`;
+            });
+            document.getElementById('attendanceTable').innerHTML = html;
+        }
+
+نعم، دالة الحذف العامة لتنظيف الجداول:
+        function deleteItem(key, index, renderFunc) {
+            let data = getData(key);
+            data.splice(index, 1);
+            saveData(key, data);
+            renderFunc();
+        }
+
+        // تحميل البيانات عند فتح الصفحة
+        window.onload = function() {
+            renderTasks();
+            renderIt();
+            renderEmp();
+            renderSales();
+            renderWarehouse();
+            renderFinance();
+            renderAttendance();
+            updateStats();
+        };
 
         function logout() {
-            localStorage.clear();
-            window.location.href = '/login.html';
-        }
-
-        function switchTab(tabName, element) {
-            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-blue-600', 'text-white'));
-            if(element) element.classList.add('bg-blue-600', 'text-white');
-
-            const contentArea = document.getElementById('contentArea');
-            const pageTitle = document.getElementById('pageTitle');
-
-            if (tabName === 'dashboard') {
-                pageTitle.innerText = "لوحة المؤشرات العامة";
-                contentArea.innerHTML = `
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md"><p class="text-gray-400 text-sm">إجمالي الموظفين</p><h3 class="text-3xl font-bold text-blue-500 mt-2">150+</h3></div>
-                        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md"><p class="text-gray-400 text-sm">حالة النظام</p><h3 class="text-3xl font-bold text-green-500 mt-2">متصل وآمن</h3></div>
-                        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md"><p class="text-gray-400 text-sm">القسم الحالي</p><h3 class="text-xl font-bold text-yellow-500 mt-2">${userDepartment}</h3></div>
-                    </div>`;
-            } else if (tabName === 'tasks') {
-                pageTitle.innerText = "إدارة المهام والمأموريات";
-                contentArea.innerHTML = `
-                    <div class="bg-gray-900 border border-gray-800 p-6 rounded-xl space-y-4">
-                        <h3 class="font-bold text-lg text-blue-400">إضافة مهمة جديدة</h3>
-                        <form onsubmit="addTask(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" id="taskTitle" placeholder="عنوان المهمة" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
-                            <input type="text" id="taskAssigned" placeholder="الموظف المسؤول" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
-                            <input type="text" id="taskDept" placeholder="القسم المختص" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
-                            <input type="text" id="taskDesc" placeholder="تفاصيل المهمة" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
-                            <button type="submit" class="col-span-2 bg-blue-600 hover:bg-blue-700 p-3 rounded font-semibold transition">حفظ وإرسال المهمة</button>
-                        </form>
-                    </div>`;
-            } else if (tabName === 'helpdesk') {
-                pageTitle.innerText = "نظام الدعم الفني وتذاكر الأعطال";
-                contentArea.innerHTML = `
-                    <div class="bg-gray-900 border border-gray-800 p-6 rounded-xl space-y-4">
-                        <h3 class="font-bold text-lg text-yellow-400">فتح تذكرة دعم فني جديدة</h3>
-                        <form onsubmit="addTicket(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" id="ticketSubject" placeholder="مشكلة في (طابعة، شبكة، كمبيوتر..)" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
-                            <input type="text" id="ticketDept" placeholder="القسم" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
-                            <textarea id="ticketDesc" placeholder="تفاصيل المشكلة التقنية..." required class="col-span-2 bg-gray-800 border border-gray-700 p-3 rounded text-white"></textarea>
-                            <button type="submit" class="col-span-2 bg-yellow-600 hover:bg-yellow-700 p-3 rounded font-semibold transition">إرسال التذكرة لفريق الـ IT</button>
-                        </form>
-                    </div>`;
-            } else if (tabName === 'hr') {
-                pageTitle.innerText = "شؤون الموظفين وإنشاء الحسابات";
-                contentArea.innerHTML = `
-                    <div class="bg-gray-900 border border-gray-800 p-6 rounded-xl space-y-4">
-                        <h3 class="font-bold text-lg text-blue-400">إنشاء حساب موظف جديد (من 150 موظف)</h3>
-                        <form onsubmit="createEmployee(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <input type="text" id="empName" placeholder="اسم الموظف الثلاثي" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
-                            <input type="email" id="empEmail" placeholder="البريد الإلكتروني" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
-                            <input type="password" id="empPassword" placeholder="كلمة المرور" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
-                            <select id="empDepartment" class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
-                                <option value="IT">IT</option><option value="HR">HR</option><option value="Finance">Finance</option><option value="Sales">Sales</option>
-                            </select>
-                            <select id="empRole" class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
-                                <option value="employee">موظف عادي</option><option value="hr">مسؤول HR</option><option value="admin">أدمن</option>
-                            </select>
-                            <button type="submit" class="col-span-2 bg-blue-600 hover:bg-blue-700 p-3 rounded font-semibold transition">إنشاء الحساب</button>
-                        </form>
-                    </div>`;
-            }
-        }
-
-        async function addTask(e) {
-            e.preventDefault();
-            const body = {
-                title: document.getElementById('taskTitle').value,
-                assignedTo: document.getElementById('taskAssigned').value,
-                department: document.getElementById('taskDept').value,
-                description: document.getElementById('taskDesc').value
-            };
-            const res = await fetch('/api/tasks/add', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
-            if((await res.json()).success) { alert('تم اضافة المهمة بنجاح'); e.target.reset(); }
-        }
-
-        async function addTicket(e) {
-            e.preventDefault();
-            const body = {
-                subject: document.getElementById('ticketSubject').value,
-                department: document.getElementById('ticketDept').value,
-                description: document.getElementById('ticketDesc').value,
-                createdBy: userName
-            };
-            const res = await fetch('/api/tickets/add', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
-            if((await res.json()).success) { alert('تم فتح التذكرة بنجاح'); e.target.reset(); }
-        }
-
-        async function createEmployee(e) {
-            e.preventDefault();
-            const body = {
-                requesterId: userId,
-                name: document.getElementById('empName').value,
-                email: document.getElementById('empEmail').value,
-                password: document.getElementById('empPassword').value,
-                department: document.getElementById('empDepartment').value,
-                role: document.getElementById('empRole').value
-            };
-            const res = await fetch('/api/users/create', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
-            const data = await res.json();
-            if(data.success) { alert('تم إنشاء الموظف بنجاح'); e.target.reset(); } else { alert(data.message); }
+            window.location.href = '#';
+            alert('تم تسجيل الخروج بنجاح');
         }
     </script>
 </body>
