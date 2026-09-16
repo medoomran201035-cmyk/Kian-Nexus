@@ -1,331 +1,248 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kyan IT - Enterprise ERP</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام كيان الإداري - Kayan ERP</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Socket.io -->
+  <script src="/socket.io/socket.io.js"></script>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans">
-    <div id="app" class="min-h-screen flex flex-col">
-        <!-- Login View -->
-        <div id="login-view" class="flex-1 flex items-center justify-center p-4">
-            <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md border border-gray-700">
-                <div class="text-center mb-6">
-                    <h1 class="text-2xl font-bold text-indigo-400">Kyan IT - Enterprise ERP</h1>
-                    <p class="text-sm text-gray-400 mt-1">تسجيل الدخول للنظام السحابي الموحد</p>
-                </div>
-                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">اسم المستخدم</label>
-                        <input type="text" id="username" class="w-full bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">رقم التعريف / البصمة (PIN)</label>
-                        <input type="password" id="pin" class="w-full bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
-                    </div>
-                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded transition">دخول النظام</button>
-                </form>
-            </div>
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen flex flex-col">
+
+  <!-- شريط الإشعارات العلوي الفوري -->
+  <div class="fixed top-4 left-4 z-50">
+    <div class="relative inline-block cursor-pointer bg-gray-800 p-2 rounded-full border border-gray-700 shadow-lg" id="notificationDropdown">
+      <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5" id="notifBadge">0</span>
+      <i class="fas fa-bell text-lg text-gray-200 hover:text-white transition"></i>
+      
+      <!-- قائمة الإشعارات المنسدلة -->
+      <div id="notifList" class="hidden absolute left-0 mt-2 w-80 bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-3 z-50 text-sm text-gray-200">
+        <p class="text-xs text-gray-400 border-b border-gray-700 pb-1 mb-2">الإشعارات الحية (Socket.io)</p>
+        <div id="notifContainer" class="space-y-2 max-h-60 overflow-y-auto">
+          <p class="text-xs text-gray-500 text-center">لا توجد إشعارات جديدة</p>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <!-- Dashboard View -->
-        <div id="dashboard-view" class="hidden flex-1 flex flex-col">
-            <header class="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center shadow-md">
-                <div class="flex items-center space-x-4 space-x-reverse">
-                    <h2 class="text-xl font-bold text-indigo-400">Kyan IT ERP</h2>
-                    <span id="user-role-badge" class="bg-indigo-900 text-indigo-300 text-xs px-2.5 py-1 rounded-full font-semibold"></span>
-                    <span id="welcome-user-name" class="text-sm text-gray-300"></span>
-                </div>
-                <div class="flex items-center space-x-4 space-x-reverse">
-                    <button onclick="logout()" class="bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded text-sm font-medium transition"><i class="fa-solid fa-power-off ml-1"></i>تسجيل خروج</button>
-                </div>
-            </header>
-            
-            <main class="flex-1 p-6 overflow-y-auto space-y-6">
-                <!-- Statistics Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
-                        <h3 class="text-gray-400 text-sm">إجمالي الموظفين</h3>
-                        <p id="stat-employees" class="text-3xl font-bold mt-2 text-indigo-400">0</p>
-                    </div>
-                    <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
-                        <h3 class="text-gray-400 text-sm">سجلات الحضور</h3>
-                        <p id="stat-attendance" class="text-3xl font-bold mt-2 text-green-400">0</p>
-                    </div>
-                    <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
-                        <h3 class="text-gray-400 text-sm">المهام النشطة</h3>
-                        <p id="stat-tasks" class="text-3xl font-bold mt-2 text-cyan-400">0</p>
-                    </div>
-                    <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
-                        <h3 class="text-gray-400 text-sm">الإعلانات العامة</h3>
-                        <p id="stat-announcements" class="text-3xl font-bold mt-2 text-amber-400">0</p>
-                    </div>
-                </div>
-
-                <!-- Attendance Control Box -->
-                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow">
-                    <h3 class="text-lg font-semibold mb-4 text-indigo-300"><i class="fa-solid fa-fingerprint ml-2"></i>بصمة الحضور والانصراف السحابية</h3>
-                    <div class="flex space-x-4 space-x-reverse">
-                        <button onclick="recordAttendance('حضور')" class="bg-green-600 hover:bg-green-700 px-5 py-2.5 rounded font-medium transition shadow"><i class="fa-solid fa-right-to-bracket ml-2"></i>تسجيل حضور</button>
-                        <button onclick="recordAttendance('انصراف')" class="bg-amber-600 hover:bg-amber-700 px-5 py-2.5 rounded font-medium transition shadow"><i class="fa-solid fa-right-from-bracket ml-2"></i>تسجيل انصراف</button>
-                    </div>
-                </div>
-
-                <!-- HR & Admin Section: Create Employee Accounts -->
-                <div id="hr-employee-section" class="hidden bg-gray-800 p-6 rounded-xl border border-indigo-500 shadow">
-                    <h3 class="text-lg font-semibold mb-4 text-indigo-300"><i class="fa-solid fa-user-plus ml-2"></i>شؤون الموظفين (HR): إضافة موظف جديد</h3>
-                    <form onsubmit="handleCreateEmployee(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <input type="text" id="new-name" placeholder="اسم الموظف" class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
-                        <input type="text" id="new-username" placeholder="اسم المستخدم للدخول" class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
-                        <input type="password" id="new-pin" placeholder="رقم البصمة / PIN" class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded transition shadow">إنشاء حساب الموظف</button>
-                    </form>
-                </div>
-
-                <!-- Admin Only Section: Announcements & Tasks Management -->
-                <div id="admin-only-section" class="hidden space-y-6">
-                    <!-- Create Announcement -->
-                    <div class="bg-gray-800 p-6 rounded-xl border border-amber-500 shadow">
-                        <h3 class="text-lg font-semibold mb-4 text-amber-300"><i class="fa-solid fa-bullhorn ml-2"></i>نشر تعميم أو إعلان عام (أدمين فقط)</h3>
-                        <form onsubmit="handleCreateAnnouncement(event)" class="flex gap-4">
-                            <input type="text" id="new-announcement" placeholder="محتوى الإعلان أو التوجيه..." class="flex-1 bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-500" required>
-                            <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-medium px-6 py-2 rounded transition shadow">نشر الإعلان</button>
-                        </form>
-                    </div>
-
-                    <!-- Assign Task -->
-                    <div class="bg-gray-800 p-6 rounded-xl border border-cyan-500 shadow">
-                        <h3 class="text-lg font-semibold mb-4 text-cyan-300"><i class="fa-solid fa-list-check ml-2"></i>إسناد مهمة جديدة لموظف (أدمين فقط)</h3>
-                        <form onsubmit="handleCreateTask(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <select id="task-employee" class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-cyan-500" required></select>
-                            <input type="text" id="task-title" placeholder="عنوان أو تفاصيل المهمة..." class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-cyan-500" required>
-                            <button type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 rounded transition shadow">إسناد المهمة</button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Tasks List Section -->
-                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow">
-                    <h3 class="text-lg font-semibold mb-4 text-indigo-300"><i class="fa-solid fa-tasks ml-2"></i>المهام المطلوبة</h3>
-                    <div id="tasks-list" class="space-y-3"></div>
-                </div>
-
-                <!-- Announcements Section -->
-                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow">
-                    <h3 class="text-lg font-semibold mb-4 text-indigo-300"><i class="fa-solid fa-bullhorn ml-2"></i>لوحة الإعلانات والتعاميم</h3>
-                    <div id="announcements-list" class="space-y-3 text-gray-300"></div>
-                </div>
-
-                <!-- Attendance Logs Section (Admin & HR View) -->
-                <div id="attendance-logs-box" class="hidden bg-gray-800 p-6 rounded-xl border border-gray-700 shadow">
-                    <h3 class="text-lg font-semibold mb-4 text-indigo-300"><i class="fa-solid fa-clipboard-user ml-2"></i>سجلات حضور وانصراف الموظفين</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-right text-sm text-gray-300">
-                            <thead class="bg-gray-900 text-gray-400 uppercase text-xs">
-                                <tr>
-                                    <th class="px-4 py-3">الموظف</th>
-                                    <th class="px-4 py-3">نوع الحركة</th>
-                                    <th class="px-4 py-3">الوقت والتاريخ</th>
-                                </tr>
-                            </thead>
-                            <tbody id="attendance-table-body" class="divide-y divide-gray-700"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </main>
+  <!-- الهيدر الرئيسي -->
+  <header class="bg-gray-800 border-b border-gray-700 p-4 shadow-md">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div class="flex items-center space-x-3 space-x-reverse">
+        <div class="bg-blue-600 text-white p-2 rounded-lg font-bold text-lg"><i class="fas fa-cube"></i></div>
+        <div>
+          <h1 class="text-lg font-bold text-white">نظام كيان الإداري (Kayan ERP)</h1>
+          <p class="text-xs text-gray-400">إدارة المبيعات، المخزون، المالية، والعهد</p>
         </div>
+      </div>
+      <div class="flex items-center space-x-4 space-x-reverse">
+        <span class="text-xs bg-green-900 text-green-300 px-3 py-1 rounded-full border border-green-700">متصل بالسيرفر الحي</span>
+        <div class="text-sm text-gray-300"><i class="fas fa-user-circle ml-1"></i> مسؤل النظام</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- محتوى لوحة التحكم -->
+  <main class="flex-grow max-w-7xl w-full mx-auto p-6 space-y-6">
+
+    <!-- بطاقات الإحصائيات السريعة -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 shadow flex items-center justify-between">
+        <div>
+          <p class="text-xs text-gray-400">إجمالي المبيعات</p>
+          <h3 class="text-xl font-bold text-white mt-1">124,500 ر.س</h3>
+        </div>
+        <div class="bg-blue-900 p-3 rounded-lg text-blue-300"><i class="fas fa-chart-line"></i></div>
+      </div>
+      <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 shadow flex items-center justify-between">
+        <div>
+          <p class="text-xs text-gray-400">العهد والأصول المسجلة</p>
+          <h3 class="text-xl font-bold text-white mt-1" id="totalAssetsCount">--</h3>
+        </div>
+        <div class="bg-green-900 p-3 rounded-lg text-green-300"><i class="fas fa-laptop"></i></div>
+      </div>
+      <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 shadow flex items-center justify-between">
+        <div>
+          <p class="text-xs text-gray-400">صافي الأرباح</p>
+          <h3 class="text-xl font-bold text-white mt-1">48,200 ر.س</h3>
+        </div>
+        <div class="bg-purple-900 p-3 rounded-lg text-purple-300"><i class="fas fa-wallet"></i></div>
+      </div>
+      <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 shadow flex items-center justify-between">
+        <div>
+          <p class="text-xs text-gray-400">حضور الموظفين اليوم</p>
+          <h3 class="text-xl font-bold text-white mt-1">96%</h3>
+        </div>
+        <div class="bg-yellow-900 p-3 rounded-lg text-yellow-300"><i class="fas fa-users"></i></div>
+      </div>
     </div>
 
-    <!-- Script Logic -->
-    <script>
-        let currentUser = null;
-        let dbData = { employees: [], attendance: [], tasks: [], announcements: [] };
+    <!-- قسم الرسوم البيانية -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
+        <h3 class="text-sm font-semibold text-gray-300 mb-4 flex items-center">
+          <i class="fas fa-chart-bar ml-2 text-blue-400"></i> معدلات الحضور الأسبوعية
+        </h3>
+        <canvas id="attendanceChart" height="130"></canvas>
+      </div>
+      <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
+        <h3 class="text-sm font-semibold text-gray-300 mb-4 flex items-center">
+          <i class="fas fa-chart-pie ml-2 text-green-400"></i> توزيع العهد والأصول المؤسسية
+        </h3>
+        <canvas id="assetsChart" height="130"></canvas>
+      </div>
+    </div>
 
-        async function fetchData() {
-            try {
-                const res = await fetch('/api/data');
-                dbData = await res.json();
-            } catch (err) {
-                console.error('Error fetching data:', err);
-            }
+    <!-- جدول الأصول والعهد الحديثة -->
+    <div class="bg-gray-800 rounded-xl border border-gray-700 shadow overflow-hidden">
+      <div class="p-4 border-b border-gray-700 flex justify-between items-center">
+        <h3 class="text-sm font-semibold text-gray-200">سجل العهد والأصول الحية</h3>
+        <button onclick="loadAssets()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded transition">
+          <i class="fas fa-sync-alt ml-1"></i> تحديث البيانات
+        </button>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-right text-xs">
+          <thead class="bg-gray-700 text-gray-300">
+            <tr>
+              <th class="p-3">اسم الأصل</th>
+              <th class="p-3">الرقم التسلسلي</th>
+              <th class="p-3">التصنيف</th>
+              <th class="p-3">الحالة</th>
+              <th class="p-3">التاريخ</th>
+            </tr>
+          </thead>
+          <tbody id="assetsTableBody" class="divide-y divide-gray-700 text-gray-300">
+            <tr>
+              <td colspan="5" class="p-4 text-center text-gray-500">جاري تحميل البيانات...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- الفوتر -->
+  <footer class="bg-gray-800 border-t border-gray-700 py-3 text-center text-xs text-gray-400">
+    جميع الحقوق محفوظة لصالح نظام كيان الإداري © 2026
+  </footer>
+
+  <!-- السكريبت والوظائف التفاعلية -->
+  <script>
+    // إظهار وإخفاء قائمة الإشعارات
+    document.getElementById('notificationDropdown').addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.getElementById('notifList').classList.toggle('hidden');
+    });
+
+    window.addEventListener('click', () => {
+      document.getElementById('notifList').classList.add('hidden');
+    });
+
+    // Socket.io للإشعارات الفورية
+    const socket = io();
+    let notifCount = 0;
+
+    socket.on('notification', (data) => {
+      notifCount++;
+      document.getElementById('notifBadge').innerText = notifCount;
+      
+      const container = document.getElementById('notifContainer');
+      if (notifCount === 1) container.innerHTML = '';
+      
+      const notifItem = document.createElement('div');
+      notifItem.className = `p-2 rounded bg-gray-900 border-l-4 ${data.type === 'success' ? 'border-green-500' : 'border-blue-500'} text-xs shadow`;
+      notifItem.innerHTML = `<strong class="text-white">${data.title}</strong><p class="text-gray-300 mt-0.5">${data.message}</p>`;
+      
+      container.prepend(notifItem);
+      
+      // تحديث الجدول تلقائياً عند إضافة أو تعديل أصل
+      loadAssets();
+    });
+
+    // جلب الأصول من السيرفر وعرضها في الجدول
+    async function loadAssets() {
+      try {
+        const res = await fetch('/api/assets');
+        const assets = await res.json();
+        
+        document.getElementById('totalAssetsCount').innerText = assets.length;
+        
+        const tbody = document.getElementById('assetsTableBody');
+        if (assets.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-500">لا توجد عهد أو أصول مسجلة حالياً</td></tr>`;
+          return;
         }
+        
+        tbody.innerHTML = assets.map(asset => `
+          <tr class="hover:bg-gray-750 transition">
+            <td class="p-3 font-medium text-white">${asset.assetName}</td>
+            <td class="p-3 text-gray-400">${asset.serialNumber}</td>
+            <td class="p-3"><span class="bg-blue-900 text-blue-200 px-2 py-0.5 rounded text-[10px]">${asset.category}</span></td>
+            <td class="p-3">
+              <span class="px-2 py-0.5 rounded text-[10px] ${asset.status === 'Available' ? 'bg-green-900 text-green-300' : 'bg-yellow-900 text-yellow-300'}">
+                ${asset.status}
+              </span>
+            </td>
+            <td class="p-3 text-gray-400">${new Date(asset.createdAt).toLocaleDateString('ar-SA')}</td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        console.error('خطأ في جلب الأصول:', err);
+      }
+    }
 
-        async function handleLogin(e) {
-            e.preventDefault();
-            const u = document.getElementById('username').value.trim();
-            const p = document.getElementById('pin').value.trim();
-            await fetchData();
-            const emp = dbData.employees.find(x => x.username === u && x.pin === p);
-            if (emp) {
-                currentUser = emp;
-                document.getElementById('login-view').classList.add('hidden');
-                document.getElementById('dashboard-view').classList.remove('hidden');
-                document.getElementById('user-role-badge').innerText = emp.role.toUpperCase();
-                document.getElementById('welcome-user-name').innerText = 'مرحباً، ' + emp.name;
-                
-                // Permissions check
-                if (emp.role === 'admin') {
-                    document.getElementById('hr-employee-section').classList.remove('hidden');
-                    document.getElementById('admin-only-section').classList.remove('hidden');
-                    document.getElementById('attendance-logs-box').classList.remove('hidden');
-                    populateEmployeeDropdown();
-                } else if (emp.role === 'hr') {
-                    document.getElementById('hr-employee-section').classList.remove('hidden');
-                    document.getElementById('admin-only-section').classList.add('hidden');
-                    document.getElementById('attendance-logs-box').classList.remove('hidden');
-                } else {
-                    document.getElementById('hr-employee-section').classList.add('hidden');
-                    document.getElementById('admin-only-section').classList.add('hidden');
-                    document.getElementById('attendance-logs-box').classList.add('hidden');
-                }
-                updateDashboard();
-            } else {
-                alert('خطأ في اسم المستخدم أو رمز البصمة (PIN)!');
-            }
+    // رسم الحضور (Line Chart)
+    const ctxAttendance = document.getElementById('attendanceChart').getContext('2d');
+    new Chart(ctxAttendance, {
+      type: 'line',
+      data: {
+        labels: ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'],
+        datasets: [{
+          label: 'حضور الموظفين (%)',
+          data: [92, 95, 90, 96, 94, 98],
+          borderColor: '#3b82f6',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          tension: 0.3,
+          fill: true
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { labels: { color: '#9ca3af' } } },
+        scales: {
+          x: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } },
+          y: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } }
         }
+      }
+    });
 
-        function logout() {
-            currentUser = null;
-            document.getElementById('dashboard-view').classList.add('hidden');
-            document.getElementById('login-view').classList.remove('hidden');
-            document.getElementById('login-form').reset();
-        }
+    // رسم الأصول (Doughnut Chart)
+    const ctxAssets = document.getElementById('assetsChart').getContext('2d');
+    new Chart(ctxAssets, {
+      type: 'doughnut',
+      data: {
+        labels: ['لابتوب', 'هواتف', 'أجهزة شبكات', 'أدوات مكتبية'],
+        datasets: [{
+          data: [45, 20, 15, 20],
+          backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af' } } }
+      }
+    });
 
-        async function updateDashboard() {
-            await fetchData();
-            document.getElementById('stat-employees').innerText = dbData.employees.length;
-            document.getElementById('stat-attendance').innerText = dbData.attendance.length;
-            document.getElementById('stat-tasks').innerText = dbData.tasks.filter(t => t.status !== 'مكتملة').length;
-            document.getElementById('stat-announcements').innerText = dbData.announcements.length;
-            
-            // Render Announcements
-            const annList = document.getElementById('announcements-list');
-            if(dbData.announcements.length === 0) {
-                annList.innerHTML = '<p class="text-gray-500 text-sm">لا توجد إعلانات حالياً.</p>';
-            } else {
-                annList.innerHTML = dbData.announcements.map(a => `
-                    <div class="p-4 bg-gray-900 rounded-lg border border-gray-700 flex justify-between items-center">
-                        <span>${a.text}</span>
-                        <span class="text-xs text-gray-500">${new Date(a.date).toLocaleString()}</span>
-                    </div>
-                `).join('');
-            }
-
-            // Render Tasks
-            const tasksList = document.getElementById('tasks-list');
-            let userTasks = (currentUser.role === 'admin' || currentUser.role === 'hr') ? dbData.tasks : dbData.tasks.filter(t => t.userId === currentUser.id);
-            if(userTasks.length === 0) {
-                tasksList.innerHTML = '<p class="text-gray-500 text-sm">لا توجد مهام مسجلة.</p>';
-            } else {
-                tasksList.innerHTML = userTasks.map(t => `
-                    <div class="p-4 bg-gray-900 rounded-lg border border-gray-700 flex justify-between items-center">
-                        <div>
-                            <p class="font-medium text-white">${t.title}</p>
-                            <span class="text-xs text-gray-400">المسؤول: ${t.assignedToName}</span>
-                        </div>
-                        <div class="flex items-center space-x-3 space-x-reverse">
-                            <span class="px-2.5 py-1 text-xs rounded font-semibold ${t.status === 'مكتملة' ? 'bg-green-900 text-green-300' : 'bg-amber-900 text-amber-300'}">${t.status}</span>
-                            ${currentUser.role === 'employee' && t.status !== 'مكتملة' ? `<button onclick="completeTask('${t.id}')" class="bg-green-600 hover:bg-green-700 text-xs px-3 py-1.5 rounded transition">إنجاز</button>` : ''}
-                        </div>
-                    </div>
-                `).join('');
-            }
-
-            // Render Attendance Table for Admin and HR
-            if (currentUser.role === 'admin' || currentUser.role === 'hr') {
-                const attBody = document.getElementById('attendance-table-body');
-                if (dbData.attendance.length === 0) {
-                    attBody.innerHTML = '<tr><td colspan="3" class="px-4 py-3 text-center text-gray-500">لا توجد سجلات حضور اليوم.</td></tr>';
-                } else {
-                    attBody.innerHTML = dbData.attendance.slice(-10).reverse().map(att => `
-                        <tr class="hover:bg-gray-700/50">
-                            <td class="px-4 py-3 font-medium">${att.name}</td>
-                            <td class="px-4 py-3"><span class="px-2 py-0.5 text-xs rounded ${att.type === 'حضور' ? 'bg-green-900 text-green-300' : 'bg-amber-900 text-amber-300'}">${att.type}</span></td>
-                            <td class="px-4 py-3 text-gray-400">${new Date(att.time).toLocaleString()}</td>
-                        </tr>
-                    `).join('');
-                }
-            }
-        }
-
-        function populateEmployeeDropdown() {
-            const select = document.getElementById('task-employee');
-            if(select) {
-                select.innerHTML = dbData.employees.map(e => `<option value="${e.id}">${e.name} (${e.department})</option>`).join('');
-            }
-        }
-
-        async function recordAttendance(type) {
-            if (!currentUser) return;
-            dbData.attendance.push({ userId: currentUser.id, name: currentUser.name, type: type, time: new Date().toISOString() });
-            await saveAndSync();
-            alert(type === 'حضور' ? 'تم تسجيل الحضور بنجاح!' : 'تم تسجيل الانصراف بنجاح!');
-        }
-
-        async function handleCreateEmployee(e) {
-            e.preventDefault();
-            const name = document.getElementById('new-name').value.trim();
-            const username = document.getElementById('new-username').value.trim();
-            const pin = document.getElementById('new-pin').value.trim();
-
-            if (dbData.employees.some(x => x.username === username)) {
-                alert('اسم المستخدم موجود مسبقاً!');
-                return;
-            }
-
-            dbData.employees.push({ id: Date.now().toString(), name, username, pin, role: 'employee', department: 'General' });
-            await saveAndSync();
-            alert('تم إنشاء حساب الموظف الجديد بنجاح!');
-            document.getElementById('new-name').value = '';
-            document.getElementById('new-username').value = '';
-            document.getElementById('new-pin').value = '';
-            populateEmployeeDropdown();
-        }
-
-        async function handleCreateAnnouncement(e) {
-            e.preventDefault();
-            const text = document.getElementById('new-announcement').value.trim();
-            dbData.announcements.push({ id: Date.now().toString(), text, date: new Date().toISOString() });
-            await saveAndSync();
-            alert('تم نشر الإعلان بنجاح!');
-            document.getElementById('new-announcement').value = '';
-        }
-
-        async function handleCreateTask(e) {
-            e.preventDefault();
-            const empId = document.getElementById('task-employee').value;
-            const title = document.getElementById('task-title').value.trim();
-            const emp = dbData.employees.find(x => x.id === empId);
-
-            dbData.tasks.push({ id: Date.now().toString(), userId: empId, assignedToName: emp ? emp.name : 'مستخدم', title, status: 'قيد التنفيذ' });
-            await saveAndSync();
-            alert('تم إسناد المهمة بنجاح!');
-            document.getElementById('task-title').value = '';
-        }
-
-        async function completeTask(taskId) {
-            const task = dbData.tasks.find(t => t.id === taskId);
-            if (task) {
-                task.status = 'مكتملة';
-                await saveAndSync();
-                alert('تم تحديث حالة المهمة إلى مكتملة!');
-            }
-        }
-
-        async function saveAndSync() {
-            const res = await fetch('/api/data', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dbData)
-            });
-            if (res.ok) {
-                updateDashboard();
-            } else {
-                alert('حدث خطأ أثناء حفظ البيانات على السيرفر!');
-            }
-        }
-    </script>
+    // تحميل البيانات أول ما الصفحة تفتح
+    loadAssets();
+  </script>
 </body>
 </html>
