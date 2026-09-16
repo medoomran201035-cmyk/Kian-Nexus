@@ -9,7 +9,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // الاتصال بقاعدة البيانات
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://<username>:<password>@cluster.mongodb.net/kayan_erp?retryWrites=true&w=majority';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/kayan_erp';
 
 // 1. نموذج المستخدمين (Users Schema)
 const UserSchema = new mongoose.Schema({
@@ -26,7 +26,7 @@ const User = mongoose.model('User', UserSchema);
 const TaskSchema = new mongoose.Schema({
     title: String,
     description: String,
-    assignedTo: String, // إيميل أو اسم الموظف
+    assignedTo: String,
     department: String,
     status: { type: String, default: 'قيد التنفيذ' },
     createdAt: { type: Date, default: Date.now }
@@ -44,15 +44,18 @@ const TicketSchema = new mongoose.Schema({
 });
 const Ticket = mongoose.model('Ticket', TicketSchema);
 
-// الاتصال وإنشاء حساب الأدمن الافتراضي تلقائياً
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/kayan_erp', {
+// الاتصال بقاعدة البيانات وإنشاء الحسابات الافتراضية الثلاثة تلقائياً
+mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(async () => {
     console.log('Connected to MongoDB successfully.');
+    
     const adminExists = await User.findOne({ email: 'admin@kayan.com' });
     if (!adminExists) {
         const hashedPassword = await bcrypt.hash('123', 10);
+        
+        // 1. حساب الأدمن
         await User.create({
             name: 'المدير التنفيذي (الأدمن)',
             email: 'admin@kayan.com',
@@ -60,7 +63,26 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/kayan_erp',
             role: 'admin',
             department: 'الإدارة العليا'
         });
-        console.log('Default Admin Created: admin@kayan.com / 123');
+
+        // 2. حساب الـ HR التجريبي
+        await User.create({
+            name: 'مسؤول الموارد البشرية',
+            email: 'hr@kayan.com',
+            password: hashedPassword,
+            role: 'hr',
+            department: 'HR'
+        });
+
+        // 3. حساب موظف عادي تجريبي
+        await User.create({
+            name: 'محمد الموظف',
+            email: 'emp@kayan.com',
+            password: hashedPassword,
+            role: 'employee',
+            department: 'IT'
+        });
+
+        console.log('Default Accounts Created: Admin, HR, Employee (Password: 123)');
     }
 }).catch(err => console.error('MongoDB connection error:', err));
 
@@ -91,7 +113,7 @@ app.post('/api/users/create', async (req, res) => {
         const { requesterId, name, email, password, role, department } = req.body;
         const requester = await User.findById(requesterId);
         if (!requester || (requester.role !== 'admin' && requester.role !== 'hr')) {
-            return res.status(403).json({ success: false, message: 'صلاحيات للإدارة أو HR فقط' });
+            return res.status(403).json({ success: false, message: 'صلاحيات الإدارة أو HR فقط' });
         }
 
         const existing = await User.findOne({ email });
