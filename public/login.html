@@ -7,68 +7,57 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
-        body { background-color: #0b0f19; color: #f8fafc; display: flex; align-items: center; justify-content: center; height: 100vh; }
-        .login-card { background: #0f172a; padding: 40px; border-radius: 16px; border: 1px solid #1e293b; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; }
-        .login-card img { width: 80px; height: 80px; border-radius: 14px; margin-bottom: 20px; border: 2px solid #334155; object-fit: cover; }
-        .login-card h2 { font-size: 22px; color: #fff; margin-bottom: 25px; }
-        .form-group { margin-bottom: 20px; text-align: right; }
-        .form-group label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 8px; }
-        .form-group input { width: 100%; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px; outline: none; }
-        .login-btn { width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .login-btn:hover { background: #1d4ed8; }
-        .error-msg { color: #ef4444; font-size: 13px; margin-top: 15px; display: none; }
+        body { background-color: #0b0f19; color: #f8fafc; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .login-card { background: #1e293b; padding: 40px; border-radius: 12px; border: 1px solid #334155; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .login-card h2 { text-align: center; margin-bottom: 25px; color: #2563eb; font-size: 22px; }
+        .form-group { margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-size: 13px; color: #94a3b8; }
+        .form-group input { background: #0b0f19; border: 1px solid #334155; color: #f8fafc; padding: 12px; border-radius: 6px; outline: none; font-size: 14px; }
+        .btn-login { width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 15px; }
+        .btn-login:hover { opacity: 0.9; }
+        .error-msg { color: #ef4444; font-size: 12px; text-align: center; margin-top: 10px; }
     </style>
 </head>
 <body>
     <div class="login-card">
-        <img src="logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/80'">
-        <h2>تسجيل الدخول لـ Kayan ERP</h2>
-        <form onsubmit="handleLogin(event)">
+        <h2>تسجيل دخول - Kayan ERP</h2>
+        <form id="loginForm">
             <div class="form-group">
-                <label>البريد الإلكتروني</label>
-                <input type="email" id="email" required placeholder="admin@kayan.com">
+                <label>اسم المستخدم</label>
+                <input type="text" id="username" required placeholder="admin">
             </div>
             <div class="form-group">
                 <label>كلمة المرور</label>
-                <input type="password" id="password" required placeholder="••••••">
+                <input type="password" id="password" required placeholder="123456">
             </div>
-            <button type="submit" class="login-btn">دخول</button>
-            <div id="errorMsg" class="error-msg">البريد أو كلمة المرور غير صحيحة</div>
+            <button type="submit" class="btn-login">دخول للنظام</button>
+            <div class="error-msg" id="errorMsg"></div>
         </form>
     </div>
 
     <script>
-        async function handleLogin(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            let email = document.getElementById('email').value;
-            let password = document.getElementById('password').value;
-            let errorMsg = document.getElementById('errorMsg');
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
             try {
-                let res = await fetch('/api/auth/login', {
+                const res = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
+                    body: JSON.stringify({ username, password })
                 });
-                let data = await res.json();
-
-                if (data.success) {
+                const data = await res.json();
+                if(data.success) {
                     localStorage.setItem('kayan_user', JSON.stringify(data.user));
                     window.location.href = 'index.html';
                 } else {
-                    errorMsg.style.display = 'block';
-                    errorMsg.innerText = data.message || 'خطأ في البيانات';
+                    document.getElementById('errorMsg').innerText = data.message || 'خطأ في بيانات الدخول';
                 }
-            } catch (err) {
-                // وضع تجريبي محلي لو السيرفر مش شغال حالياً
-                if(email === 'admin@kayan.com' && password === '123') {
-                    localStorage.setItem('kayan_user', JSON.stringify({name: 'المدير التنفيذي', role: 'ADMIN'}));
-                    window.location.href = 'index.html';
-                } else {
-                    errorMsg.style.display = 'block';
-                }
+            } catch(err) {
+                document.getElementById('errorMsg').innerText = 'حدث خطأ في الاتصال بالخادم';
             }
-        }
+        });
     </script>
 </body>
 </html>

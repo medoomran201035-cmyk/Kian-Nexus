@@ -5,32 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kayan ERP - Enterprise Ultimate Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Chart.js for Analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --bg-main: #0b0f19;
-            --bg-sidebar: #0f172a;
-            --bg-card: #1e293b;
-            --border-color: #334155;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --primary: #2563eb;
-        }
-        .light-mode {
-            --bg-main: #f1f5f9;
-            --bg-sidebar: #ffffff;
-            --bg-card: #ffffff;
-            --border-color: #cbd5e1;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --primary: #2563eb;
-        }
-
+        :root { --bg-main: #0b0f19; --bg-sidebar: #0f172a; --bg-card: #1e293b; --border-color: #334155; --text-main: #f8fafc; --text-muted: #94a3b8; --primary: #2563eb; }
+        .light-mode { --bg-main: #f1f5f9; --bg-sidebar: #ffffff; --bg-card: #ffffff; --border-color: #cbd5e1; --text-main: #0f172a; --text-muted: #64748b; --primary: #2563eb; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; transition: background 0.3s, color 0.3s; }
         body { background-color: var(--bg-main); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
         
-        /* القائمة الجانبية */
         .sidebar { width: 260px; background-color: var(--bg-sidebar); border-left: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between; height: 100vh; position: fixed; right: 0; top: 0; z-index: 100; }
         .sidebar-brand { display: flex; align-items: center; justify-content: center; padding: 20px 15px; border-bottom: 1px solid var(--border-color); background: var(--bg-sidebar); }
         .sidebar-brand img { width: 100%; max-width: 190px; height: auto; object-fit: contain; border-radius: 8px; }
@@ -47,7 +28,6 @@
         .logout-btn { width: 100%; background: #ef4444; color: white; border: none; padding: 8px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .logout-btn:hover { background: #dc2626; }
 
-        /* المحتوى الرئيسي */
         .main-content { margin-right: 260px; width: calc(100% - 260px); height: 100vh; display: flex; flex-direction: column; background: var(--bg-main); }
         .header { background: var(--bg-sidebar); padding: 15px 30px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
         .header h1 { font-size: 18px; color: var(--text-main); font-weight: 700; }
@@ -87,6 +67,7 @@
         .data-table th { background: var(--bg-sidebar); color: var(--text-muted); font-weight: 600; }
         .data-table tr:hover { background: rgba(51, 65, 85, 0.2); }
         .btn-delete { background: #ef4444; color: #fff; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn-download { background: #10b981; color: #fff; text-decoration: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; display: inline-block; }
 
         .activity-box { background: var(--bg-card); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); margin-top: 20px; }
         .activity-box h3 { font-size: 16px; margin-bottom: 12px; color: var(--primary); }
@@ -94,20 +75,14 @@
         .activity-list li { padding: 8px 0; border-bottom: 1px solid var(--border-color); font-size: 13px; color: var(--text-main); display: flex; justify-content: space-between; }
         .activity-list li span { color: var(--text-muted); font-size: 11px; }
 
-        /* Toast Notifications */
         #toastContainer { position: fixed; bottom: 20px; left: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
-        .toast { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px 20px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); font-size: 13px; animation: slideIn 0.3s ease; display: flex; align-items: center; gap: 10px; }
-        .toast.success { border-right: 4px solid #10b981; }
-        .toast.error { border-right: 4px solid #ef4444; }
-        @keyframes slideIn { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .toast { background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-main); padding: 12px 20px; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); font-size: 13px; display: flex; align-items: center; gap: 10px; border-right: 4px solid #10b981; }
     </style>
 </head>
 <body>
 
-    <!-- نظام الإشعارات المنبثقة Toast Container -->
     <div id="toastContainer"></div>
 
-    <!-- القائمة الجانبية -->
     <aside class="sidebar">
         <div>
             <div class="sidebar-brand">
@@ -118,34 +93,34 @@
                 <li><a href="#" onclick="switchSection('home', this)" class="active" data-section="home">
                     <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> <span data-i18n="home">الرئيسية</span>
                 </a></li>
+                <li class="admin-only"><a href="#" onclick="switchSection('users', this)" data-section="users">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> <span data-i18n="users">إدارة المستخدمين</span>
+                </a></li>
+                <li class="admin-only"><a href="#" onclick="switchSection('hr', this)" data-section="hr">
+                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> <span data-i18n="hr">شؤون الموظفين</span>
+                </a></li>
                 <li><a href="#" onclick="switchSection('tasks', this)" data-section="tasks">
                     <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg> <span data-i18n="tasks">إدارة المهام</span>
                 </a></li>
                 <li><a href="#" onclick="switchSection('it', this)" data-section="it">
                     <svg viewBox="0 0 24 24"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg> <span data-i18n="it">الدعم الفني (IT)</span>
                 </a></li>
-                <li><a href="#" onclick="switchSection('hr', this)" data-section="hr">
-                    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> <span data-i18n="hr">شؤون الموظفين</span>
-                </a></li>
-                <li><a href="#" onclick="switchSection('users', this)" data-section="users">
-                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg> <span data-i18n="users">إدارة المستخدمين</span>
-                </a></li>
                 <li><a href="#" onclick="switchSection('files', this)" data-section="files">
                     <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg> <span data-i18n="files">أرشيف الملفات</span>
                 </a></li>
-                <li><a href="#" onclick="switchSection('sales', this)" data-section="sales">
+                <li class="admin-only"><a href="#" onclick="switchSection('sales', this)" data-section="sales">
                     <svg viewBox="0 0 24 24"><path d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg> <span data-i18n="sales">المبيعات</span>
                 </a></li>
-                <li><a href="#" onclick="switchSection('warehouse', this)" data-section="warehouse">
+                <li class="admin-only"><a href="#" onclick="switchSection('warehouse', this)" data-section="warehouse">
                     <svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm12 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg> <span data-i18n="warehouse">المخازن</span>
                 </a></li>
-                <li><a href="#" onclick="switchSection('finance', this)" data-section="finance">
+                <li class="admin-only"><a href="#" onclick="switchSection('finance', this)" data-section="finance">
                     <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg> <span data-i18n="finance">المالية</span>
                 </a></li>
-                <li><a href="#" onclick="switchSection('attendance', this)" data-section="attendance">
+                <li class="admin-only"><a href="#" onclick="switchSection('attendance', this)" data-section="attendance">
                     <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg> <span data-i18n="attendance">الحضور والانصراف</span>
                 </a></li>
-                <li><a href="#" onclick="switchSection('settings', this)" data-section="settings">
+                <li class="admin-only"><a href="#" onclick="switchSection('settings', this)" data-section="settings">
                     <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg> <span data-i18n="settings">الإعدادات</span>
                 </a></li>
             </ul>
@@ -162,12 +137,11 @@
         </div>
     </aside>
 
-    <!-- المحتوى الرئيسي -->
     <div class="main-content">
         <header class="header">
             <h1 id="pageTitle">لوحة التحكم الرئيسية</h1>
             <div class="header-actions">
-                <input type="text" class="global-search" id="globalSearchInput" placeholder="بحث عام بالسيستم..." onkeyup="globalSearch(this.value)">
+                <input type="text" class="global-search" id="globalSearchInput" placeholder="بحث شامل بالسيستم..." onkeyup="globalSearch(this.value)">
                 <div class="live-clock" id="liveClock">00:00:00</div>
                 <button class="action-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
                 <button class="action-btn" onclick="toggleLanguage()" id="langBtn">EN</button>
@@ -186,7 +160,6 @@
                     <div class="card"><h4 data-i18n="system_users">مستخدمو النظام</h4><div class="number" id="statUsers">0</div></div>
                 </div>
 
-                <!-- Charts Section -->
                 <div class="charts-container">
                     <div class="chart-box">
                         <h3 data-i18n="sales_analytics">تحليل المبيعات الشهرية</h3>
@@ -199,220 +172,182 @@
                 </div>
 
                 <div class="activity-box">
-                    <h3 data-i18n="recent_activity">سجل النشاطات الفورية للشركة</h3>
+                    <h3 data-i18n="recent_activity">سجل النشاطات الفورية للشركة (Audit Log)</h3>
                     <ul class="activity-list" id="activityList"></ul>
                 </div>
             </div>
 
-            <!-- 2. إدارة المهام -->
-            <div id="tasks" class="section-view">
-                <div class="form-box">
-                    <div class="form-group"><label data-i18n="task_title">عنوان المهمة</label><input type="text" id="taskName" placeholder="اسم المهمة..."></div>
-                    <div class="form-group"><label data-i18n="assignee">المسؤول</label><input type="text" id="taskAssignee" placeholder="اسم الموظف..."></div>
-                    <button class="btn-primary" onclick="addTask()" data-i18n="add_task">إضافة مهمة</button>
-                </div>
-                <div class="table-actions">
-                    <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
-                </div>
-                <table class="data-table"><thead><tr><th data-i18n="task_title">المهمة</th><th data-i18n="assignee">المسؤول</th><th data-i18n="status">الحالة</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="tasksTable"></tbody></table>
-            </div>
-
-            <!-- 3. الدعم الفني IT -->
-            <div id="it" class="section-view">
-                <div class="form-box">
-                    <div class="form-group"><label data-i18n="issue">المشكلة / الجهاز</label><input type="text" id="itIssue" placeholder="تفاصيل العطل..."></div>
-                    <div class="form-group"><label data-i18n="department">القسم الطالب</label><input type="text" id="itDept" placeholder="اسم القسم..."></div>
-                    <button class="btn-primary" onclick="addItTicket()" data-i18n="open_ticket">فتح تذكرة</button>
-                </div>
-                <div class="table-actions">
-                    <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
-                </div>
-                <table class="data-table"><thead><tr><th data-i18n="issue">المشكلة</th><th data-i18n="department">القسم</th><th data-i18n="status">الحالة</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="itTable"></tbody></table>
-            </div>
-
-            <!-- 4. شؤون الموظفين HR -->
-            <div id="hr" class="section-view">
-                <div class="form-box">
-                    <div class="form-group"><label data-i18n="emp_name">اسم الموظف</label><input type="text" id="empName" placeholder="الاسم الثلاثي..."></div>
-                    <div class="form-group"><label data-i18n="job_title">المسمى الوظيفي</label><input type="text" id="empRole" placeholder="الوظيفة..."></div>
-                    <button class="btn-primary" onclick="addEmp()" data-i18n="register_emp">تسجيل موظف</button>
-                </div>
-                <div class="table-actions">
-                    <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
-                </div>
-                <table class="data-table"><thead><tr><th data-i18n="emp_name">الموظف</th><th data-i18n="job_title">الوظيفة</th><th data-i18n="date">التاريخ</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="empTable"></tbody></table>
-            </div>
-
-            <!-- 5. إدارة المستخدمين -->
+            <!-- 2. إدارة المستخدمين -->
             <div id="users" class="section-view">
                 <div class="form-box">
-                    <div class="form-group"><label data-i18n="username">اسم المستخدم</label><input type="text" id="userNameInput" placeholder="اسم الدخول..."></div>
-                    <div class="form-group">
-                        <label data-i18n="role">الصلاحية</label>
-                        <select id="userRoleInput">
-                            <option value="Admin">مدير عام (Admin)</option>
-                            <option value="HR">شؤون موظفين (HR)</option>
-                            <option value="IT">دعم فني (IT)</option>
-                        </select>
+                    <div class="form-group"><label>اسم المستخدم</label><input type="text" id="uName"></div>
+                    <div class="form-group"><label>كلمة المرور</label><input type="password" id="uPass"></div>
+                    <div class="form-group"><label>الاسم الحقيقي</label><input type="text" id="uFull"></div>
+                    <div class="form-group"><label>الصلاحية</label>
+                        <select id="uRole"><option value="Employee">موظف</option><option value="HR">شؤون موظفين</option><option value="Admin">مدير عام</option></select>
                     </div>
-                    <button class="btn-primary" onclick="addUser()" data-i18n="add_user">إضافة مستخدم</button>
+                    <button class="btn-primary" onclick="addUser()">إضافة مستخدم</button>
                 </div>
                 <div class="table-actions">
-                    <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
-                </div>
-                <table class="data-table"><thead><tr><th data-i18n="username">اسم المستخدم</th><th data-i18n="role">الدور</th><th data-i18n="date">التاريخ</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="usersTable"></tbody></table>
-            </div>
-
-            <!-- 6. أرشيف الملفات (مع دعم رفع أي صيغة وزر التحميل) -->
-            <div id="files" class="section-view">
-                <div class="form-box">
-                    <div class="form-group"><label>اختر الملف أو الصورة</label><input type="file" id="fileInput" style="padding: 7px;"></div>
-                    <div class="form-group"><label>وصف الملف</label><input type="text" id="fileDesc" placeholder="تفاصيل الملف..."></div>
-                    <button class="btn-primary" onclick="uploadAndSaveFile()">رفع وحفظ الملف</button>
-                </div>
-                <div class="table-actions">
+                    <button class="btn-tool" onclick="exportTableToCSV('usersTable', 'users.csv')">تصدير CSV</button>
                     <button class="btn-tool" onclick="window.print()">طباعة التقرير</button>
                 </div>
-                <table class="data-table"><thead><tr><th>اسم الملف</th><th>الوصف</th><th>الحجم</th><th>إجراء</th></tr></thead><tbody id="filesTable"></tbody></table>
+                <table class="data-table" id="usersTable"><thead><tr><th>المستخدم</th><th>الاسم</th><th>الدور</th><th>إجراء</th></tr></thead><tbody id="usersBody"></tbody></table>
+            </div>
+
+            <!-- 3. شؤون الموظفين -->
+            <div id="hr" class="section-view">
+                <div class="form-box">
+                    <div class="form-group"><label>اسم الموظف</label><input type="text" id="empName"></div>
+                    <div class="form-group"><label>المسمى الوظيفي</label><input type="text" id="empRole"></div>
+                    <div class="form-group"><label>ملف تعريفي (أي صيغة)</label><input type="file" id="empFile"></div>
+                    <button class="btn-primary" onclick="addEmp()">تسجيل موظف</button>
+                </div>
+                <div class="table-actions">
+                    <button class="btn-tool" onclick="exportTableToCSV('empTable', 'employees.csv')">تصدير CSV</button>
+                    <button class="btn-tool" onclick="window.print()">طباعة التقرير</button>
+                </div>
+                <table class="data-table" id="empTable"><thead><tr><th>الموظف</th><th>الوظيفة</th><th>المرفق</th><th>إجراء</th></tr></thead><tbody id="empBody"></tbody></table>
+            </div>
+
+            <!-- 4. إدارة المهام -->
+            <div id="tasks" class="section-view">
+                <div class="form-box admin-only">
+                    <div class="form-group"><label>عنوان المهمة</label><input type="text" id="taskName"></div>
+                    <div class="form-group"><label>المسؤول</label><input type="text" id="taskAssignee"></div>
+                    <div class="form-group"><label>مرفق</label><input type="file" id="taskFile"></div>
+                    <button class="btn-primary" onclick="addTask()">إضافة مهمة</button>
+                </div>
+                <div class="table-actions">
+                    <button class="btn-tool" onclick="exportTableToCSV('tasksTable', 'tasks.csv')">تصدير CSV</button>
+                    <button class="btn-tool" onclick="window.print()">طباعة التقرير</button>
+                </div>
+                <table class="data-table" id="tasksTable"><thead><tr><th>المهمة</th><th>المسؤول</th><th>الحالة</th><th>المرفق</th><th>إجراء</th></tr></thead><tbody id="tasksBody"></tbody></table>
+            </div>
+
+            <!-- 5. الدعم الفني -->
+            <div id="it" class="section-view">
+                <div class="form-box">
+                    <div class="form-group"><label>المشكلة</label><input type="text" id="itIssue"></div>
+                    <div class="form-group"><label>القسم</label><input type="text" id="itDept"></div>
+                    <div class="form-group"><label>مرفق</label><input type="file" id="itFile"></div>
+                    <button class="btn-primary" onclick="addItTicket()">فتح تذكرة</button>
+                </div>
+                <div class="table-actions"><button class="btn-tool" onclick="window.print()">طباعة التقرير</button></div>
+                <table class="data-table" id="itTable"><thead><tr><th>المشكلة</th><th>القسم</th><th>الحالة</th><th>المرفق</th><th>إجراء</th></tr></thead><tbody id="itBody"></tbody></table>
+            </div>
+
+            <!-- 6. أرشيف الملفات -->
+            <div id="files" class="section-view">
+                <div class="form-box">
+                    <div class="form-group"><label>رفع ملف (أي صيغة)</label><input type="file" id="fileInput" style="padding: 7px;"></div>
+                    <div class="form-group"><label>وصف الملف</label><input type="text" id="fileDesc"></div>
+                    <button class="btn-primary" onclick="uploadAndSaveFile()">رفع وحفظ الملف</button>
+                </div>
+                <table class="data-table"><thead><tr><th>اسم الملف</th><th>الوصف</th><th>الحجم</th><th>تحميل / حذف</th></tr></thead><tbody id="filesBody"></tbody></table>
             </div>
 
             <!-- 7. المبيعات -->
             <div id="sales" class="section-view">
                 <div class="form-box">
-                    <div class="form-group"><label data-i18n="client_item">العميل / الصنف</label><input type="text" id="saleItem" placeholder="تفاصيل المبيعة..."></div>
-                    <div class="form-group"><label data-i18n="amount">المبلغ</label><input type="number" id="saleAmount" placeholder="القيمة..."></div>
-                    <button class="btn-primary" onclick="addSale()" data-i18n="add_sale">تسجيل مبيعة</button>
+                    <div class="form-group"><label>البيان</label><input type="text" id="saleItem"></div>
+                    <div class="form-group"><label>المبلغ</label><input type="number" id="saleAmount"></div>
+                    <button class="btn-primary" onclick="addSale()">تسجيل مبيعة</button>
                 </div>
-                <div class="table-actions">
-                    <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
-                </div>
-                <table class="data-table"><thead><tr><th data-i18n="statement">البيان</th><th data-i18n="amount">القيمة</th><th data-i18n="date">التاريخ</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="salesTable"></tbody></table>
+                <table class="data-table" id="salesTable"><thead><tr><th>البيان</th><th>القيمة</th><th>التاريخ</th><th>إجراء</th></tr></thead><tbody id="salesBody"></tbody></table>
             </div>
 
             <!-- 8. المخازن -->
             <div id="warehouse" class="section-view">
                 <div class="form-box">
-                    <div class="form-group"><label data-i18n="product_name">اسم المنتج</label><input type="text" id="wareItem" placeholder="اسم المنتج..."></div>
-                    <div class="form-group"><label data-i18n="quantity">الكمية</label><input type="number" id="wareQty" placeholder="العدد..."></div>
-                    <button class="btn-primary" onclick="addWarehouseItem()" data-i18n="add_product">إضافة للمخزن</button>
+                    <div class="form-group"><label>المنتج</label><input type="text" id="wareItem"></div>
+                    <div class="form-group"><label>الكمية</label><input type="number" id="wareQty"></div>
+                    <button class="btn-primary" onclick="addWarehouse()">إضافة للمخزن</button>
                 </div>
-                <div class="table-actions">
-                    <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
-                </div>
-                <table class="data-table"><thead><tr><th data-i18n="product_name">المنتج</th><th data-i18n="quantity">الكمية</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="warehouseTable"></tbody></table>
+                <table class="data-table" id="warehouseTable"><thead><tr><th>المنتج</th><th>الكمية</th><th>إجراء</th></tr></thead><tbody id="warehouseBody"></tbody></table>
             </div>
 
             <!-- 9. المالية -->
             <div id="finance" class="section-view">
                 <div class="form-box">
-                    <div class="form-group"><label data-i18n="trans_desc">وصف المعاملة</label><input type="text" id="finDesc" placeholder="مصروفات، إيرادات..."></div>
-                    <div class="form-group"><label data-i18n="amount">المبلغ</label><input type="number" id="finAmount" placeholder="القيمة..."></div>
-                    <button class="btn-primary" onclick="addFinance()" data-i18n="add_trans">إضافة معاملة</button>
+                    <div class="form-group"><label>البيان</label><input type="text" id="finDesc"></div>
+                    <div class="form-group"><label>المبلغ</label><input type="number" id="finAmount"></div>
+                    <button class="btn-primary" onclick="addFinance()">إضافة معاملة</button>
                 </div>
-                <div class="table-actions">
-                    <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
-                </div>
-                <table class="data-table"><thead><tr><th data-i18n="statement">البيان</th><th data-i18n="amount">المبلغ</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="financeTable"></tbody></table>
+                <table class="data-table" id="financeTable"><thead><tr><th>البيان</th><th>المبلغ</th><th>إجراء</th></tr></thead><tbody id="financeBody"></tbody></table>
             </div>
 
             <!-- 10. الحضور والانصراف -->
             <div id="attendance" class="section-view">
                 <div class="form-box">
-                    <div class="form-group"><label data-i18n="emp_name">اسم الموظف</label><input type="text" id="attName" placeholder="الموظف..."></div>
+                    <div class="form-group"><label>الموظف</label><input type="text" id="attName"></div>
                     <div class="form-group">
-                        <label data-i18n="status">الحالة</label>
+                        <label>الحالة</label>
                         <select id="attStatus"><option value="حاضر">حاضر</option><option value="إجازة">إجازة</option><option value="غائب">غائب</option></select>
                     </div>
-                    <button class="btn-primary" onclick="addAttendance()" data-i18n="register">تسجيل</button>
+                    <button class="btn-primary" onclick="addAttendance()">تسجيل حضور</button>
                 </div>
-                <div class="table-actions">
-                    <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
-                </div>
-                <table class="data-table"><thead><tr><th data-i18n="emp_name">الموظف</th><th data-i18n="status">الحالة</th><th data-i18n="time">الوقت</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="attendanceTable"></tbody></table>
+                <table class="data-table" id="attendanceTable"><thead><tr><th>الموظف</th><th>الحالة</th><th>الوقت</th><th>إجراء</th></tr></thead><tbody id="attendanceBody"></tbody></table>
             </div>
 
             <!-- 11. الإعدادات -->
             <div id="settings" class="section-view">
                 <div style="background: var(--bg-card); padding: 25px; border-radius: 12px; border: 1px solid var(--border-color); max-width: 600px; margin-bottom: 25px;">
-                    <h3 style="margin-bottom: 20px; font-size: 18px;" data-i18n="settings_title">إعدادات النظام والشركة</h3>
+                    <h3 style="margin-bottom: 20px; font-size: 18px;">إعدادات النظام والشركة</h3>
                     <div class="form-group" style="margin-bottom: 15px;">
-                        <label data-i18n="company_name_label">اسم الشركة بالهيدر</label>
+                        <label>اسم الشركة بالهيدر</label>
                         <input type="text" id="settingCompanyName" placeholder="شركة كيان للإدارة المتكاملة">
                     </div>
                     <div class="form-group" style="margin-bottom: 15px;">
-                        <label data-i18n="admin_name_label">اسم المسؤول الظاهر</label>
+                        <label>اسم المسؤول الظاهر</label>
                         <input type="text" id="settingAdminName" placeholder="مهندس محمد فيصل صلاح عمران">
                     </div>
                     <div class="form-group" style="margin-bottom: 15px;">
-                        <label data-i18n="accent_color_label">لون الهوية الأساسي</label>
+                        <label>لون الهوية الأساسي</label>
                         <input type="color" id="settingAccentColor" value="#2563eb" style="height: 40px; cursor: pointer;">
                     </div>
-                    <button class="btn-primary" onclick="saveSettings()" data-i18n="save_changes">حفظ التعديلات</button>
+                    <button class="btn-primary" onclick="saveSettings()">حفظ التعديلات</button>
+                </div>
+
+                <div style="background: var(--bg-card); padding: 25px; border-radius: 12px; border: 1px solid var(--border-color); max-width: 600px;">
+                    <h3 style="margin-bottom: 15px; font-size: 18px;">النسخ الاحتياطي لقاعدة البيانات</h3>
+                    <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;">احفظ نسخة احتياطية كاملة لكافة بيانات الشركة وجداولها كملف JSON.</p>
+                    <a href="/api/backup" class="btn-primary" style="text-decoration:none; display:inline-block; line-height:22px;" download>تحميل نسخة احتياطية (Backup)</a>
                 </div>
             </div>
+
         </div>
     </div>
 
     <script>
-        // الساعة الحية
         setInterval(() => {
             const now = new Date();
             document.getElementById('liveClock').innerText = now.toLocaleTimeString('en-US');
         }, 1000);
 
-        // نظام Toast Notifications
+        const currentUser = JSON.parse(localStorage.getItem('kayan_user'));
+        if(!currentUser) { window.location.href = 'login.html'; }
+        else {
+            document.getElementById('userNameView').innerText = `${currentUser.name} (${currentUser.role})`;
+            if(currentUser.role === 'Employee') {
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+            }
+        }
+
+        function logout() { localStorage.removeItem('kayan_user'); window.location.href = 'login.html'; }
+
         function showToast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            toast.innerHTML = `<span>${type === 'success' ? '✅' : '⚠️'}</span> ${message}`;
+            toast.innerHTML = `<span>✅</span> ${message}`;
             container.appendChild(toast);
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            setTimeout(() => toast.remove(), 3000);
         }
 
-        // ترجمة اللغات
         const translations = {
-            ar: {
-                home: "الرئيسية", tasks: "إدارة المهام", it: "الدعم الفني (IT)", hr: "شؤون الموظفين",
-                users: "إدارة المستخدمين", files: "أرشيف الملفات", sales: "المبيعات", warehouse: "المخازن",
-                finance: "المالية", attendance: "الحضور والانصراف", settings: "الإعدادات", logout: "خروج",
-                total_emp: "إجمالي الموظفين", active_tasks: "المهام الجارية", it_tickets: "تذاكر الدعم الفني",
-                system_users: "مستخدمو النظام", task_title: "عنوان المهمة", assignee: "المسؤول", status: "الحالة", action: "إجراء", add_task: "إضافة مهمة",
-                issue: "المشكلة / الجهاز", department: "القسم الطالب", open_ticket: "فتح تذكرة", emp_name: "اسم الموظف",
-                job_title: "المسمى الوظيفي", register_emp: "تسجيل موظف", username: "اسم المستخدم", role: "الصلاحية",
-                add_user: "إضافة مستخدم", select_file: "اختر الملف", file_desc: "وصف الملف", upload_file: "رفع الملف",
-                file_name: "اسم الملف", size: "الحجم", client_item: "العميل / الصنف", amount: "المبلغ", add_sale: "تسجيل مبيعة",
-                statement: "البيان", product_name: "اسم المنتج", quantity: "الكمية", add_product: "إضافة للمخزن",
-                trans_desc: "وصف المعاملة", add_trans: "إضافة معاملة", register: "تسجيل", time: "الوقت",
-                settings_title: "إعدادات النظام والشركة", company_name_label: "اسم الشركة بالهيدر",
-                admin_name_label: "اسم المسؤول الظاهر", save_changes: "حفظ التعديلات", date: "التاريخ",
-                dashboard_title: "لوحة التحكم الرئيسية", recent_activity: "سجل النشاطات الفورية للشركة", 
-                print_table: "طباعة التقرير", export_excel: "تصدير Excel",
-                sales_analytics: "تحليل المبيعات الشهرية", tasks_analytics: "توزيع حالة المهام",
-                accent_color_label: "لون الهوية الأساسي"
-            },
-            en: {
-                home: "Home", tasks: "Task Management", it: "IT Support", hr: "HR Management",
-                users: "User Management", files: "File Archive", sales: "Sales", warehouse: "Warehouse",
-                finance: "Finance", attendance: "Attendance", settings: "Settings", logout: "Logout",
-                total_emp: "Total Employees", active_tasks: "Active Tasks", it_tickets: "IT Tickets",
-                system_users: "System Users", task_title: "Task Title", assignee: "Assignee", status: "Status", action: "Action", add_task: "Add Task",
-                issue: "Issue / Device", department: "Department", open_ticket: "Open Ticket", emp_name: "Employee Name",
-                job_title: "Job Title", register_emp: "Register Employee", username: "Username", role: "Role",
-                add_user: "Add User", select_file: "Select File", file_desc: "File Description", upload_file: "Upload File",
-                file_name: "File Name", size: "Size", client_item: "Client / Item", amount: "Amount", add_sale: "Add Sale",
-                statement: "Statement", product_name: "Product Name", quantity: "Quantity", add_product: "Add to Warehouse",
-                trans_desc: "Transaction Desc", add_trans: "Add Transaction", register: "Register", time: "Time",
-                settings_title: "System Settings", company_name_label: "Header Company Name",
-                admin_name_label: "Admin Display Name", save_changes: "Save Changes", date: "Date",
-                dashboard_title: "Main Dashboard", recent_activity: "Real-time Activity Log", 
-                print_table: "Print Report", export_excel: "Export Excel",
-                sales_analytics: "Monthly Sales Analytics", tasks_analytics: "Tasks Status Distribution",
-                accent_color_label: "Primary Accent Color"
-            }
+            ar: { home: "الرئيسية", users: "إدارة المستخدمين", hr: "شؤون الموظفين", tasks: "إدارة المهام", it: "الدعم الفني (IT)", files: "أرشيف الملفات", sales: "المبيعات", warehouse: "المخازن", finance: "المالية", attendance: "الحضور والانصراف", settings: "الإعدادات", logout: "خروج", total_emp: "إجمالي الموظفين", active_tasks: "المهام الجارية", it_tickets: "تذاكر الدعم الفني", system_users: "مستخدمو النظام", sales_analytics: "تحليل المبيعات الشهرية", tasks_analytics: "توزيع حالة المهام", recent_activity: "سجل النشاطات الفورية للشركة (Audit Log)" },
+            en: { home: "Home", users: "User Management", hr: "HR Management", tasks: "Task Management", it: "IT Support", files: "File Archive", sales: "Sales", warehouse: "Warehouse", finance: "Finance", attendance: "Attendance", settings: "Settings", logout: "Logout", total_emp: "Total Employees", active_tasks: "Active Tasks", it_tickets: "IT Tickets", system_users: "System Users", sales_analytics: "Monthly Sales Analytics", tasks_analytics: "Tasks Distribution", recent_activity: "Real-time Activity Log (Audit Log)" }
         };
 
         let currentLang = localStorage.getItem('kayan_lang') || 'ar';
@@ -432,10 +367,8 @@
             langBtn.innerText = currentLang === 'ar' ? 'EN' : 'عربي';
 
             document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[currentLang][key]) {
-                    el.innerText = translations[currentLang][key];
-                }
+                let key = el.getAttribute('data-i18n');
+                if(translations[currentLang][key]) el.innerText = translations[currentLang][key];
             });
         }
 
@@ -448,24 +381,13 @@
         function applyTheme() {
             const root = document.getElementById('htmlRoot');
             const themeBtn = document.getElementById('themeBtn');
-            if (currentTheme === 'light') {
-                root.classList.add('light-mode');
-                themeBtn.innerText = '☀️';
-            } else {
-                root.classList.remove('light-mode');
-                themeBtn.innerText = '🌙';
-            }
+            if (currentTheme === 'light') { root.classList.add('light-mode'); themeBtn.innerText = '☀️'; }
+            else { root.classList.remove('light-mode'); themeBtn.innerText = '🌙'; }
         }
 
         function applyAccentColor(color) {
             document.documentElement.style.setProperty('--primary', color);
             localStorage.setItem('kayan_accent', color);
-        }
-
-        function globalSearch(query) {
-            if(!query) return;
-            query = query.toLowerCase();
-            showToast(`جاري البحث عن: ${query}`, 'success');
         }
 
         function saveSettings() {
@@ -475,7 +397,7 @@
             if(compName) localStorage.setItem('kayan_comp_name', compName);
             if(adminName) localStorage.setItem('kayan_admin_name', adminName);
             if(accentColor) applyAccentColor(accentColor);
-            showToast('تم حفظ الإعدادات بنجاح!', 'success');
+            showToast('تم حفظ الإعدادات بنجاح!');
             loadSettings();
         }
 
@@ -483,18 +405,9 @@
             let compName = localStorage.getItem('kayan_comp_name');
             let adminName = localStorage.getItem('kayan_admin_name');
             let savedAccent = localStorage.getItem('kayan_accent');
-            if(compName) {
-                document.getElementById('companyNameHeader').innerText = compName;
-                document.getElementById('settingCompanyName').value = compName;
-            }
-            if(adminName) {
-                document.getElementById('userNameView').innerText = adminName;
-                document.getElementById('settingAdminName').value = adminName;
-            }
-            if(savedAccent) {
-                applyAccentColor(savedAccent);
-                document.getElementById('settingAccentColor').value = savedAccent;
-            }
+            if(compName) { document.getElementById('companyNameHeader').innerText = compName; document.getElementById('settingCompanyName').value = compName; }
+            if(adminName) { document.getElementById('settingAdminName').value = adminName; }
+            if(savedAccent) { applyAccentColor(savedAccent); document.getElementById('settingAccentColor').value = savedAccent; }
         }
 
         let salesChartInstance = null;
@@ -508,12 +421,7 @@
                 type: 'bar',
                 data: {
                     labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر'],
-                    datasets: [{
-                        label: 'المبيعات (ر.س)',
-                        data: [12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, 42000],
-                        backgroundColor: '#2563eb',
-                        borderRadius: 6
-                    }]
+                    datasets: [{ label: 'المبيعات (ر.س)', data: [12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, 42000], backgroundColor: '#2563eb', borderRadius: 6 }]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
             });
@@ -522,10 +430,7 @@
                 type: 'doughnut',
                 data: {
                     labels: ['جارِ التنفيذ', 'مكتملة', 'معلقة'],
-                    datasets: [{
-                        data: [3, 5, 2],
-                        backgroundColor: ['#38bdf8', '#10b981', '#fbbf24']
-                    }]
+                    datasets: [{ data: [3, 5, 2], backgroundColor: ['#38bdf8', '#10b981', '#fbbf24'] }]
                 },
                 options: { responsive: true, maintainAspectRatio: false }
             });
@@ -537,204 +442,151 @@
             loadSettings();
             initCharts();
             loadAllData();
+            loadActivities();
         });
 
         function switchSection(sectionId, element) {
             document.querySelectorAll('.section-view').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.sidebar-menu a').forEach(a => a.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
-            element.classList.add('active');
+            if(element) element.classList.add('active');
         }
 
-        // جلب وعرض البيانات من MongoDB والتعامل مع الـ CRUD
+        async function uploadFile(fileInputId) {
+            const fileInput = document.getElementById(fileInputId);
+            if(!fileInput || fileInput.files.length === 0) return { fileUrl: '', fileName: '', size: '' };
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            const res = await fetch('/api/upload', { method: 'POST', body: formData });
+            const data = await res.json();
+            return data.success ? { fileUrl: data.filePath, fileName: data.originalName, size: data.size } : { fileUrl: '', fileName: '', size: '' };
+        }
+
         async function loadAllData() {
-            fetchAndRender('tasks', 'tasksTable', t => `<tr><td>${t.name}</td><td>${t.assignee || '-'}</td><td><span style="color:#38bdf8">${t.status}</span></td><td><button class="btn-delete" onclick="deleteItem('tasks', '${t._id}')">حذف</button></td></tr>`);
-            fetchAndRender('it', 'itTable', t => `<tr><td>${t.issue}</td><td>${t.dept || '-'}</td><td><span style="color:#fbbf24">${t.status}</span></td><td><button class="btn-delete" onclick="deleteItem('it', '${t._id}')">حذف</button></td></tr>`);
-            fetchAndRender('emp', 'empTable', e => `<tr><td>${e.name}</td><td>${e.role}</td><td>${e.date}</td><td><button class="btn-delete" onclick="deleteItem('emp', '${e._id}')">حذف</button></td></tr>`);
-            fetchAndRender('users', 'usersTable', u => `<tr><td>${u.name}</td><td><span style="color:#4ade80">${u.role}</span></td><td>${u.date}</td><td><button class="btn-delete" onclick="deleteItem('users', '${u._id}')">حذف</button></td></tr>`);
-            loadFilesFromDB();
-            fetchAndRender('sales', 'salesTable', s => `<tr><td>${s.item}</td><td>${s.amount}</td><td>${s.date}</td><td><button class="btn-delete" onclick="deleteItem('sales', '${s._id}')">حذف</button></td></tr>`);
-            fetchAndRender('warehouse', 'warehouseTable', w => `<tr><td>${w.item}</td><td>${w.qty}</td><td><button class="btn-delete" onclick="deleteItem('warehouse', '${w._id}')">حذف</button></td></tr>`);
-            fetchAndRender('finance', 'financeTable', f => `<tr><td>${f.desc}</td><td>${f.amount}</td><td><button class="btn-delete" onclick="deleteItem('finance', '${f._id}')">حذف</button></td></tr>`);
-            fetchAndRender('attendance', 'attendanceTable', a => `<tr><td>${a.name}</td><td>${a.status}</td><td>${a.time}</td><td><button class="btn-delete" onclick="deleteItem('attendance', '${a._id}')">حذف</button></td></tr>`);
+            loadTable('tasks', 'tasksBody', t => {
+                if(currentUser.role === 'Employee' && t.assignee !== currentUser.name) return '';
+                let dl = t.fileUrl ? `<a href="/api/download/${t.fileUrl.split('/').pop()}" class="btn-download" download>تحميل</a>` : '-';
+                return `<tr><td>${t.name}</td><td>${t.assignee || '-'}</td><td>${t.status}</td><td>${dl}</td><td><button class="btn-delete" onclick="del('tasks','${t._id}')">حذف</button></td></tr>`;
+            });
+            loadTable('emp', 'empBody', e => `<tr><td>${e.name}</td><td>${e.role}</td><td>${e.fileUrl ? `<a href="/api/download/${e.fileUrl.split('/').pop()}" class="btn-download" download>تحميل</a>` : '-'}</td><td><button class="btn-delete" onclick="del('emp','${e._id}')">حذف</button></td></tr>`);
+            loadTable('users', 'usersBody', u => `<tr><td>${u.username}</td><td>${u.name}</td><td>${u.role}</td><td><button class="btn-delete" onclick="del('users','${u._id}')">حذف</button></td></tr>`);
+            loadTable('it', 'itBody', i => `<tr><td>${i.issue}</td><td>${i.dept}</td><td>${i.status}</td><td>${i.fileUrl ? `<a href="/api/download/${i.fileUrl.split('/').pop()}" class="btn-download" download>تحميل</a>` : '-'}</td><td><button class="btn-delete" onclick="del('it','${i._id}')">حذف</button></td></tr>`);
+            loadTable('sales', 'salesBody', s => `<tr><td>${s.item}</td><td>${s.amount}</td><td>${s.date}</td><td><button class="btn-delete" onclick="del('sales','${s._id}')">حذف</button></td></tr>`);
+            loadTable('warehouse', 'warehouseBody', w => `<tr><td>${w.item}</td><td>${w.qty}</td><td><button class="btn-delete" onclick="del('warehouse','${w._id}')">حذف</button></td></tr>`);
+            loadTable('finance', 'financeBody', f => `<tr><td>${f.desc}</td><td>${f.amount}</td><td><button class="btn-delete" onclick="del('finance','${f._id}')">حذف</button></td></tr>`);
+            loadTable('attendance', 'attendanceBody', a => `<tr><td>${a.name}</td><td>${a.status}</td><td>${a.time}</td><td><button class="btn-delete" onclick="del('attendance','${a._id}')">حذف</button></td></tr>`);
+            loadFiles();
         }
 
-        async function fetchAndRender(endpoint, tableId, rowTemplate) {
+        async function loadTable(endpoint, bodyId, template) {
             try {
                 let res = await fetch(`/api/${endpoint}`);
                 let data = await res.json();
-                let html = '';
-                data.forEach(item => { html += rowTemplate(item); });
-                document.getElementById(tableId).innerHTML = html;
-                updateStatsCount(endpoint, data.length);
-            } catch (err) { console.error(err); }
-        }
-
-        function updateStatsCount(endpoint, count) {
-            if(endpoint === 'emp') document.getElementById('statEmp').innerText = count;
-            if(endpoint === 'tasks') document.getElementById('statTasks').innerText = count;
-            if(endpoint === 'it') document.getElementById('statIt').innerText = count;
-            if(endpoint === 'users') document.getElementById('statUsers').innerText = count;
-        }
-
-        async function postData(endpoint, data) {
-            let res = await fetch(`/api/${endpoint}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            });
-            return await res.json();
-        }
-
-        async function deleteItem(endpoint, id) {
-            if(confirm('هل أنت متأكد من الحذف؟')) {
-                await fetch(`/api/${endpoint}/${id}`, { method: 'DELETE' });
-                showToast('تم الحذف بنجاح', 'success');
-                loadAllData();
-            }
-        }
-
-        // دوال الإضافة لكل قسم
-        async function addTask() {
-            let name = document.getElementById('taskName').value;
-            let assignee = document.getElementById('taskAssignee').value;
-            if(!name) return showToast('أدخل اسم المهمة', 'error');
-            await postData('tasks', { name, assignee, status: 'جارِ التنفيذ' });
-            showToast('تمت إضافة المهمة بنجاح!', 'success');
-            document.getElementById('taskName').value = '';
-            document.getElementById('taskAssignee').value = '';
-            loadAllData();
-        }
-
-        async function addItTicket() {
-            let issue = document.getElementById('itIssue').value;
-            let dept = document.getElementById('itDept').value;
-            if(!issue) return showToast('أدخل المشكلة', 'error');
-            await postData('it', { issue, dept, status: 'مفتوحة' });
-            showToast('تم فتح التذكرة بنجاح!', 'success');
-            document.getElementById('itIssue').value = '';
-            document.getElementById('itDept').value = '';
-            loadAllData();
-        }
-
-        async function addEmp() {
-            let name = document.getElementById('empName').value;
-            let role = document.getElementById('empRole').value;
-            if(!name) return showToast('أدخل اسم الموظف', 'error');
-            await postData('emp', { name, role, date: new Date().toLocaleDateString('ar-EG') });
-            showToast('تم تسجيل الموظف بنجاح!', 'success');
-            document.getElementById('empName').value = '';
-            document.getElementById('empRole').value = '';
-            loadAllData();
-        }
-
-        async function addUser() {
-            let name = document.getElementById('userNameInput').value;
-            let role = document.getElementById('userRoleInput').value;
-            if(!name) return showToast('أدخل اسم المستخدم', 'error');
-            await postData('users', { name, role, date: new Date().toLocaleDateString('ar-EG') });
-            showToast('تم إضافة المستخدم بنجاح!', 'success');
-            document.getElementById('userNameInput').value = '';
-            loadAllData();
-        }
-
-        // رفع الملفات والصور بأي صيغة مع زر التحميل
-        async function uploadAndSaveFile() {
-            let fileInput = document.getElementById('fileInput');
-            let desc = document.getElementById('fileDesc').value;
-            if(fileInput.files.length === 0) return showToast('اختر ملفاً أولاً', 'error');
-            
-            let formData = new FormData();
-            formData.append('file', fileInput.files[0]);
-
-            try {
-                showToast('جاري رفع الملف...', 'success');
-                let uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
-                let uploadResult = await uploadRes.json();
-                if(!uploadResult.success) return showToast('فشل رفع الملف', 'error');
-
-                await postData('files', {
-                    name: uploadResult.originalName,
-                    desc: desc || '-',
-                    size: uploadResult.size,
-                    filePath: uploadResult.filePath
-                });
-
-                showToast('تم رفع وحفظ الملف بنجاح!', 'success');
-                document.getElementById('fileInput').value = '';
-                document.getElementById('fileDesc').value = '';
-                loadFilesFromDB();
-            } catch (err) {
-                showToast('حدث خطأ أثناء الرفع', 'error');
-            }
-        }
-
-        async function loadFilesFromDB() {
-            try {
-                let res = await fetch('/api/files');
-                let files = await res.json();
-                let html = '';
-                files.forEach(f => {
-                    let fileName = f.filePath ? f.filePath.split('/').pop() : '';
-                    html += `<tr>
-                        <td>${f.name}</td>
-                        <td>${f.desc}</td>
-                        <td>${f.size || '-'}</td>
-                        <td>
-                            ${fileName ? `<a href="/api/download/${fileName}" class="btn-tool" style="padding:4px 8px; font-size:11px;" download>تحميل</a>` : ''}
-                            <button class="btn-delete" onclick="deleteItem('files', '${f._id}')">حذف</button>
-                        </td>
-                    </tr>`;
-                });
-                document.getElementById('filesTable').innerHTML = html;
+                document.getElementById(bodyId).innerHTML = data.map(template).join('');
+                if(endpoint === 'emp') document.getElementById('statEmp').innerText = data.length;
+                if(endpoint === 'tasks') document.getElementById('statTasks').innerText = data.length;
+                if(endpoint === 'it') document.getElementById('statIt').innerText = data.length;
+                if(endpoint === 'users') document.getElementById('statUsers').innerText = data.length;
             } catch(err) { console.error(err); }
         }
 
-        async function addSale() {
-            let item = document.getElementById('saleItem').value;
-            let amount = document.getElementById('saleAmount').value;
-            if(!item || !amount) return showToast('أدخل البيانات', 'error');
-            await postData('sales', { item, amount: Number(amount), date: new Date().toLocaleDateString('ar-EG') });
-            showToast('تم تسجيل المبيعة بنجاح!', 'success');
-            document.getElementById('saleItem').value = '';
-            document.getElementById('saleAmount').value = '';
-            loadAllData();
+        async function loadFiles() {
+            let res = await fetch('/api/files');
+            let files = await res.json();
+            document.getElementById('filesBody').innerHTML = files.map(f => `
+                <tr><td>${f.name}</td><td>${f.desc}</td><td>${f.size || '-'}</td>
+                <td><a href="/api/download/${f.filePath.split('/').pop()}" class="btn-download" download>تحميل</a> <button class="btn-delete" onclick="del('files','${f._id}')">حذف</button></td></tr>
+            `).join('');
         }
 
-        async function addWarehouseItem() {
-            let item = document.getElementById('wareItem').value;
-            let qty = document.getElementById('wareQty').value;
-            if(!item) return showToast('أدخل المنتج', 'error');
-            await postData('warehouse', { item, qty: Number(qty) || 0 });
-            showToast('تمت الإضافة للمخزن بنجاح!', 'success');
-            document.getElementById('wareItem').value = '';
-            document.getElementById('wareQty').value = '';
-            loadAllData();
+        async function loadActivities() {
+            let res = await fetch('/api/activities');
+            let data = await res.json();
+            document.getElementById('activityList').innerHTML = data.map(a => `<li>${a.text} <span>${a.time} (${a.user})</span></li>`).join('');
+        }
+
+        async function del(endpoint, id) {
+            if(confirm('هل أنت متأكد من الحذف؟')) {
+                await fetch(`/api/${endpoint}/${id}`, { method: 'DELETE' });
+                showToast('تم الحذف بنجاح');
+                loadAllData(); loadActivities();
+            }
+        }
+
+        async function addUser() {
+            await fetch('/api/users', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ username: document.getElementById('uName').value, password: document.getElementById('uPass').value, name: document.getElementById('uFull').value, role: document.getElementById('uRole').value }) });
+            showToast('تم إضافة المستخدم'); loadAllData(); loadActivities();
+        }
+
+        async function addEmp() {
+            let f = await uploadFile('empFile');
+            await fetch('/api/emp', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name: document.getElementById('empName').value, role: document.getElementById('empRole').value, date: new Date().toLocaleDateString('ar-EG'), fileUrl: f.fileUrl, fileName: f.fileName }) });
+            showToast('تم تسجيل الموظف'); loadAllData(); loadActivities();
+        }
+
+        async function addTask() {
+            let f = await uploadFile('taskFile');
+            await fetch('/api/tasks', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name: document.getElementById('taskName').value, assignee: document.getElementById('taskAssignee').value, status: 'جارِ التنفيذ', fileUrl: f.fileUrl, fileName: f.fileName }) });
+            showToast('تمت إضافة المهمة'); loadAllData(); loadActivities();
+        }
+
+        async function addItTicket() {
+            let f = await uploadFile('itFile');
+            await fetch('/api/it', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ issue: document.getElementById('itIssue').value, dept: document.getElementById('itDept').value, status: 'مفتوحة', fileUrl: f.fileUrl }) });
+            showToast('تم فتح التذكرة'); loadAllData(); loadActivities();
+        }
+
+        async function uploadAndSaveFile() {
+            let f = await uploadFile('fileInput');
+            if(!f.fileUrl) return showToast('اختر ملفاً أولاً', 'error');
+            await fetch('/api/files', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name: f.fileName, desc: document.getElementById('fileDesc').value || '-', size: f.size, filePath: f.fileUrl }) });
+            showToast('تم رفع وحفظ الملف'); loadFiles(); loadActivities();
+        }
+
+        async function addSale() {
+            await fetch('/api/sales', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ item: document.getElementById('saleItem').value, amount: Number(document.getElementById('saleAmount').value), date: new Date().toLocaleDateString('ar-EG') }) });
+            showToast('تم التسجيل'); loadAllData(); loadActivities();
+        }
+
+        async function addWarehouse() {
+            await fetch('/api/warehouse', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ item: document.getElementById('wareItem').value, qty: Number(document.getElementById('wareQty').value) }) });
+            showToast('تمت الإضافة'); loadAllData(); loadActivities();
         }
 
         async function addFinance() {
-            let desc = document.getElementById('finDesc').value;
-            let amount = document.getElementById('finAmount').value;
-            if(!desc || !amount) return showToast('أدخل البيانات', 'error');
-            await postData('finance', { desc, amount: Number(amount) });
-            showToast('تمت إضافة المعاملة بنجاح!', 'success');
-            document.getElementById('finDesc').value = '';
-            document.getElementById('finAmount').value = '';
-            loadAllData();
+            await fetch('/api/finance', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ desc: document.getElementById('finDesc').value, amount: Number(document.getElementById('finAmount').value) }) });
+            showToast('تم التسجيل'); loadAllData(); loadActivities();
         }
 
         async function addAttendance() {
-            let name = document.getElementById('attName').value;
-            let status = document.getElementById('attStatus').value;
-            if(!name) return showToast('أدخل اسم الموظف', 'error');
-            await postData('attendance', { name, status, time: new Date().toLocaleString('ar-EG') });
-            showToast('تم تسجيل الحضور بنجاح!', 'success');
-            document.getElementById('attName').value = '';
-            loadAllData();
+            await fetch('/api/attendance', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ name: document.getElementById('attName').value, status: document.getElementById('attStatus').value, time: new Date().toLocaleString('ar-EG') }) });
+            showToast('تم التسجيل'); loadAllData(); loadActivities();
         }
 
-        function logout() {
-            window.location.href = 'login.html';
+        function globalSearch(query) {
+            query = query.toLowerCase();
+            document.querySelectorAll('.data-table tbody tr').forEach(tr => {
+                let text = tr.innerText.toLowerCase();
+                tr.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        function exportTableToCSV(tableId, filename) {
+            let csv = [];
+            let rows = document.querySelectorAll(`#${tableId} tr`);
+            for (let i = 0; i < rows.length; i++) {
+                let row = [], cols = rows[i].querySelectorAll("td, th");
+                for (let j = 0; j < cols.length; j++) row.push('"' + cols[j].innerText + '"');
+                csv.push(row.join(","));
+            }
+            let csvFile = new Blob([csv.join("\n")], { type: "text/csv;charset=utf-8;" });
+            let downloadLink = document.createElement("a");
+            downloadLink.download = filename;
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
         }
     </script>
 </body>
