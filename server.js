@@ -11,7 +11,6 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// إعداد التخزين للمرفقات
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         const uploadDir = path.join(__dirname, 'public', 'uploads');
@@ -24,13 +23,13 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// جلب وحفظ بيانات النظام السحابي
 function loadData() {
     if (!fs.existsSync(DATA_FILE)) {
         const initial = {
             employees: [
                 { id: '1', name: 'Admin', username: 'admin', pin: '1234', role: 'admin', department: 'Management' },
-                { id: '2', name: 'Mohamed', username: 'mohamed', pin: '0000', role: 'employee', department: 'IT Support' }
+                { id: '2', name: 'HR Manager', username: 'hr', pin: '1111', role: 'hr', department: 'Human Resources' },
+                { id: '3', name: 'Mohamed', username: 'mohamed', pin: '0000', role: 'employee', department: 'IT Support' }
             ],
             attendance: [],
             tasks: [],

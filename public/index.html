@@ -73,22 +73,22 @@
                     </div>
                 </div>
 
-                <!-- Admin Only Section: Management Tools -->
-                <div id="admin-section" class="hidden space-y-6">
-                    <!-- Create Employee -->
-                    <div class="bg-gray-800 p-6 rounded-xl border border-indigo-500 shadow">
-                        <h3 class="text-lg font-semibold mb-4 text-indigo-300"><i class="fa-solid fa-user-plus ml-2"></i>إدارة النظام: إضافة موظف جديد</h3>
-                        <form onsubmit="handleCreateEmployee(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <input type="text" id="new-name" placeholder="اسم الموظف" class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
-                            <input type="text" id="new-username" placeholder="اسم المستخدم للدخول" class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
-                            <input type="password" id="new-pin" placeholder="رقم البصمة / PIN" class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
-                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded transition shadow">إنشاء الحساب</button>
-                        </form>
-                    </div>
+                <!-- HR & Admin Section: Create Employee Accounts -->
+                <div id="hr-employee-section" class="hidden bg-gray-800 p-6 rounded-xl border border-indigo-500 shadow">
+                    <h3 class="text-lg font-semibold mb-4 text-indigo-300"><i class="fa-solid fa-user-plus ml-2"></i>شؤون الموظفين (HR): إضافة موظف جديد</h3>
+                    <form onsubmit="handleCreateEmployee(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <input type="text" id="new-name" placeholder="اسم الموظف" class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
+                        <input type="text" id="new-username" placeholder="اسم المستخدم للدخول" class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
+                        <input type="password" id="new-pin" placeholder="رقم البصمة / PIN" class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-indigo-500" required>
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded transition shadow">إنشاء حساب الموظف</button>
+                    </form>
+                </div>
 
+                <!-- Admin Only Section: Announcements & Tasks Management -->
+                <div id="admin-only-section" class="hidden space-y-6">
                     <!-- Create Announcement -->
                     <div class="bg-gray-800 p-6 rounded-xl border border-amber-500 shadow">
-                        <h3 class="text-lg font-semibold mb-4 text-amber-300"><i class="fa-solid fa-bullhorn ml-2"></i>نشر تعميم أو إعلان عام</h3>
+                        <h3 class="text-lg font-semibold mb-4 text-amber-300"><i class="fa-solid fa-bullhorn ml-2"></i>نشر تعميم أو إعلان عام (أدمين فقط)</h3>
                         <form onsubmit="handleCreateAnnouncement(event)" class="flex gap-4">
                             <input type="text" id="new-announcement" placeholder="محتوى الإعلان أو التوجيه..." class="flex-1 bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-amber-500" required>
                             <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-medium px-6 py-2 rounded transition shadow">نشر الإعلان</button>
@@ -97,7 +97,7 @@
 
                     <!-- Assign Task -->
                     <div class="bg-gray-800 p-6 rounded-xl border border-cyan-500 shadow">
-                        <h3 class="text-lg font-semibold mb-4 text-cyan-300"><i class="fa-solid fa-list-check ml-2"></i>إسناد مهمة جديدة لموظف</h3>
+                        <h3 class="text-lg font-semibold mb-4 text-cyan-300"><i class="fa-solid fa-list-check ml-2"></i>إسناد مهمة جديدة لموظف (أدمين فقط)</h3>
                         <form onsubmit="handleCreateTask(event)" class="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <select id="task-employee" class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-cyan-500" required></select>
                             <input type="text" id="task-title" placeholder="عنوان أو تفاصيل المهمة..." class="bg-gray-900 border border-gray-700 rounded px-3 py-2 text-white focus:outline-none focus:border-cyan-500" required>
@@ -118,8 +118,8 @@
                     <div id="announcements-list" class="space-y-3 text-gray-300"></div>
                 </div>
 
-                <!-- Attendance Logs Section (Admin View) -->
-                <div id="admin-attendance-box" class="hidden bg-gray-800 p-6 rounded-xl border border-gray-700 shadow">
+                <!-- Attendance Logs Section (Admin & HR View) -->
+                <div id="attendance-logs-box" class="hidden bg-gray-800 p-6 rounded-xl border border-gray-700 shadow">
                     <h3 class="text-lg font-semibold mb-4 text-indigo-300"><i class="fa-solid fa-clipboard-user ml-2"></i>سجلات حضور وانصراف الموظفين</h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-right text-sm text-gray-300">
@@ -165,13 +165,20 @@
                 document.getElementById('user-role-badge').innerText = emp.role.toUpperCase();
                 document.getElementById('welcome-user-name').innerText = 'مرحباً، ' + emp.name;
                 
+                // Permissions check
                 if (emp.role === 'admin') {
-                    document.getElementById('admin-section').classList.remove('hidden');
-                    document.getElementById('admin-attendance-box').classList.remove('hidden');
+                    document.getElementById('hr-employee-section').classList.remove('hidden');
+                    document.getElementById('admin-only-section').classList.remove('hidden');
+                    document.getElementById('attendance-logs-box').classList.remove('hidden');
                     populateEmployeeDropdown();
+                } else if (emp.role === 'hr') {
+                    document.getElementById('hr-employee-section').classList.remove('hidden');
+                    document.getElementById('admin-only-section').classList.add('hidden');
+                    document.getElementById('attendance-logs-box').classList.remove('hidden');
                 } else {
-                    document.getElementById('admin-section').classList.add('hidden');
-                    document.getElementById('admin-attendance-box').classList.add('hidden');
+                    document.getElementById('hr-employee-section').classList.add('hidden');
+                    document.getElementById('admin-only-section').classList.add('hidden');
+                    document.getElementById('attendance-logs-box').classList.add('hidden');
                 }
                 updateDashboard();
             } else {
@@ -208,7 +215,7 @@
 
             // Render Tasks
             const tasksList = document.getElementById('tasks-list');
-            let userTasks = currentUser.role === 'admin' ? dbData.tasks : dbData.tasks.filter(t => t.userId === currentUser.id);
+            let userTasks = (currentUser.role === 'admin' || currentUser.role === 'hr') ? dbData.tasks : dbData.tasks.filter(t => t.userId === currentUser.id);
             if(userTasks.length === 0) {
                 tasksList.innerHTML = '<p class="text-gray-500 text-sm">لا توجد مهام مسجلة.</p>';
             } else {
@@ -220,14 +227,14 @@
                         </div>
                         <div class="flex items-center space-x-3 space-x-reverse">
                             <span class="px-2.5 py-1 text-xs rounded font-semibold ${t.status === 'مكتملة' ? 'bg-green-900 text-green-300' : 'bg-amber-900 text-amber-300'}">${t.status}</span>
-                            ${currentUser.role !== 'admin' && t.status !== 'مكتملة' ? `<button onclick="completeTask('${t.id}')" class="bg-green-600 hover:bg-green-700 text-xs px-3 py-1.5 rounded transition">إنجاز</button>` : ''}
+                            ${currentUser.role === 'employee' && t.status !== 'مكتملة' ? `<button onclick="completeTask('${t.id}')" class="bg-green-600 hover:bg-green-700 text-xs px-3 py-1.5 rounded transition">إنجاز</button>` : ''}
                         </div>
                     </div>
                 `).join('');
             }
 
-            // Render Attendance Table for Admin
-            if (currentUser.role === 'admin') {
+            // Render Attendance Table for Admin and HR
+            if (currentUser.role === 'admin' || currentUser.role === 'hr') {
                 const attBody = document.getElementById('attendance-table-body');
                 if (dbData.attendance.length === 0) {
                     attBody.innerHTML = '<tr><td colspan="3" class="px-4 py-3 text-center text-gray-500">لا توجد سجلات حضور اليوم.</td></tr>';
@@ -245,7 +252,9 @@
 
         function populateEmployeeDropdown() {
             const select = document.getElementById('task-employee');
-            select.innerHTML = dbData.employees.map(e => `<option value="${e.id}">${e.name} (${e.department})</option>`).join('');
+            if(select) {
+                select.innerHTML = dbData.employees.map(e => `<option value="${e.id}">${e.name} (${e.department})</option>`).join('');
+            }
         }
 
         async function recordAttendance(type) {
@@ -266,9 +275,9 @@
                 return;
             }
 
-            dbData.employees.push({ id: Date.now().toString(), name, username, pin, role: 'employee', department: 'IT Support' });
+            dbData.employees.push({ id: Date.now().toString(), name, username, pin, role: 'employee', department: 'General' });
             await saveAndSync();
-            alert('تم إنشاء حساب الموظف بنجاح!');
+            alert('تم إنشاء حساب الموظف الجديد بنجاح!');
             document.getElementById('new-name').value = '';
             document.getElementById('new-username').value = '';
             document.getElementById('new-pin').value = '';
