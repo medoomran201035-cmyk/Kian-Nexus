@@ -13,12 +13,11 @@ app.use(express.json());
 app.use(express.static('public')); // قراءة واجهة المستخدم من مجلد public
 
 // الاتصال بقاعدة البيانات MongoDB
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/kayan_erp', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => console.log('📦 Connected to MongoDB')).catch(err => console.error('DB Connection Error:', err));
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/kayan_erp')
+  .then(() => console.log('🟢 Connected to MongoDB'))
+  .catch(err => console.error('🔴 DB Connection Error:', err));
 
-// حفظ الـ io داخل الـ app عشان نستخدمه في الـ Routes
+// Routes عشان نستخدمه في app داخل الـ routes أو حفظ الـ io
 app.set('socketio', io);
 
 // استدعاء مسارات الأصول والعهد
@@ -26,7 +25,7 @@ const assetRoutes = require('./routes/assets');
 app.use('/api/assets', assetRoutes);
 
 io.on('connection', (socket) => {
-  console.log('🔗 موظف متصل بالأنظمة الحية: ' + socket.id);
+  console.log('🟢 موظف متصل بالأنظمة الحية ' + socket.id);
 
   socket.on('disconnect', () => {
     console.log('❌ انقطع الاتصال: ' + socket.id);
