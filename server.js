@@ -12,10 +12,17 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname)));
 
-// إعداد مجلد تخزين الملفات والصور
-const uploadDir = path.join(__dirname, 'uploads');
+// قراءة الملفات الثابتة من مجلد public (حيث توجد index.html و login.html)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// مسار رئيسي يفتح index.html تلقائياً عند الدخول على الرابط
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// إعداد مجلد تخزين الملفات والصور داخل public/uploads
+const uploadDir = path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -35,8 +42,6 @@ const upload = multer({
     storage: storage,
     limits: { fileSize: 50 * 1024 * 1024 } // حد أقصى 50 ميجابايت للملف
 });
-
-app.use('/uploads', express.static(uploadDir));
 
 // ==================== نماذج قاعدة البيانات (MongoDB Schemas) ====================
 const TaskSchema = new mongoose.Schema({ name: String, assignee: String, status: String });
