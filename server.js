@@ -1,38 +1,35 @@
 const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
 const mongoose = require('mongoose');
+const cors = require('cors');
+const path = require('path');
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: { origin: "*" }
-});
+const PORT = process.env.PORT || 10000;
 
+// Middleware
 app.use(express.json());
-app.use(express.static('public')); // قراءة واجهة المستخدم من مجلد public
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
-// الاتصال بقاعدة البيانات MongoDB
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/kayan_erp')
-  .then(() => console.log('🟢 Connected to MongoDB'))
-  .catch(err => console.error('🔴 DB Connection Error:', err));
+// Serve static files (HTML, CSS, JS) from public directory or root
+app.use(express.static(path.join(__dirname)));
 
-// Routes عشان نستخدمه في app داخل الـ routes أو حفظ الـ io
-app.set('socketio', io);
+// MongoDB Connection (رابط قاعدة البيانات مع الباسورد مباشرة بدون مشاكل)
+const MONGO_URI = 'mongodb+srv://medoomran201035_db_user:1234@cluster0.ykv026a.mongodb.net/kayan_erp?appName=Cluster0';
 
-// استدعاء مسارات الأصول والعهد
-const assetRoutes = require('./routes/assets');
-app.use('/api/assets', assetRoutes);
-
-io.on('connection', (socket) => {
-  console.log('🟢 موظف متصل بالأنظمة الحية ' + socket.id);
-
-  socket.on('disconnect', () => {
-    console.log('❌ انقطع الاتصال: ' + socket.id);
+mongoose.connect(MONGO_URI)
+  .then(() => {
+    console.log('🟢 Connected to MongoDB');
+  })
+  .catch((err) => {
+    console.error('🔴 DB Connection Error:', err);
   });
+
+// Basic Route / Homepage
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`🚀 Kayan Server running on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`Kayan Server running on port ${PORT}`);
 });
