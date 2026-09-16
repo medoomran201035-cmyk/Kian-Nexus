@@ -8,8 +8,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 🔴 حط رابط الـ MongoDB Atlas الخاص بك هنا بين العلامتين
-const MONGO_URI = process.env.MONGO_URI || 'حط_رابط_القاعدة_هنا';
+// رابط قاعدة البيانات (بيسحب من Render أو الرابط المباشر)
+const MONGO_URI = process.env.MONGO_URI || 'حط_رابط_القاعدة_هنا_لو_مش_محطوط_في_Environment_Variables';
 
 // 1. نموذج المستخدمين (Users Schema)
 const UserSchema = new mongoose.Schema({
@@ -44,10 +44,18 @@ const TicketSchema = new mongoose.Schema({
 });
 const Ticket = mongoose.model('Ticket', TicketSchema);
 
-// الاتصال بقاعدة البيانات بدون خيارات قديمة (تم تصحيحها هنا 👇)
+// الاتصال بقاعدة البيانات وحذف الفهرس القديم أوتوماتيك
 mongoose.connect(MONGO_URI).then(async () => {
     console.log('Connected to MongoDB successfully.');
     
+    // سحر الحذف التلقائي للفهرس القديم لمنع خطأ الـ Duplicate Key
+    try {
+        await User.collection.dropIndex('username_1');
+        console.log('Legacy username_1 index dropped successfully.');
+    } catch (e) {
+        console.log('Index username_1 already dropped or not found, continuing...');
+    }
+
     const adminExists = await User.findOne({ email: 'admin@kayan.com' });
     if (!adminExists) {
         const hashedPassword = await bcrypt.hash('123', 10);
