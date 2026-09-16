@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول - Kayan ERP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen flex items-center justify-center">
+
+  <div class="bg-gray-800 p-8 rounded-2xl border border-gray-700 shadow-2xl w-full max-w-md">
+    <div class="text-center mb-6">
+      <div class="bg-blue-600 text-white w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 text-xl shadow-lg">
+        <i class="fas fa-cube"></i>
+      </div>
+      <h1 class="text-xl font-bold text-white">تسجيل الدخول إلى Kayan ERP</h1>
+      <p class="text-xs text-gray-400 mt-1">أدخل بيانات الحساب للمتابعة إلى لوحة التحكم</p>
+    </div>
+
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label class="block text-xs text-gray-400 mb-1">اسم المستخدم</label>
+        <input type="text" id="username" required class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-blue-500">
+      </div>
+      <div>
+        <label class="block text-xs text-gray-400 mb-1">كلمة المرور / البصمة</label>
+        <input type="password" id="password" required class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-blue-500">
+      </div>
+      
+      <div id="errorMsg" class="hidden text-red-400 text-xs text-center bg-red-950/50 p-2 rounded border border-red-800"></div>
+
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-lg">
+        دخول للنظام
+      </button>
+    </form>
+
+    <div class="mt-6 border-t border-gray-700 pt-4 text-center">
+      <p class="text-[11px] text-gray-500">بيانات تجريبية سريعة:</p>
+      <p class="text-[10px] text-gray-400 mt-1">Admin: <span class="text-blue-400">admin / 1234</span> | HR: <span class="text-green-400">hr / 1111</span> | User: <span class="text-purple-400">mohamed / 0000</span></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorDiv = document.getElementById('errorMsg');
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        
+        const data = await res.json();
+
+        if (data.success) {
+          localStorage.setItem('kayanUser', JSON.stringify(data.user));
+          window.location.href = '/index.html';
+        } else {
+          errorDiv.innerText = data.message;
+          errorDiv.classList.remove('hidden');
+        }
+      } catch (err) {
+        errorDiv.innerText = 'حدث خطأ في الاتصال بالسيرفر';
+        errorDiv.classList.remove('hidden');
+      }
+    });
+  </script>
+</body>
+</html>

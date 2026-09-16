@@ -3,246 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نظام كيان الإداري - Kayan ERP</title>
-  <!-- Tailwind CSS -->
+  <title>لوحة التحكم - Kayan ERP</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- Socket.io -->
-  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // التحقق الفوري من تسجيل الدخول
+    const currentUser = JSON.parse(localStorage.getItem('kayanUser'));
+    if (!currentUser) {
+      window.location.href = '/login.html';
+    }
+  </script>
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans min-h-screen flex flex-col">
-
-  <!-- شريط الإشعارات العلوي الفوري -->
-  <div class="fixed top-4 left-4 z-50">
-    <div class="relative inline-block cursor-pointer bg-gray-800 p-2 rounded-full border border-gray-700 shadow-lg" id="notificationDropdown">
-      <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5" id="notifBadge">0</span>
-      <i class="fas fa-bell text-lg text-gray-200 hover:text-white transition"></i>
-      
-      <!-- قائمة الإشعارات المنسدلة -->
-      <div id="notifList" class="hidden absolute left-0 mt-2 w-80 bg-gray-800 border border-gray-700 rounded-lg shadow-xl p-3 z-50 text-sm text-gray-200">
-        <p class="text-xs text-gray-400 border-b border-gray-700 pb-1 mb-2">الإشعارات الحية (Socket.io)</p>
-        <div id="notifContainer" class="space-y-2 max-h-60 overflow-y-auto">
-          <p class="text-xs text-gray-500 text-center">لا توجد إشعارات جديدة</p>
-        </div>
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen">
+  <div class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-gray-800 border-l border-gray-700 flex flex-col justify-between hidden md:flex">
+      <div class="p-4 border-b border-gray-700">
+        <h1 class="text-lg font-bold text-blue-400 flex items-center gap-2">
+          <i class="fas fa-cube"></i> Kayan ERP
+        </h1>
+        <p id="userNameDisplay" class="text-xs text-gray-400 mt-1">جاري التحميل...</p>
       </div>
+      <nav class="p-4 space-y-2 flex-1">
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium">
+          <i class="fas fa-home"></i> الرئيسية
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-gray-700 text-sm">
+          <i class="fas fa-users"></i> الموظفين
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-gray-700 text-sm">
+          <i class="fas fa-boxes"></i> الأصول والمخزن
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-gray-700 text-sm">
+          <i class="fas fa-clipboard-check"></i> الحضور والانصراف
+        </a>
+      </nav>
+      <div class="p-4 border-t border-gray-700">
+        <button onclick="logout()" class="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg text-sm transition shadow">
+          <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+        </button>
+      </div>
+    </aside>
+
+    <!-- Content Area -->
+    <div class="flex-1 flex flex-col overflow-y-auto">
+      <header class="bg-gray-800 border-b border-gray-700 p-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <span id="userRoleBadge" class="bg-blue-900 text-blue-300 text-xs px-2.5 py-1 rounded-full font-medium">صلاحية المستخدم</span>
+          <h2 class="text-lg font-bold">لوحة القيادة الرئيسية</h2>
+        </div>
+        <div class="flex items-center gap-4">
+          <span id="welcomeHeader" class="text-sm text-gray-300"></span>
+        </div>
+      </header>
+
+      <main class="p-6 space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
+            <h3 class="text-sm text-gray-400">إجمالي الموظفين</h3>
+            <p class="text-2xl font-bold mt-2 text-blue-400">24</p>
+          </div>
+          <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
+            <h3 class="text-sm text-gray-400">حالة السيرفر</h3>
+            <p class="text-2xl font-bold mt-2 text-green-400">متصل (Online)</p>
+          </div>
+          <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
+            <h3 class="text-sm text-gray-400">المهام النشطة</h3>
+            <p class="text-2xl font-bold mt-2 text-purple-400">12</p>
+          </div>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+          <h3 class="text-base font-bold mb-4">نظام Kayan ERP السحابي يعمل بكفاءة عالية</h3>
+          <p class="text-sm text-gray-400">تم تفعيل نظام المصادقة والصلاحيات والأمان بنجاح. استخدم القائمة الجانبية للتنقل بين الأقسام.</p>
+        </div>
+      </main>
     </div>
   </div>
 
-  <!-- الهيدر الرئيسي -->
-  <header class="bg-gray-800 border-b border-gray-700 p-4 shadow-md">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <div class="flex items-center space-x-3 space-x-reverse">
-        <div class="bg-blue-600 text-white p-2 rounded-lg font-bold text-lg"><i class="fas fa-cube"></i></div>
-        <div>
-          <h1 class="text-lg font-bold text-white">نظام كيان الإداري (Kayan ERP)</h1>
-          <p class="text-xs text-gray-400">إدارة المبيعات، المخزون، المالية، والعهد</p>
-        </div>
-      </div>
-      <div class="flex items-center space-x-4 space-x-reverse">
-        <span class="text-xs bg-green-900 text-green-300 px-3 py-1 rounded-full border border-green-700">متصل بالسيرفر الحي</span>
-        <div class="text-sm text-gray-300"><i class="fas fa-user-circle ml-1"></i> مسؤل النظام</div>
-      </div>
-    </div>
-  </header>
-
-  <!-- محتوى لوحة التحكم -->
-  <main class="flex-grow max-w-7xl w-full mx-auto p-6 space-y-6">
-
-    <!-- بطاقات الإحصائيات السريعة -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 shadow flex items-center justify-between">
-        <div>
-          <p class="text-xs text-gray-400">إجمالي المبيعات</p>
-          <h3 class="text-xl font-bold text-white mt-1">124,500 ر.س</h3>
-        </div>
-        <div class="bg-blue-900 p-3 rounded-lg text-blue-300"><i class="fas fa-chart-line"></i></div>
-      </div>
-      <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 shadow flex items-center justify-between">
-        <div>
-          <p class="text-xs text-gray-400">العهد والأصول المسجلة</p>
-          <h3 class="text-xl font-bold text-white mt-1" id="totalAssetsCount">--</h3>
-        </div>
-        <div class="bg-green-900 p-3 rounded-lg text-green-300"><i class="fas fa-laptop"></i></div>
-      </div>
-      <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 shadow flex items-center justify-between">
-        <div>
-          <p class="text-xs text-gray-400">صافي الأرباح</p>
-          <h3 class="text-xl font-bold text-white mt-1">48,200 ر.س</h3>
-        </div>
-        <div class="bg-purple-900 p-3 rounded-lg text-purple-300"><i class="fas fa-wallet"></i></div>
-      </div>
-      <div class="bg-gray-800 p-4 rounded-xl border border-gray-700 shadow flex items-center justify-between">
-        <div>
-          <p class="text-xs text-gray-400">حضور الموظفين اليوم</p>
-          <h3 class="text-xl font-bold text-white mt-1">96%</h3>
-        </div>
-        <div class="bg-yellow-900 p-3 rounded-lg text-yellow-300"><i class="fas fa-users"></i></div>
-      </div>
-    </div>
-
-    <!-- قسم الرسوم البيانية -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
-        <h3 class="text-sm font-semibold text-gray-300 mb-4 flex items-center">
-          <i class="fas fa-chart-bar ml-2 text-blue-400"></i> معدلات الحضور الأسبوعية
-        </h3>
-        <canvas id="attendanceChart" height="130"></canvas>
-      </div>
-      <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
-        <h3 class="text-sm font-semibold text-gray-300 mb-4 flex items-center">
-          <i class="fas fa-chart-pie ml-2 text-green-400"></i> توزيع العهد والأصول المؤسسية
-        </h3>
-        <canvas id="assetsChart" height="130"></canvas>
-      </div>
-    </div>
-
-    <!-- جدول الأصول والعهد الحديثة -->
-    <div class="bg-gray-800 rounded-xl border border-gray-700 shadow overflow-hidden">
-      <div class="p-4 border-b border-gray-700 flex justify-between items-center">
-        <h3 class="text-sm font-semibold text-gray-200">سجل العهد والأصول الحية</h3>
-        <button onclick="loadAssets()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs px-3 py-1.5 rounded transition">
-          <i class="fas fa-sync-alt ml-1"></i> تحديث البيانات
-        </button>
-      </div>
-      <div class="overflow-x-auto">
-        <table class="w-full text-right text-xs">
-          <thead class="bg-gray-700 text-gray-300">
-            <tr>
-              <th class="p-3">اسم الأصل</th>
-              <th class="p-3">الرقم التسلسلي</th>
-              <th class="p-3">التصنيف</th>
-              <th class="p-3">الحالة</th>
-              <th class="p-3">التاريخ</th>
-            </tr>
-          </thead>
-          <tbody id="assetsTableBody" class="divide-y divide-gray-700 text-gray-300">
-            <tr>
-              <td colspan="5" class="p-4 text-center text-gray-500">جاري تحميل البيانات...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </main>
-
-  <!-- الفوتر -->
-  <footer class="bg-gray-800 border-t border-gray-700 py-3 text-center text-xs text-gray-400">
-    جميع الحقوق محفوظة لصالح نظام كيان الإداري © 2026
-  </footer>
-
-  <!-- السكريبت والوظائف التفاعلية -->
   <script>
-    // إظهار وإخفاء قائمة الإشعارات
-    document.getElementById('notificationDropdown').addEventListener('click', (e) => {
-      e.stopPropagation();
-      document.getElementById('notifList').classList.toggle('hidden');
-    });
-
-    window.addEventListener('click', () => {
-      document.getElementById('notifList').classList.add('hidden');
-    });
-
-    // Socket.io للإشعارات الفورية
-    const socket = io();
-    let notifCount = 0;
-
-    socket.on('notification', (data) => {
-      notifCount++;
-      document.getElementById('notifBadge').innerText = notifCount;
-      
-      const container = document.getElementById('notifContainer');
-      if (notifCount === 1) container.innerHTML = '';
-      
-      const notifItem = document.createElement('div');
-      notifItem.className = `p-2 rounded bg-gray-900 border-l-4 ${data.type === 'success' ? 'border-green-500' : 'border-blue-500'} text-xs shadow`;
-      notifItem.innerHTML = `<strong class="text-white">${data.title}</strong><p class="text-gray-300 mt-0.5">${data.message}</p>`;
-      
-      container.prepend(notifItem);
-      
-      // تحديث الجدول تلقائياً عند إضافة أو تعديل أصل
-      loadAssets();
-    });
-
-    // جلب الأصول من السيرفر وعرضها في الجدول
-    async function loadAssets() {
-      try {
-        const res = await fetch('/api/assets');
-        const assets = await res.json();
-        
-        document.getElementById('totalAssetsCount').innerText = assets.length;
-        
-        const tbody = document.getElementById('assetsTableBody');
-        if (assets.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-500">لا توجد عهد أو أصول مسجلة حالياً</td></tr>`;
-          return;
-        }
-        
-        tbody.innerHTML = assets.map(asset => `
-          <tr class="hover:bg-gray-750 transition">
-            <td class="p-3 font-medium text-white">${asset.assetName}</td>
-            <td class="p-3 text-gray-400">${asset.serialNumber}</td>
-            <td class="p-3"><span class="bg-blue-900 text-blue-200 px-2 py-0.5 rounded text-[10px]">${asset.category}</span></td>
-            <td class="p-3">
-              <span class="px-2 py-0.5 rounded text-[10px] ${asset.status === 'Available' ? 'bg-green-900 text-green-300' : 'bg-yellow-900 text-yellow-300'}">
-                ${asset.status}
-              </span>
-            </td>
-            <td class="p-3 text-gray-400">${new Date(asset.createdAt).toLocaleDateString('ar-SA')}</td>
-          </tr>
-        `).join('');
-      } catch (err) {
-        console.error('خطأ في جلب الأصول:', err);
-      }
+    if (currentUser) {
+      document.getElementById('userNameDisplay').innerText = currentUser.name;
+      document.getElementById('welcomeHeader').innerText = `مرحباً، ${currentUser.name}`;
+      document.getElementById('userRoleBadge').innerText = `الصلاحية: ${currentUser.role.toUpperCase()}`;
     }
 
-    // رسم الحضور (Line Chart)
-    const ctxAttendance = document.getElementById('attendanceChart').getContext('2d');
-    new Chart(ctxAttendance, {
-      type: 'line',
-      data: {
-        labels: ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'],
-        datasets: [{
-          label: 'حضور الموظفين (%)',
-          data: [92, 95, 90, 96, 94, 98],
-          borderColor: '#3b82f6',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          tension: 0.3,
-          fill: true
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { labels: { color: '#9ca3af' } } },
-        scales: {
-          x: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } },
-          y: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } }
-        }
-      }
-    });
-
-    // رسم الأصول (Doughnut Chart)
-    const ctxAssets = document.getElementById('assetsChart').getContext('2d');
-    new Chart(ctxAssets, {
-      type: 'doughnut',
-      data: {
-        labels: ['لابتوب', 'هواتف', 'أجهزة شبكات', 'أدوات مكتبية'],
-        datasets: [{
-          data: [45, 20, 15, 20],
-          backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444']
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { position: 'bottom', labels: { color: '#9ca3af' } } }
-      }
-    });
-
-    // تحميل البيانات أول ما الصفحة تفتح
-    loadAssets();
+    function logout() {
+      localStorage.removeItem('kayanUser');
+      window.location.href = '/login.html';
+    }
   </script>
 </body>
 </html>
