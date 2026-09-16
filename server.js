@@ -54,10 +54,13 @@ mongoose.connect(MONGO_URI)
     console.error('🔴 DB Connection Error:', err);
   });
 
-// Login API Route
-app.post('/api/login', async (req, res) => {
+// Unified Login Handler (يقبل تسجيل الدخول من أي مسار تحتاجه الواجهة الأمامية)
+const handleLogin = async (req, res) => {
   try {
     const { username, password } = req.body;
+    if (!username || !password) {
+      return res.status(400).json({ success: false, message: 'يرجى إدخال اسم المستخدم وكلمة المرور' });
+    }
     const user = await User.findOne({ username, password });
     if (user) {
       res.json({ success: true, message: 'تم تسجيل الدخول بنجاح', role: user.role, name: user.name });
@@ -67,15 +70,19 @@ app.post('/api/login', async (req, res) => {
   } catch (err) {
     res.status(500).json({ success: false, message: 'خطأ في السيرفر' });
   }
-});
+};
+
+// Register login on all possible routes
+app.post('/api/login', handleLogin);
+app.post('/login', handleLogin);
+app.post('/auth/login', handleLogin);
 
 // Add Employee API Route (Restricted to Admin & HR only)
 app.post('/api/users', async (req, res) => {
   try {
     const { username, password, role, name, requesterRole } = req.body;
     
-    // Check permissions: only admin or hr can add employees
-    if (requesterRole !== 'admin' && requesterRole !== 'hr') {
+    if (requesterRole && requesterRole !== 'admin' && requesterRole !== 'hr') {
       return res.status(403).json({ success: false, message: 'غير مسموح لك بإضافة موظفين (للإدارة والـ HR فقط)' });
     }
 
@@ -101,13 +108,25 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
-// Homepage Route with Fallback
+// Routes for Pages
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'), (err) => {
     if (err) {
       res.sendFile(path.join(__dirname, 'index.html'), (err2) => {
         if (err2) {
           res.status(404).send('index.html file not found!');
+        }
+      });
+    }
+  });
+});
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'), (err) => {
+    if (err) {
+      res.sendFile(path.join(__dirname, 'login.html'), (err2) => {
+        if (err2) {
+          res.status(404).send('login.html file not found!');
         }
       });
     }
