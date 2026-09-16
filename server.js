@@ -11,10 +11,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-// Serve static files (HTML, CSS, JS) from public directory or root
+// Serve static files from both public folder and root directory
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname)));
 
-// MongoDB Connection (رابط قاعدة البيانات مع الباسورد مباشرة بدون مشاكل)
+// MongoDB Connection (مربوط بقاعدة البيانات مباشرة بالباسورد)
 const MONGO_URI = 'mongodb+srv://medoomran201035_db_user:1234@cluster0.ykv026a.mongodb.net/kayan_erp?appName=Cluster0';
 
 mongoose.connect(MONGO_URI)
@@ -25,9 +26,17 @@ mongoose.connect(MONGO_URI)
     console.error('🔴 DB Connection Error:', err);
   });
 
-// Basic Route / Homepage
+// Homepage Route with automatic file location fallback
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'), (err) => {
+    if (err) {
+      res.sendFile(path.join(__dirname, 'index.html'), (err2) => {
+        if (err2) {
+          res.status(404).send('index.html file not found!');
+        }
+      });
+    }
+  });
 });
 
 app.listen(PORT, () => {
