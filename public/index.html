@@ -1,97 +1,115 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة التحكم - Kayan ERP</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script>
-    // التحقق الفوري من تسجيل الدخول
-    const currentUser = JSON.parse(localStorage.getItem('kayanUser'));
-    if (!currentUser) {
-      window.location.href = '/login.html';
-    }
-  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - Kayan ERP</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        // التحقق الفوري من تسجيل الدخول
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        if (!currentUser) {
+            window.location.href = '/login.html';
+        }
+    </script>
 </head>
 <body class="bg-gray-900 text-gray-100 font-sans min-h-screen">
-  <div class="flex h-screen overflow-hidden">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-gray-800 border-l border-gray-700 flex flex-col justify-between hidden md:flex">
-      <div class="p-4 border-b border-gray-700">
-        <h1 class="text-lg font-bold text-blue-400 flex items-center gap-2">
-          <i class="fas fa-cube"></i> Kayan ERP
-        </h1>
-        <p id="userNameDisplay" class="text-xs text-gray-400 mt-1">جاري التحميل...</p>
-      </div>
-      <nav class="p-4 space-y-2 flex-1">
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium">
-          <i class="fas fa-home"></i> الرئيسية
-        </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-gray-700 text-sm">
-          <i class="fas fa-users"></i> الموظفين
-        </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-gray-700 text-sm">
-          <i class="fas fa-boxes"></i> الأصول والمخزن
-        </a>
-        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-gray-700 text-sm">
-          <i class="fas fa-clipboard-check"></i> الحضور والانصراف
-        </a>
-      </nav>
-      <div class="p-4 border-t border-gray-700">
-        <button onclick="logout()" class="w-full flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg text-sm transition shadow">
-          <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
-        </button>
-      </div>
-    </aside>
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-800 border-l border-gray-700 flex flex-col justify-between h-full">
+            <div>
+                <!-- Brand / Logo -->
+                <div class="p-4 border-b border-gray-700 flex items-center justify-center">
+                    <img src="logo.png" alt="Kayan Smart Logo" class="h-12 w-auto object-contain">
+                </div>
+                <div class="px-4 py-2 border-b border-gray-700 text-xs text-gray-400 text-center">
+                    مرحباً، <span id="userNameDisplay" class="font-semibold text-white">مدير النظام</span>
+                </div>
+                <!-- Navigation Links -->
+                <nav class="p-4 space-y-2">
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-600 text-white font-medium transition">
+                        <i class="fas fa-home"></i> الرئيسية
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition">
+                        <i class="fas fa-users"></i> الموظفين
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition">
+                        <i class="fas fa-boxes"></i> الأصول والمخزن
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition">
+                        <i class="fas fa-chart-line"></i> المبيعات
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition">
+                        <i class="fas fa-wallet"></i> الحسابات والمالية
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition">
+                        <i class="fas fa-fingerprint"></i> الحضور والانصراف
+                    </a>
+                </nav>
+            </div>
+            <!-- Logout Button -->
+            <div class="p-4 border-t border-gray-700">
+                <button onclick="localStorage.removeItem('currentUser'); window.location.href='/login.html';" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white transition text-sm font-medium">
+                    <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                </button>
+            </div>
+        </aside>
 
-    <!-- Content Area -->
-    <div class="flex-1 flex flex-col overflow-y-auto">
-      <header class="bg-gray-800 border-b border-gray-700 p-4 flex justify-between items-center">
-        <div class="flex items-center gap-3">
-          <span id="userRoleBadge" class="bg-blue-900 text-blue-300 text-xs px-2.5 py-1 rounded-full font-medium">صلاحية المستخدم</span>
-          <h2 class="text-lg font-bold">لوحة القيادة الرئيسية</h2>
-        </div>
-        <div class="flex items-center gap-4">
-          <span id="welcomeHeader" class="text-sm text-gray-300"></span>
-        </div>
-      </header>
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col overflow-y-auto bg-gray-900">
+            <!-- Top Navbar -->
+            <header class="bg-gray-800 border-b border-gray-700 px-6 py-4 flex items-center justify-between shadow-md">
+                <div class="flex items-center gap-4">
+                    <h1 class="text-xl font-bold text-white">لوحة التحكم الرئيسية - Kayan Smart ERP</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm text-gray-300 bg-gray-700 px-3 py-1.5 rounded-lg">التاريخ: <span id="current-date"></span></span>
+                </div>
+            </header>
 
-      <main class="p-6 space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
-            <h3 class="text-sm text-gray-400">إجمالي الموظفين</h3>
-            <p class="text-2xl font-bold mt-2 text-blue-400">24</p>
-          </div>
-          <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
-            <h3 class="text-sm text-gray-400">حالة السيرفر</h3>
-            <p class="text-2xl font-bold mt-2 text-green-400">متصل (Online)</p>
-          </div>
-          <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
-            <h3 class="text-sm text-gray-400">المهام النشطة</h3>
-            <p class="text-2xl font-bold mt-2 text-purple-400">12</p>
-          </div>
-        </div>
+            <!-- Dashboard Content -->
+            <div class="p-6 space-y-6">
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
+                        <div class="text-gray-400 text-sm">إجمالي المبيعات</div>
+                        <div class="text-2xl font-bold text-white mt-1">0.00 ج.م</div>
+                    </div>
+                    <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
+                        <div class="text-gray-400 text-sm">عدد الموظفين</div>
+                        <div class="text-2xl font-bold text-white mt-1">0</div>
+                    </div>
+                    <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
+                        <div class="text-gray-400 text-sm">الأصول المسجلة</div>
+                        <div class="text-2xl font-bold text-white mt-1">0</div>
+                    </div>
+                    <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow">
+                        <div class="text-gray-400 text-sm">الحضور اليوم</div>
+                        <div class="text-2xl font-bold text-green-400 mt-1">0%</div>
+                    </div>
+                </div>
 
-        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
-          <h3 class="text-base font-bold mb-4">نظام Kayan ERP السحابي يعمل بكفاءة عالية</h3>
-          <p class="text-sm text-gray-400">تم تفعيل نظام المصادقة والصلاحيات والأمان بنجاح. استخدم القائمة الجانبية للتنقل بين الأقسام.</p>
-        </div>
-      </main>
+                <!-- Main Section -->
+                <div class="bg-gray-800 rounded-xl border border-gray-700 p-6 shadow">
+                    <h2 class="text-lg font-bold text-white mb-4">نظرة عامة على النظام</h2>
+                    <p class="text-gray-400">مرحباً بك في نظام إدارة الموارد المؤسسية Kayan Smart ERP. تم تحديث الشعار وعمل النظام بكفاءة تامة.</p>
+                </div>
+            </div>
+        </main>
     </div>
-  </div>
 
-  <script>
-    if (currentUser) {
-      document.getElementById('userNameDisplay').innerText = currentUser.name;
-      document.getElementById('welcomeHeader').innerText = `مرحباً، ${currentUser.name}`;
-      document.getElementById('userRoleBadge').innerText = `الصلاحية: ${currentUser.role.toUpperCase()}`;
-    }
-
-    function logout() {
-      localStorage.removeItem('kayanUser');
-      window.location.href = '/login.html';
-    }
-  </script>
+    <script>
+        // عرض اسم المستخدم وتاريخ اليوم
+        document.addEventListener('DOMContentLoaded', () => {
+            if (currentUser && currentUser.name) {
+                document.getElementById('userNameDisplay').textContent = currentUser.name;
+            }
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            document.getElementById('current-date').textContent = new Date().toLocaleDateString('ar-EG', options);
+        });
+    </script>
 </body>
 </html>
