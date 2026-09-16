@@ -3,216 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kian-Nexus | لوحة التحكم العقارية المتكاملة</title>
-    <!-- Tailwind CSS للتصميم السريع -->
+    <title>Kian-Nexus - لوحة إدارة العقارات</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js للرسوم البيانية -->
-    <script src="https://cdn.jsdelivr.5net/npm/chart.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col items-center justify-center p-6">
 
-    <!-- Navbar -->
-    <nav class="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
-        <h1 class="text-xl font-bold text-blue-400">Kian-Nexus | كيان-نكسس</h1>
-        <div class="flex items-center gap-4">
-            <span id="userRoleBadge" class="bg-blue-600 text-xs px-3 py-1 rounded-full">مدير النظام (Admin)</span>
-            <button onclick="logout()" class="text-red-400 hover:text-red-300 text-sm">تسجيل خروج</button>
+    <!-- حاوية الترحيب بالبداية الجديدة -->
+    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200/80 text-center max-w-lg w-full">
+        <div class="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6 text-3xl shadow-inner">
+            <i class="fa-solid fa-city"></i>
         </div>
-    </nav>
-
-    <div class="container mx-auto p-6">
+        <h1 class="text-2xl font-black text-slate-900 mb-2">منصة Kian-Nexus</h1>
+        <p class="text-sm text-slate-500 mb-8 leading-relaxed">تم تهيئة وتنظيف كافة الملفات بنجاح. البيئة الآن جاهزة تماماً لبناء لوحة التحكم من الصفر على نظافة!</p>
         
-        <!-- إحصائيات وشارتات -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg">
-                <h2 class="text-lg font-semibold mb-4 text-gray-300">إحصائيات حالة الوحدات العقارية</h2>
-                <canvas id="propertyChart" class="max-h-60"></canvas>
+        <div class="grid grid-cols-2 gap-3 text-xs font-semibold">
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-slate-600">
+                <i class="fa-solid fa-server ml-1 text-emerald-600"></i> Express Server Ready
             </div>
-            <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg flex flex-col justify-center">
-                <h2 class="text-xl font-bold mb-2 text-blue-400">مرحباً بك يا بشمهندس</h2>
-                <p class="text-gray-400 text-sm mb-4">النظام يعمل بكفاءة عالية على السحابة. يمكنك إضافة عقارات جديدة، متابعة العقود، وحذف الوحدات المنتهية بكل سهولة.</p>
-                <div class="grid grid-cols-2 gap-4 text-center">
-                    <div class="bg-gray-700 p-3 rounded-lg">
-                        <span class="block text-2xl font-bold text-green-400" id="totalProps">0</span>
-                        <span class="text-xs text-gray-400">إجمالي العقارات</span>
-                    </div>
-                    <div class="bg-gray-700 p-3 rounded-lg">
-                        <span class="block text-2xl font-bold text-yellow-400">نشط</span>
-                        <span class="text-xs text-gray-400">حالة السيرفر</span>
-                    </div>
-                </div>
+            <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 text-slate-600">
+                <i class="fa-solid fa-paintbrush ml-1 text-sky-600"></i> Tailwind CSS Active
             </div>
-        </div>
-
-        <!-- قسم إدارة العقارات (CRUD) -->
-        <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 shadow-lg">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold text-gray-200">إدارة العقارات والوحدات</h2>
-                <button onclick="openAddModal()" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded-lg text-sm transition">+ إضافة عقار جديد</button>
-            </div>
-
-            <!-- جدول العقارات -->
-            <div class="overflow-x-auto">
-                <table class="w-full text-right border-collapse">
-                    <thead>
-                        <tr class="border-b border-gray-700 text-gray-400 text-sm">
-                            <th class="py-3 px-4">اسم العقار</th>
-                            <th class="py-3 px-4">النوع</th>
-                            <th class="py-3 px-4">السعر</th>
-                            <th class="py-3 px-4">الموقع</th>
-                            <th class="py-3 px-4">الحالة</th>
-                            <th class="py-3 px-4 text-center">الإجراءات</th>
-                        </tr>
-                    </thead>
-                    <tbody id="propertiesTableBody" class="divide-y divide-gray-700 text-sm">
-                        <!-- يتم تعبئتها ديناميكياً عبر الجافاسكريبت -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- نافذة إضافة عقار (Modal) -->
-    <div id="addModal" class="fixed inset-0 bg-black/60 hidden flex justify-center items-center p-4">
-        <div class="bg-gray-800 p-6 rounded-xl w-full max-w-md border border-gray-700">
-            <h3 class="text-lg font-bold mb-4 text-blue-400">إضافة عقار جديد للنظام</h3>
-            <form id="addPropertyForm" onsubmit="addProperty(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs text-gray-400 mb-1">اسم العقار</label>
-                    <input type="text" id="propTitle" required class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-400 mb-1">النوع</label>
-                    <select id="propType" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-sm text-white">
-                        <option value="فيلا">فيلا</option>
-                        <option value="شقة">شقة</option>
-                        <option value="تجاري">تجاري</option>
-                        <option value="أرض">أرض</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-400 mb-1">السعر (مثال: 150,000 ر.س)</label>
-                    <input type="text" id="propPrice" required class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-sm text-white">
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-400 mb-1">الموقع</label>
-                    <input type="text" id="propLocation" required class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-sm text-white">
-                </div>
-                <div>
-                    <label class="block text-xs text-gray-400 mb-1">الحالة</label>
-                    <select id="propStatus" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-sm text-white">
-                        <option value="متاح">متاح</option>
-                        <option value="مؤجر">مؤجر</option>
-                    </select>
-                </div>
-                <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="closeAddModal()" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg text-sm">إلغاء</button>
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 px-4 py-2 rounded-lg text-sm">حفظ ونشر</button>
-                </div>
-            </form>
         </div>
     </div>
 
-    <!-- سكربت التحكم وعرض البيانات -->
-    <script>
-        let myChart = null;
-
-        async function fetchProperties() {
-            const res = await fetch('/api/properties');
-            const properties = await res.json();
-            
-            document.getElementById('totalProps').innerText = properties.length;
-            
-            const tbody = document.getElementById('propertiesTableBody');
-            tbody.innerHTML = '';
-            
-            let availableCount = 0;
-            let rentedCount = 0;
-
-            properties.forEach(p => {
-                if(p.status === 'متاح') availableCount++;
-                else rentedCount++;
-
-                tbody.innerHTML += `
-                    <tr class="hover:bg-gray-750 transition">
-                        <td class="py-3 px-4 font-medium text-white">${p.title}</td>
-                        <td class="py-3 px-4">${p.type}</td>
-                        <td class="py-3 px-4 text-green-400">${p.price}</td>
-                        <td class="py-3 px-4 text-gray-400">${p.location}</td>
-                        <td class="py-3 px-4">
-                            <span class="px-2.5 py-1 rounded-full text-xs ${p.status === 'متاح' ? 'bg-green-900/50 text-green-300 border border-green-700' : 'bg-red-900/50 text-red-300 border border-red-700'}">${p.status}</span>
-                        </td>
-                        <td class="py-3 px-4 text-center">
-                            <button onclick="deleteProperty(${p.id})" class="text-red-400 hover:text-red-300 text-xs bg-red-950/40 px-2.5 py-1 rounded border border-red-800">حذف</button>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            updateChart(availableCount, rentedCount);
-        }
-
-        function updateChart(available, rented) {
-            const ctx = document.getElementById('propertyChart').getContext('2d');
-            if(myChart) myChart.destroy();
-            
-            myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['متاحة', 'مؤجرة'],
-                    datasets: [{
-                        data: [available, rented],
-                        backgroundColor: ['#10B981', '#EF4444'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { color: '#D1D5DB' } }
-                    }
-                }
-            });
-        }
-
-        function openAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
-        function closeAddModal() { document.getElementById('addModal').classList.add('hidden'); }
-
-        async function addProperty(e) {
-            e.preventDefault();
-            const newProp = {
-                title: document.getElementById('propTitle').value,
-                type: document.getElementById('propType').value,
-                price: document.getElementById('propPrice').value,
-                location: document.getElementById('propLocation').value,
-                status: document.getElementById('propStatus').value
-            };
-
-            await fetch('/api/properties', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newProp)
-            });
-
-            closeAddModal();
-            document.getElementById('addPropertyForm').reset();
-            fetchProperties();
-        }
-
-        async function deleteProperty(id) {
-            if(confirm('هل أنت متأكد من حذف هذا العقار؟')) {
-                await fetch(`/api/properties/${id}`, { method: 'DELETE' });
-                fetchProperties();
-            }
-        }
-
-        function logout() {
-            window.location.reload();
-        }
-
-        // تحميل البيانات عند فتح الصفحة
-        fetchProperties();
-    </script>
 </body>
 </html>
