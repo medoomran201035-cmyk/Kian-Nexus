@@ -4,54 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تسجيل الدخول - Kayan ERP</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background-color: #0b0f19; color: #f8fafc; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        .login-card { background: #0f172a; padding: 40px; border-radius: 16px; border: 1px solid #1e293b; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); text-align: center; }
+        .login-card img { width: 80px; height: 80px; border-radius: 14px; margin-bottom: 20px; border: 2px solid #334155; object-fit: cover; }
+        .login-card h2 { font-size: 22px; color: #fff; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; text-align: right; }
+        .form-group label { display: block; font-size: 13px; color: #94a3b8; margin-bottom: 8px; }
+        .form-group input { width: 100%; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 12px; border-radius: 8px; font-size: 14px; outline: none; }
+        .login-btn { width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .login-btn:hover { background: #1d4ed8; }
+        .error-msg { color: #ef4444; font-size: 13px; margin-top: 15px; display: none; }
+    </style>
 </head>
-<body class="bg-gray-950 text-white font-sans flex items-center justify-center h-screen">
-
-    <div class="bg-gray-900 border border-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md">
-        <div class="text-center mb-6">
-            <h1 class="text-2xl font-bold text-blue-500">Kayan ERP</h1>
-            <p class="text-gray-400 text-sm mt-1">تسجيل الدخول إلى لوحة التحكم التنفيذية</p>
-        </div>
-
-        <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
-            <div>
-                <label class="block text-sm mb-1 text-gray-300">البريد الإلكتروني:</label>
-                <input type="email" id="email" required placeholder="admin@kayan.com" class="w-full bg-gray-800 border border-gray-700 p-3 rounded text-white focus:border-blue-500">
+<body>
+    <div class="login-card">
+        <img src="logo.png" alt="Logo" onerror="this.src='https://via.placeholder.com/80'">
+        <h2>تسجيل الدخول لـ Kayan ERP</h2>
+        <form onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label>البريد الإلكتروني</label>
+                <input type="email" id="email" required placeholder="admin@kayan.com">
             </div>
-            <div>
-                <label class="block text-sm mb-1 text-gray-300">كلمة المرور:</label>
-                <input type="password" id="password" required placeholder="••••••" class="w-full bg-gray-800 border border-gray-700 p-3 rounded text-white focus:border-blue-500">
+            <div class="form-group">
+                <label>كلمة المرور</label>
+                <input type="password" id="password" required placeholder="••••••">
             </div>
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded font-semibold transition shadow-lg">تسجيل الدخول</button>
+            <button type="submit" class="login-btn">دخول</button>
+            <div id="errorMsg" class="error-msg">البريد أو كلمة المرور غير صحيحة</div>
         </form>
     </div>
 
     <script>
-        async function handleLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+        async function handleLogin(e) {
+            e.preventDefault();
+            let email = document.getElementById('email').value;
+            let password = document.getElementById('password').value;
+            let errorMsg = document.getElementById('errorMsg');
 
             try {
-                const res = await fetch('/api/auth/login', {
+                let res = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
-                const data = await res.json();
+                let data = await res.json();
+
                 if (data.success) {
-                    localStorage.setItem('userId', data.user.id);
-                    localStorage.setItem('userName', data.user.name);
-                    localStorage.setItem('userRole', data.user.role);
-                    localStorage.setItem('userDepartment', data.user.department);
-                    window.location.href = '/index.html';
+                    localStorage.setItem('kayan_user', JSON.stringify(data.user));
+                    window.location.href = 'index.html';
                 } else {
-                    alert('خطأ: ' + data.message);
+                    errorMsg.style.display = 'block';
+                    errorMsg.innerText = data.message || 'خطأ في البيانات';
                 }
             } catch (err) {
-                console.error(err);
-                alert('حدث خطأ في الاتصال بالسيرفر');
+                // وضع تجريبي محلي لو السيرفر مش شغال حالياً
+                if(email === 'admin@kayan.com' && password === '123') {
+                    localStorage.setItem('kayan_user', JSON.stringify({name: 'المدير التنفيذي', role: 'ADMIN'}));
+                    window.location.href = 'index.html';
+                } else {
+                    errorMsg.style.display = 'block';
+                }
             }
         }
     </script>
