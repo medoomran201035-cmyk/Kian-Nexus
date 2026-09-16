@@ -3,296 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kayan ERP - لوحة التحكم التنفيذية الشاملة</title>
+    <title>Kayan ERP - لوحة التحكم المركزية</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-gray-950 text-white font-sans">
+<body class="bg-gray-950 text-gray-100 font-sans flex h-screen overflow-hidden">
 
-    <div class="flex h-screen overflow-hidden">
-        
-        <!-- القائمة الجانبية للشاشات الكبيرة -->
-        <aside class="w-64 bg-gray-900 border-l border-gray-800 flex-col justify-between hidden md:flex">
-            <div class="p-5">
-                <div class="flex items-center space-x-3 space-x-reverse mb-8">
-                    <img src="logo.png" alt="Kayan Logo" class="w-10 h-10 object-contain rounded-lg bg-gray-800 p-1 border border-gray-700 shadow-md">
-                    <h1 class="text-2xl font-bold text-blue-500 tracking-wide">Kayan ERP</h1>
+    <!-- Sidebar (القائمة الجانبية مع شعار Kayan) -->
+    <aside class="w-64 bg-gray-900 border-l border-gray-800 flex flex-col justify-between hidden md:flex">
+        <div>
+            <div class="p-5 border-b border-gray-800 flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-xl text-white shadow-lg">K</div>
+                <div>
+                    <h1 class="font-bold text-lg text-white">Kayan ERP</h1>
+                    <p class="text-xs text-gray-400">إدارة 150 موظف</p>
                 </div>
-                
-                <nav class="space-y-2">
-                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full text-right py-2.5 px-4 rounded bg-blue-600 text-white font-semibold shadow transition">لوحة المؤشرات (KPIs)</button>
-                    <button onclick="switchTab('archive')" id="nav-archive" class="w-full text-right py-2.5 px-4 rounded text-gray-400 hover:bg-gray-800 hover:text-white transition">أرشيف المستندات والموظفين</button>
-                    <button onclick="switchTab('sales')" id="nav-sales" class="w-full text-right py-2.5 px-4 rounded text-gray-400 hover:bg-gray-800 hover:text-white transition">المبيعات والعملاء (CRM)</button>
-                    <button onclick="switchTab('hr')" id="nav-hr" class="w-full text-right py-2.5 px-4 rounded text-gray-400 hover:bg-gray-800 hover:text-white transition">شؤون الموظفين والرواتب</button>
-                    <button onclick="switchTab('finance')" id="nav-finance" class="w-full text-right py-2.5 px-4 rounded text-gray-400 hover:bg-gray-800 hover:text-white transition">الإدارة المالية والقيود</button>
-                </nav>
             </div>
-            <div class="p-5 border-t border-gray-800">
-                <button onclick="logout()" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded text-sm font-semibold transition">تسجيل الخروج</button>
-            </div>
-        </aside>
 
-        <!-- قائمة الجوال المنبثقة (Mobile Menu Drawer) -->
-        <div id="mobileMenu" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex flex-col justify-between p-6 md:hidden">
-            <div>
-                <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
-                    <div class="flex items-center space-x-3 space-x-reverse">
-                        <img src="logo.png" alt="Kayan Logo" class="w-10 h-10 object-contain rounded-lg bg-gray-800 p-1 border border-gray-700">
-                        <h1 class="text-xl font-bold text-blue-500">Kayan ERP</h1>
-                    </div>
-                    <button onclick="toggleMobileMenu()" class="text-gray-400 hover:text-white text-3xl font-bold">&times;</button>
-                </div>
-                <nav class="space-y-3">
-                    <button onclick="switchTab('dashboard'); toggleMobileMenu();" id="m-nav-dashboard" class="w-full text-right py-3 px-4 rounded bg-blue-600 text-white font-semibold shadow">لوحة المؤشرات (KPIs)</button>
-                    <button onclick="switchTab('archive'); toggleMobileMenu();" id="m-nav-archive" class="w-full text-right py-3 px-4 rounded text-gray-300 hover:bg-gray-800">أرشيف المستندات والموظفين</button>
-                    <button onclick="switchTab('sales'); toggleMobileMenu();" id="m-nav-sales" class="w-full text-right py-3 px-4 rounded text-gray-300 hover:bg-gray-800">المبيعات والعملاء (CRM)</button>
-                    <button onclick="switchTab('hr'); toggleMobileMenu();" id="m-nav-hr" class="w-full text-right py-3 px-4 rounded text-gray-300 hover:bg-gray-800">شؤون الموظفين والرواتب</button>
-                    <button onclick="switchTab('finance'); toggleMobileMenu();" id="m-nav-finance" class="w-full text-right py-3 px-4 rounded text-gray-300 hover:bg-gray-800">الإدارة المالية والقيود</button>
-                </nav>
-            </div>
-            <div class="pt-4 border-t border-gray-800">
-                <button onclick="logout()" class="w-full bg-red-600 hover:bg-red-700 py-3 rounded text-sm font-semibold">تسجيل الخروج</button>
-            </div>
+            <nav class="p-4 space-y-2">
+                <a href="#" onclick="switchTab('dashboard', this)" class="nav-btn flex items-center space-x-3 space-x-reverse p-3 rounded-lg bg-blue-600 text-white font-medium transition">
+                    <i class="fa-solid fa-house"></i><span>الرئيسية</span>
+                </a>
+                <a href="#" onclick="switchTab('tasks', this)" class="nav-btn flex items-center space-x-3 space-x-reverse p-3 rounded-lg hover:bg-gray-800 text-gray-300 transition">
+                    <i class="fa-solid fa-list-check"></i><span>إدارة المهام</span>
+                </a>
+                <a href="#" onclick="switchTab('helpdesk', this)" class="nav-btn flex items-center space-x-3 space-x-reverse p-3 rounded-lg hover:bg-gray-800 text-gray-300 transition">
+                    <i class="fa-solid fa-headset"></i><span>الدعم الفني (IT)</span>
+                </a>
+                <a href="#" onclick="switchTab('hr', this)" id="hrTab" class="nav-btn flex items-center space-x-3 space-x-reverse p-3 rounded-lg hover:bg-gray-800 text-gray-300 transition hidden">
+                    <i class="fa-solid fa-users-gear"></i><span>شؤون الموظفين (HR)</span>
+                </a>
+            </nav>
         </div>
 
-        <!-- المحتوى الرئيسي -->
-        <main class="flex-1 overflow-y-auto flex flex-col">
-            <header class="bg-gray-900 border-b border-gray-800 p-4 flex justify-between items-center shadow-sm">
-                <div class="flex items-center space-x-3 space-x-reverse">
-                    <!-- زر القائمة للجوال -->
-                    <button onclick="toggleMobileMenu()" class="md:hidden text-gray-200 hover:text-white focus:outline-none p-1.5 bg-gray-800 rounded-lg border border-gray-700 shadow">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                    <h2 id="pageTitle" class="text-sm md:text-lg font-semibold text-gray-200">لوحة المؤشرات التنفيذية</h2>
-                </div>
-                <div class="text-xs md:text-sm text-gray-400">مرحباً بك يا عُمدة (<span id="userRoleDisplay" class="text-blue-400">Admin</span>)</div>
-            </header>
-
-            <div class="p-4 md:p-6 flex-1">
-
-                <!-- 1. لوحة المؤشرات -->
-                <div id="tab-dashboard" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow">
-                            <p class="text-gray-400 text-sm">إجمالي الإيرادات</p>
-                            <h3 class="text-2xl font-bold text-green-400 mt-2">142,500 ر.س</h3>
-                        </div>
-                        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow">
-                            <p class="text-gray-400 text-sm">الصفقات النشطة</p>
-                            <h3 class="text-2xl font-bold text-blue-400 mt-2">24 صفقة</h3>
-                        </div>
-                        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow">
-                            <p class="text-gray-400 text-sm">الموظفون النشطون</p>
-                            <h3 class="text-2xl font-bold text-purple-400 mt-2">18 موظف</h3>
-                        </div>
-                        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow">
-                            <p class="text-gray-400 text-sm">المستندات المؤرشفة</p>
-                            <h3 id="docCount" class="text-2xl font-bold text-yellow-400 mt-2">0</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2. أرشيف المستندات -->
-                <div id="tab-archive" class="hidden space-y-6">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-                        <h2 class="text-xl md:text-2xl font-bold text-gray-100">إدارة الموظفين والأرشيف الشامل</h2>
-                        <button id="addBtn" onclick="openAddModal()" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-semibold hidden transition shadow-lg text-center">
-                            + إضافة موظف أو مستند جديد
-                        </button>
-                    </div>
-
-                    <div class="overflow-x-auto bg-gray-900 rounded-lg shadow-xl border border-gray-800">
-                        <table class="w-full text-right border-collapse min-w-[650px]">
-                            <thead>
-                                <tr class="bg-gray-800 text-gray-300 border-b border-gray-700 text-sm">
-                                    <th class="p-3">عنوان المستند / الموظف</th>
-                                    <th class="p-3">الإدارة / القسم</th>
-                                    <th class="p-3">نوع الملف</th>
-                                    <th class="p-3">المستند المرفق</th>
-                                    <th class="p-3 text-center">التحكم</th>
-                                </tr>
-                            </thead>
-                            <tbody id="documents-table-body" class="text-sm"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- باقي الأقسام -->
-                <div id="tab-sales" class="hidden bg-gray-900 p-6 rounded-xl border border-gray-800">
-                    <h3 class="text-xl font-bold text-blue-400 mb-2">قسم المبيعات وعلاقات العملاء (CRM)</h3>
-                    <p class="text-gray-400 text-sm">إدارة الصفقات وعروض الأسعار قيد التفعيل.</p>
-                </div>
-
-                <div id="tab-hr" class="hidden bg-gray-900 p-6 rounded-xl border border-gray-800">
-                    <h3 class="text-xl font-bold text-purple-400 mb-2">شؤون الموظفين والرواتب</h3>
-                    <p class="text-gray-400 text-sm">إدارة بيانات الموظفين والحضور والإجازات.</p>
-                </div>
-
-                <div id="tab-finance" class="hidden bg-gray-900 p-6 rounded-xl border border-gray-800">
-                    <h3 class="text-xl font-bold text-green-400 mb-2">الإدارة المالية والقيود</h3>
-                    <p class="text-gray-400 text-sm">دفتر القيود اليومية والإيرادات والمصروفات.</p>
-                </div>
-
+        <div class="p-4 border-t border-gray-800">
+            <div class="mb-3">
+                <p id="userNameDisplay" class="text-sm font-bold text-white">جار التحميل...</p>
+                <p id="userRoleDisplay" class="text-xs text-blue-400">الصلاحية</p>
             </div>
-        </main>
-    </div>
-
-    <!-- Modal الإضافة -->
-    <div id="crudModal" class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center hidden z-50 p-4" dir="rtl">
-        <div class="bg-gray-900 p-6 rounded-lg w-full max-w-lg border border-gray-800 text-white shadow-2xl">
-            <h3 class="text-xl font-bold mb-4 text-blue-400">إضافة مستند أو ملف جديد</h3>
-            <form id="crudForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
-                <div>
-                    <label class="block text-sm mb-1 text-gray-300">اسم الموظف أو عنوان المستند:</label>
-                    <input type="text" id="itemTitle" required class="w-full bg-gray-800 border border-gray-700 p-2.5 rounded text-white focus:border-blue-500">
-                </div>
-                <div>
-                    <label class="block text-sm mb-1 text-gray-300">الإدارة / القسم:</label>
-                    <select id="itemDepartment" class="w-full bg-gray-800 border border-gray-700 p-2.5 rounded text-white">
-                        <option value="IT">تقنية المعلومات (IT)</option>
-                        <option value="HR">الموارد البشرية (HR)</option>
-                        <option value="Finance">الإدارة المالية</option>
-                        <option value="Sales">المبيعات</option>
-                        <option value="Operations">العمليات</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm mb-1 text-gray-300">نوع الملف:</label>
-                    <select id="fileType" class="w-full bg-gray-800 border border-gray-700 p-2.5 rounded text-white">
-                        <option value="Word">مستند نصي (Word)</option>
-                        <option value="Excel">جداول بيانات (Excel)</option>
-                        <option value="PDF">مستند إلكتروني (PDF)</option>
-                        <option value="Image">صورة (PNG / JPG)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm mb-1 text-gray-300">الملف:</label>
-                    <input type="file" id="fileInput" required class="w-full bg-gray-800 border border-gray-700 p-2 rounded text-white">
-                </div>
-                <div class="flex justify-end space-x-2 space-x-reverse pt-2">
-                    <button type="button" onclick="closeModal()" class="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded text-sm">إلغاء</button>
-                    <button type="submit" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded text-sm font-semibold">حفظ البيانات</button>
-                </div>
-            </form>
+            <button onclick="logout()" class="w-full bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white p-2 rounded-lg text-sm transition flex items-center justify-center space-x-2 space-x-reverse">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i><span>تسجيل الخروج</span>
+            </button>
         </div>
-    </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-screen overflow-y-auto">
+        <header class="bg-gray-900 border-b border-gray-800 p-4 flex justify-between items-center">
+            <h2 id="pageTitle" class="text-xl font-bold text-white">لوحة المؤشرات العامة</h2>
+            <span id="departmentBadge" class="bg-blue-900/50 text-blue-300 border border-blue-700 text-xs px-3 py-1 rounded-full">القسم: عام</span>
+        </header>
+
+        <div class="p-6 space-y-6" id="contentArea">
+            <!-- المحتوى الافتراضي -->
+        </div>
+    </main>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const userId = localStorage.getItem("userId");
-            if (!userId) {
-                window.location.href = '/login.html';
-                return;
-            }
-            const userRole = localStorage.getItem("userRole"); 
+        const userId = localStorage.getItem('userId');
+        const userName = localStorage.getItem('userName');
+        const userRole = localStorage.getItem('userRole');
+        const userDepartment = localStorage.getItem('userDepartment');
+
+        if (!userId) {
+            window.location.href = '/login.html';
+        } else {
+            document.getElementById('userNameDisplay').innerText = userName;
+            document.getElementById('userRoleDisplay').innerText = `الدور: ${userRole.toUpperCase()}`;
+            document.getElementById('departmentBadge').innerText = `القسم: ${userDepartment}`;
             if (userRole === 'admin' || userRole === 'hr') {
-                document.getElementById('addBtn').classList.remove('hidden');
+                document.getElementById('hrTab').classList.remove('hidden');
             }
-            if(userRole) {
-                document.getElementById('userRoleDisplay').innerText = userRole.toUpperCase();
-            }
-            fetchDocuments();
-        });
-
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('hidden');
+            switchTab('dashboard');
         }
 
-        function switchTab(tabName) {
-            ['dashboard', 'archive', 'sales', 'hr', 'finance'].forEach(t => {
-                document.getElementById(`tab-${t}`).classList.add('hidden');
-                const navD = document.getElementById(`nav-${t}`);
-                if(navD) { navD.classList.remove('bg-blue-600', 'text-white'); navD.classList.add('text-gray-400'); }
-                const navM = document.getElementById(`m-nav-${t}`);
-                if(navM) { navM.classList.remove('bg-blue-600', 'text-white'); navM.classList.add('text-gray-300'); }
-            });
-            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
-            
-            const navD = document.getElementById(`nav-${tabName}`);
-            if(navD) { navD.classList.add('bg-blue-600', 'text-white'); navD.classList.remove('text-gray-400'); }
-            const navM = document.getElementById(`m-nav-${tabName}`);
-            if(navM) { navM.classList.add('bg-blue-600', 'text-white'); navM.classList.remove('text-gray-300'); }
-            
-            const titles = {
-                'dashboard': 'لوحة المؤشرات التنفيذية',
-                'archive': 'أرشيف المستندات والموظفين',
-                'sales': 'قسم المبيعات وعلاقات العملاء',
-                'hr': 'شؤون الموظفين والرواتب',
-                'finance': 'الإدارة المالية والقيود'
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        }
+
+        function switchTab(tabName, element) {
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-blue-600', 'text-white'));
+            if(element) element.classList.add('bg-blue-600', 'text-white');
+
+            const contentArea = document.getElementById('contentArea');
+            const pageTitle = document.getElementById('pageTitle');
+
+            if (tabName === 'dashboard') {
+                pageTitle.innerText = "لوحة المؤشرات العامة";
+                contentArea.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md"><p class="text-gray-400 text-sm">إجمالي الموظفين</p><h3 class="text-3xl font-bold text-blue-500 mt-2">150+</h3></div>
+                        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md"><p class="text-gray-400 text-sm">حالة النظام</p><h3 class="text-3xl font-bold text-green-500 mt-2">متصل وآمن</h3></div>
+                        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-md"><p class="text-gray-400 text-sm">القسم الحالي</p><h3 class="text-xl font-bold text-yellow-500 mt-2">${userDepartment}</h3></div>
+                    </div>`;
+            } else if (tabName === 'tasks') {
+                pageTitle.innerText = "إدارة المهام والمأموريات";
+                contentArea.innerHTML = `
+                    <div class="bg-gray-900 border border-gray-800 p-6 rounded-xl space-y-4">
+                        <h3 class="font-bold text-lg text-blue-400">إضافة مهمة جديدة</h3>
+                        <form onsubmit="addTask(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="taskTitle" placeholder="عنوان المهمة" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
+                            <input type="text" id="taskAssigned" placeholder="الموظف المسؤول" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
+                            <input type="text" id="taskDept" placeholder="القسم المختص" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
+                            <input type="text" id="taskDesc" placeholder="تفاصيل المهمة" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
+                            <button type="submit" class="col-span-2 bg-blue-600 hover:bg-blue-700 p-3 rounded font-semibold transition">حفظ وإرسال المهمة</button>
+                        </form>
+                    </div>`;
+            } else if (tabName === 'helpdesk') {
+                pageTitle.innerText = "نظام الدعم الفني وتذاكر الأعطال";
+                contentArea.innerHTML = `
+                    <div class="bg-gray-900 border border-gray-800 p-6 rounded-xl space-y-4">
+                        <h3 class="font-bold text-lg text-yellow-400">فتح تذكرة دعم فني جديدة</h3>
+                        <form onsubmit="addTicket(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="ticketSubject" placeholder="مشكلة في (طابعة، شبكة، كمبيوتر..)" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
+                            <input type="text" id="ticketDept" placeholder="القسم" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
+                            <textarea id="ticketDesc" placeholder="تفاصيل المشكلة التقنية..." required class="col-span-2 bg-gray-800 border border-gray-700 p-3 rounded text-white"></textarea>
+                            <button type="submit" class="col-span-2 bg-yellow-600 hover:bg-yellow-700 p-3 rounded font-semibold transition">إرسال التذكرة لفريق الـ IT</button>
+                        </form>
+                    </div>`;
+            } else if (tabName === 'hr') {
+                pageTitle.innerText = "شؤون الموظفين وإنشاء الحسابات";
+                contentArea.innerHTML = `
+                    <div class="bg-gray-900 border border-gray-800 p-6 rounded-xl space-y-4">
+                        <h3 class="font-bold text-lg text-blue-400">إنشاء حساب موظف جديد (من 150 موظف)</h3>
+                        <form onsubmit="createEmployee(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <input type="text" id="empName" placeholder="اسم الموظف الثلاثي" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
+                            <input type="email" id="empEmail" placeholder="البريد الإلكتروني" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
+                            <input type="password" id="empPassword" placeholder="كلمة المرور" required class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
+                            <select id="empDepartment" class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
+                                <option value="IT">IT</option><option value="HR">HR</option><option value="Finance">Finance</option><option value="Sales">Sales</option>
+                            </select>
+                            <select id="empRole" class="bg-gray-800 border border-gray-700 p-3 rounded text-white">
+                                <option value="employee">موظف عادي</option><option value="hr">مسؤول HR</option><option value="admin">أدمن</option>
+                            </select>
+                            <button type="submit" class="col-span-2 bg-blue-600 hover:bg-blue-700 p-3 rounded font-semibold transition">إنشاء الحساب</button>
+                        </form>
+                    </div>`;
+            }
+        }
+
+        async function addTask(e) {
+            e.preventDefault();
+            const body = {
+                title: document.getElementById('taskTitle').value,
+                assignedTo: document.getElementById('taskAssigned').value,
+                department: document.getElementById('taskDept').value,
+                description: document.getElementById('taskDesc').value
             };
-            document.getElementById('pageTitle').innerText = titles[tabName];
+            const res = await fetch('/api/tasks/add', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
+            if((await res.json()).success) { alert('تم اضافة المهمة بنجاح'); e.target.reset(); }
         }
 
-        function openAddModal() { document.getElementById('crudForm').reset(); document.getElementById('crudModal').classList.remove('hidden'); }
-        function closeModal() { document.getElementById('crudModal').classList.add('hidden'); }
-
-        async function fetchDocuments() {
-            try {
-                const response = await fetch('/api/documents');
-                const result = await response.json();
-                if (result.success) {
-                    document.getElementById('docCount').innerText = result.data.length;
-                    const tbody = document.getElementById('documents-table-body');
-                    tbody.innerHTML = '';
-                    const userRole = localStorage.getItem("userRole");
-
-                    if(result.data.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-gray-500">لا توجد مستندات مسجلة حالياً.</td></tr>`;
-                        return;
-                    }
-
-                    result.data.forEach(doc => {
-                        tbody.innerHTML += `
-                            <tr class="border-b border-gray-800 hover:bg-gray-900 transition">
-                                <td class="p-3 font-medium">${doc.title}</td>
-                                <td class="p-3"><span class="bg-blue-950 text-blue-300 border border-blue-800 px-2.5 py-1 rounded text-xs">${doc.department}</span></td>
-                                <td class="p-3"><span class="bg-purple-950 text-purple-300 border border-purple-800 px-2.5 py-1 rounded text-xs">${doc.fileType}</span></td>
-                                <td class="p-3"><a href="${doc.fileUrl}" target="_blank" class="text-blue-400 underline hover:text-blue-300">تحميل / عرض الملف</a></td>
-                                <td class="p-3 text-center">
-                                    ${(userRole === 'admin' || userRole === 'hr') ? `
-                                        <button onclick="deleteDocument('${doc._id}')" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded text-xs transition shadow">حذف</button>
-                                    ` : `<span class="text-gray-500 text-xs">عرض فقط</span>`}
-                                </td>
-                            </tr>
-                        `;
-                    });
-                }
-            } catch (error) { console.error('خطأ في جلب البيانات:', error); }
+        async function addTicket(e) {
+            e.preventDefault();
+            const body = {
+                subject: document.getElementById('ticketSubject').value,
+                department: document.getElementById('ticketDept').value,
+                description: document.getElementById('ticketDesc').value,
+                createdBy: userName
+            };
+            const res = await fetch('/api/tickets/add', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
+            if((await res.json()).success) { alert('تم فتح التذكرة بنجاح'); e.target.reset(); }
         }
 
-        async function handleFormSubmit(event) {
-            event.preventDefault();
-            const formData = new FormData();
-            formData.append('title', document.getElementById('itemTitle').value);
-            formData.append('department', document.getElementById('itemDepartment').value);
-            formData.append('fileType', document.getElementById('fileType').value);
-            formData.append('file', document.getElementById('fileInput').files[0]);
-            formData.append('userId', localStorage.getItem("userId"));
-
-            const response = await fetch('/api/documents/add', {
-                method: 'POST',
-                headers: { 'user-id': localStorage.getItem("userId") },
-                body: formData
-            });
-            const result = await response.json();
-            if (result.success) { alert('تمت الإضافة بنجاح!'); closeModal(); fetchDocuments(); }
-            else { alert('خطأ: ' + result.message); }
+        async function createEmployee(e) {
+            e.preventDefault();
+            const body = {
+                requesterId: userId,
+                name: document.getElementById('empName').value,
+                email: document.getElementById('empEmail').value,
+                password: document.getElementById('empPassword').value,
+                department: document.getElementById('empDepartment').value,
+                role: document.getElementById('empRole').value
+            };
+            const res = await fetch('/api/users/create', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body) });
+            const data = await res.json();
+            if(data.success) { alert('تم إنشاء الموظف بنجاح'); e.target.reset(); } else { alert(data.message); }
         }
-
-        async function deleteDocument(id) {
-            if (confirm('هل أنت متأكد من حذف هذا العنصر؟')) {
-                const response = await fetch(`/api/documents/delete/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'user-id': localStorage.getItem("userId") }
-                });
-                const result = await response.json();
-                if (result.success) { alert('تم الحذف بنجاح!'); fetchDocuments(); }
-            }
-        }
-
-        function logout() { localStorage.clear(); window.location.href = '/login.html'; }
     </script>
 </body>
 </html>

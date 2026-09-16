@@ -6,22 +6,24 @@
     <title>تسجيل الدخول - Kayan ERP</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-950 text-white flex items-center justify-center h-screen">
+<body class="bg-gray-950 text-white font-sans flex items-center justify-center h-screen">
 
-    <div class="bg-gray-900 p-8 rounded-lg shadow-2xl w-full max-w-md border border-gray-800">
-        <h2 class="text-3xl font-bold mb-2 text-center text-blue-500">Kayan ERP</h2>
-        <p class="text-gray-400 text-center mb-6 text-sm">تسجيل الدخول إلى لوحة التحكم التنفيذية</p>
-        
+    <div class="bg-gray-900 border border-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md">
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold text-blue-500">Kayan ERP</h1>
+            <p class="text-gray-400 text-sm mt-1">تسجيل الدخول إلى لوحة التحكم التنفيذية</p>
+        </div>
+
         <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
             <div>
-                <label class="block text-sm mb-1">البريد الإلكتروني:</label>
-                <input type="email" id="email" required class="w-full bg-gray-800 border border-gray-700 p-2.5 rounded text-white focus:outline-none focus:border-blue-500">
+                <label class="block text-sm mb-1 text-gray-300">البريد الإلكتروني:</label>
+                <input type="email" id="email" required placeholder="admin@kayan.com" class="w-full bg-gray-800 border border-gray-700 p-3 rounded text-white focus:border-blue-500">
             </div>
             <div>
-                <label class="block text-sm mb-1">كلمة المرور:</label>
-                <input type="password" id="password" required class="w-full bg-gray-800 border border-gray-700 p-2.5 rounded text-white focus:outline-none focus:border-blue-500">
+                <label class="block text-sm mb-1 text-gray-300">كلمة المرور:</label>
+                <input type="password" id="password" required placeholder="••••••" class="w-full bg-gray-800 border border-gray-700 p-3 rounded text-white focus:border-blue-500">
             </div>
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded-lg font-semibold transition shadow-lg">تسجيل الدخول</button>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 py-3 rounded font-semibold transition shadow-lg">تسجيل الدخول</button>
         </form>
     </div>
 
@@ -32,25 +34,24 @@
             const password = document.getElementById('password').value;
 
             try {
-                const response = await fetch('/api/auth/login', {
+                const res = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
-
-                const result = await response.json();
-                if (result.success) {
-                    localStorage.setItem('userId', result.user.id);
-                    localStorage.setItem('userRole', result.user.role);
-                    localStorage.setItem('userName', result.user.name);
-                    
+                const data = await res.json();
+                if (data.success) {
+                    localStorage.setItem('userId', data.user.id);
+                    localStorage.setItem('userName', data.user.name);
+                    localStorage.setItem('userRole', data.user.role);
+                    localStorage.setItem('userDepartment', data.user.department);
                     window.location.href = '/index.html';
                 } else {
-                    alert('خطأ: ' + result.message);
+                    alert('خطأ: ' + data.message);
                 }
-            } catch (error) {
-                console.error('خطأ في الاتصال:', error);
-                alert('حدث خطأ أثناء الاتصال بالخادم.');
+            } catch (err) {
+                console.error(err);
+                alert('حدث خطأ في الاتصال بالسيرفر');
             }
         }
     </script>
