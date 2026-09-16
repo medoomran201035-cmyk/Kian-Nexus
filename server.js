@@ -8,8 +8,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 🔴 حط رابط الـ MongoDB Atlas الخاص بك هنا بين العلامتين (مكان 'حط_رابط_القاعدة_هنا')
-// مثال: 'mongodb+srv://myuser:mypassword@cluster0.xxxxx.mongodb.net/kayan_erp?retryWrites=true&w=majority'
+// 🔴 حط رابط الـ MongoDB Atlas الخاص بك هنا بين العلامتين
 const MONGO_URI = process.env.MONGO_URI || 'حط_رابط_القاعدة_هنا';
 
 // 1. نموذج المستخدمين (Users Schema)
@@ -45,11 +44,8 @@ const TicketSchema = new mongoose.Schema({
 });
 const Ticket = mongoose.model('Ticket', TicketSchema);
 
-// الاتصال بقاعدة البيانات وإنشاء الحسابات الافتراضية تلقائياً
-mongoose.connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(async () => {
+// الاتصال بقاعدة البيانات بدون خيارات قديمة (تم تصحيحها هنا 👇)
+mongoose.connect(MONGO_URI).then(async () => {
     console.log('Connected to MongoDB successfully.');
     
     const adminExists = await User.findOne({ email: 'admin@kayan.com' });
