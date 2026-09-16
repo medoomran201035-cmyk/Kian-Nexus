@@ -8,8 +8,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// الاتصال بقاعدة البيانات
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/kayan_erp';
+// 🔴 حط رابط الـ MongoDB Atlas الخاص بك هنا بين العلامتين (مكان 'حط_رابط_القاعدة_هنا')
+// مثال: 'mongodb+srv://myuser:mypassword@cluster0.xxxxx.mongodb.net/kayan_erp?retryWrites=true&w=majority'
+const MONGO_URI = process.env.MONGO_URI || 'حط_رابط_القاعدة_هنا';
 
 // 1. نموذج المستخدمين (Users Schema)
 const UserSchema = new mongoose.Schema({
@@ -44,7 +45,7 @@ const TicketSchema = new mongoose.Schema({
 });
 const Ticket = mongoose.model('Ticket', TicketSchema);
 
-// الاتصال بقاعدة البيانات وإنشاء الحسابات الافتراضية الثلاثة تلقائياً
+// الاتصال بقاعدة البيانات وإنشاء الحسابات الافتراضية تلقائياً
 mongoose.connect(MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -82,7 +83,7 @@ mongoose.connect(MONGO_URI, {
             department: 'IT'
         });
 
-        console.log('Default Accounts Created: Admin, HR, Employee (Password: 123)');
+        console.log('Default Accounts Created: Admin, HR, Employee');
     }
 }).catch(err => console.error('MongoDB connection error:', err));
 
@@ -129,26 +130,42 @@ app.post('/api/users/create', async (req, res) => {
 
 // جلب وإضافة المهام
 app.get('/api/tasks', async (req, res) => {
-    const tasks = await Task.find().sort({ createdAt: -1 });
-    res.json({ success: true, data: tasks });
+    try {
+        const tasks = await Task.find().sort({ createdAt: -1 });
+        res.json({ success: true, data: tasks });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 });
 
 app.post('/api/tasks/add', async (req, res) => {
-    const { title, description, assignedTo, department } = req.body;
-    const newTask = await Task.create({ title, description, assignedTo, department });
-    res.json({ success: true, data: newTask });
+    try {
+        const { title, description, assignedTo, department } = req.body;
+        const newTask = await Task.create({ title, description, assignedTo, department });
+        res.json({ success: true, data: newTask });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 });
 
 // جلب وإضافة تذاكر الدعم الفني
 app.get('/api/tickets', async (req, res) => {
-    const tickets = await Ticket.find().sort({ createdAt: -1 });
-    res.json({ success: true, data: tickets });
+    try {
+        const tickets = await Ticket.find().sort({ createdAt: -1 });
+        res.json({ success: true, data: tickets });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 });
 
 app.post('/api/tickets/add', async (req, res) => {
-    const { subject, description, department, createdBy } = req.body;
-    const newTicket = await Ticket.create({ subject, description, department, createdBy });
-    res.json({ success: true, data: newTicket });
+    try {
+        const { subject, description, department, createdBy } = req.body;
+        const newTicket = await Ticket.create({ subject, description, department, createdBy });
+        res.json({ success: true, data: newTicket });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
 });
 
 const PORT = process.env.PORT || 3000;
