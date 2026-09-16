@@ -1,176 +1,153 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
+const multer = require('multer');
 const path = require('path');
-const bcrypt = require('bcryptjs');
+const fs = require('fs');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware الأساسية
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname)));
 
-// رابط قاعدة البيانات (بيسحب من Render أو الرابط المباشر)
-const MONGO_URI = process.env.MONGO_URI || 'حط_رابط_القاعدة_هنا_لو_مش_محطوط_في_Environment_Variables';
+// إعداد مجلد تخزين الملفات والصور
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
 
-// 1. نموذج المستخدمين (Users Schema)
-const UserSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    role: { type: String, enum: ['admin', 'hr', 'employee'], default: 'employee' },
-    department: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now }
+// إعداد Multer لدعم رفع أي صيغة ملف أو صورة بأمان
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, uploadDir);
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
 });
-const User = mongoose.model('User', UserSchema);
 
-// 2. نموذج المهام (Tasks Schema)
-const TaskSchema = new mongoose.Schema({
-    title: String,
-    description: String,
-    assignedTo: String,
-    department: String,
-    status: { type: String, default: 'قيد التنفيذ' },
-    createdAt: { type: Date, default: Date.now }
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 50 * 1024 * 1024 } // حد أقصى 50 ميجابايت للملف
 });
+
+app.use('/uploads', express.static(uploadDir));
+
+// ==================== نماذج قاعدة البيانات (MongoDB Schemas) ====================
+const TaskSchema = new mongoose.Schema({ name: String, assignee: String, status: String });
 const Task = mongoose.model('Task', TaskSchema);
 
-// 3. نموذج الدعم الفني (Helpdesk Tickets Schema)
-const TicketSchema = new mongoose.Schema({
-    subject: String,
-    description: String,
-    department: String,
-    status: { type: String, default: 'مفتوحة' },
-    createdBy: String,
-    createdAt: { type: Date, default: Date.now }
-});
-const Ticket = mongoose.model('Ticket', TicketSchema);
+const ITTicketSchema = new mongoose.Schema({ issue: String, dept: String, status: String });
+const ITTicket = mongoose.model('ITTicket', ITTicketSchema);
 
-// الاتصال بقاعدة البيانات وحذف الفهرس القديم أوتوماتيك
-mongoose.connect(MONGO_URI).then(async () => {
-    console.log('Connected to MongoDB successfully.');
-    
-    // سحر الحذف التلقائي للفهرس القديم لمنع خطأ الـ Duplicate Key
+const EmployeeSchema = new mongoose.Schema({ name: String, role: String, date: String });
+const Employee = mongoose.model('Employee', EmployeeSchema);
+
+const UserSchema = new mongoose.Schema({ name: String, role: String, date: String });
+const User = mongoose.model('User', UserSchema);
+
+const FileRecordSchema = new mongoose.Schema({ name: String, desc: String, size: String, filePath: String });
+const FileRecord = mongoose.model('FileRecord', FileRecordSchema);
+
+const SaleSchema = new mongoose.Schema({ item: String, amount: Number, date: String });
+const Sale = mongoose.model('Sale', SaleSchema);
+
+const WarehouseSchema = new mongoose.Schema({ item: String, qty: Number });
+const Warehouse = mongoose.model('Warehouse', WarehouseSchema);
+
+const FinanceSchema = new mongoose.Schema({ desc: String, amount: Number });
+const Finance = mongoose.model('Finance', FinanceSchema);
+
+const AttendanceSchema = new mongoose.Schema({ name: String, status: String, time: String });
+const Attendance = mongoose.model('Attendance', AttendanceSchema);
+
+const ActivitySchema = new mongoose.Schema({ text: String, time: String });
+const Activity = mongoose.model('Activity', ActivitySchema);
+
+
+// ==================== مسارات رفع وتحميل الملفات ====================
+app.post('/api/upload', upload.single('file'), (req, res) => {
     try {
-        await User.collection.dropIndex('username_1');
-        console.log('Legacy username_1 index dropped successfully.');
-    } catch (e) {
-        console.log('Index username_1 already dropped or not found, continuing...');
-    }
-
-    const adminExists = await User.findOne({ email: 'admin@kayan.com' });
-    if (!adminExists) {
-        const hashedPassword = await bcrypt.hash('123', 10);
-        
-        // 1. حساب الأدمن
-        await User.create({
-            name: 'المدير التنفيذي (الأدمن)',
-            email: 'admin@kayan.com',
-            password: hashedPassword,
-            role: 'admin',
-            department: 'الإدارة العليا'
-        });
-
-        // 2. حساب الـ HR التجريبي
-        await User.create({
-            name: 'مسؤول الموارد البشرية',
-            email: 'hr@kayan.com',
-            password: hashedPassword,
-            role: 'hr',
-            department: 'HR'
-        });
-
-        // 3. حساب موظف عادي تجريبي
-        await User.create({
-            name: 'محمد الموظف',
-            email: 'emp@kayan.com',
-            password: hashedPassword,
-            role: 'employee',
-            department: 'IT'
-        });
-
-        console.log('Default Accounts Created: Admin, HR, Employee');
-    }
-}).catch(err => console.error('MongoDB connection error:', err));
-
-// --- المسارات (API Endpoints) ---
-
-// تسجيل الدخول
-app.post('/api/auth/login', async (req, res) => {
-    try {
-        const { email, password } = req.body;
-        const user = await User.findOne({ email });
-        if (!user) return res.status(400).json({ success: false, message: 'البريد الإلكتروني غير مسجل' });
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(400).json({ success: false, message: 'كلمة المرور غير صحيحة' });
-
+        if (!req.file) {
+            return res.status(400).json({ success: false, message: 'لم يتم إرفاق أي ملف' });
+        }
         res.json({
             success: true,
-            user: { id: user._id, name: user.name, role: user.role, department: user.department }
+            message: 'تم رفع الملف بنجاح',
+            filePath: `/uploads/${req.file.filename}`,
+            originalName: req.file.originalname,
+            size: (req.file.size / 1024).toFixed(1) + ' KB'
         });
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, error: error.message });
     }
 });
 
-// إنشاء موظف جديد (للأدمن و HR فقط)
-app.post('/api/users/create', async (req, res) => {
-    try {
-        const { requesterId, name, email, password, role, department } = req.body;
-        const requester = await User.findById(requesterId);
-        if (!requester || (requester.role !== 'admin' && requester.role !== 'hr')) {
-            return res.status(403).json({ success: false, message: 'صلاحيات الإدارة أو HR فقط' });
+app.get('/api/download/:filename', (req, res) => {
+    const filename = req.params.filename;
+    const filePath = path.join(uploadDir, filename);
+    if (fs.existsSync(filePath)) {
+        res.download(filePath);
+    } else {
+        res.status(404).json({ success: false, message: 'الملف غير موجود' });
+    }
+});
+
+
+// ==================== مسارات العمليات (CRUD Endpoints) ====================
+function setupCRUD(app, routeName, Model) {
+    app.get(`/api/${routeName}`, async (req, res) => {
+        try {
+            const data = await Model.find();
+            res.json(data);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
+    });
 
-        const existing = await User.findOne({ email });
-        if (existing) return res.status(400).json({ success: false, message: 'البريد مستخدم بالفعل' });
+    app.post(`/api/${routeName}`, async (req, res) => {
+        try {
+            const newItem = await Model.create(req.body);
+            res.json({ success: true, data: newItem });
+        } catch (err) {
+            res.status(500).json({ success: false, error: err.message });
+        }
+    });
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = await User.create({ name, email, password: hashedPassword, role: role || 'employee', department });
-        res.json({ success: true, message: 'تم إنشاء الحساب بنجاح', user: newUser });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
+    app.delete(`/api/${routeName}/:id`, async (req, res) => {
+        try {
+            await Model.findByIdAndDelete(req.params.id);
+            res.json({ success: true });
+        } catch (err) {
+            res.status(500).json({ success: false, error: err.message });
+        }
+    });
+}
+
+setupCRUD(app, 'tasks', Task);
+setupCRUD(app, 'it', ITTicket);
+setupCRUD(app, 'emp', Employee);
+setupCRUD(app, 'users', User);
+setupCRUD(app, 'files', FileRecord);
+setupCRUD(app, 'sales', Sale);
+setupCRUD(app, 'warehouse', Warehouse);
+setupCRUD(app, 'finance', Finance);
+setupCRUD(app, 'attendance', Attendance);
+setupCRUD(app, 'activities', Activity);
+
+
+// ==================== الاتصال بقاعدة البيانات وتشغيل الخادم ====================
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/kayan_erp';
+
+mongoose.connect(MONGO_URI)
+.then(() => console.log('Connected to MongoDB successfully'))
+.catch(err => console.error('MongoDB connection error:', err));
+
+app.listen(PORT, () => {
+    console.log(`Kayan ERP Enterprise Ultimate Server running on port ${PORT}`);
 });
-
-// جلب وإضافة المهام
-app.get('/api/tasks', async (req, res) => {
-    try {
-        const tasks = await Task.find().sort({ createdAt: -1 });
-        res.json({ success: true, data: tasks });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-});
-
-app.post('/api/tasks/add', async (req, res) => {
-    try {
-        const { title, description, assignedTo, department } = req.body;
-        const newTask = await Task.create({ title, description, assignedTo, department });
-        res.json({ success: true, data: newTask });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-});
-
-// جلب وإضافة تذاكر الدعم الفني
-app.get('/api/tickets', async (req, res) => {
-    try {
-        const tickets = await Ticket.find().sort({ createdAt: -1 });
-        res.json({ success: true, data: tickets });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-});
-
-app.post('/api/tickets/add', async (req, res) => {
-    try {
-        const { subject, description, department, createdBy } = req.body;
-        const newTicket = await Ticket.create({ subject, description, department, createdBy });
-        res.json({ success: true, data: newTicket });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

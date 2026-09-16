@@ -79,7 +79,7 @@
         .btn-primary:hover { opacity: 0.9; }
         
         .table-actions { display: flex; gap: 10px; margin-bottom: 12px; }
-        .btn-tool { background: #059669; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-tool { background: #059669; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; text-decoration: none; }
         .btn-tool:hover { opacity: 0.9; }
 
         .data-table { width: 100%; border-collapse: collapse; background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
@@ -103,12 +103,6 @@
     </style>
 </head>
 <body>
-
-    <script>
-        if (!localStorage.getItem('kayan_user')) {
-            window.location.href = 'login.html';
-        }
-    </script>
 
     <!-- نظام الإشعارات المنبثقة Toast Container -->
     <div id="toastContainer"></div>
@@ -218,7 +212,6 @@
                     <button class="btn-primary" onclick="addTask()" data-i18n="add_task">إضافة مهمة</button>
                 </div>
                 <div class="table-actions">
-                    <button class="btn-tool" onclick="exportToCSV('tasksTable', 'tasks_report.csv')"><span data-i18n="export_excel">تصدير Excel</span></button>
                     <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
                 </div>
                 <table class="data-table"><thead><tr><th data-i18n="task_title">المهمة</th><th data-i18n="assignee">المسؤول</th><th data-i18n="status">الحالة</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="tasksTable"></tbody></table>
@@ -232,7 +225,6 @@
                     <button class="btn-primary" onclick="addItTicket()" data-i18n="open_ticket">فتح تذكرة</button>
                 </div>
                 <div class="table-actions">
-                    <button class="btn-tool" onclick="exportToCSV('itTable', 'it_report.csv')"><span data-i18n="export_excel">تصدير Excel</span></button>
                     <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
                 </div>
                 <table class="data-table"><thead><tr><th data-i18n="issue">المشكلة</th><th data-i18n="department">القسم</th><th data-i18n="status">الحالة</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="itTable"></tbody></table>
@@ -246,7 +238,6 @@
                     <button class="btn-primary" onclick="addEmp()" data-i18n="register_emp">تسجيل موظف</button>
                 </div>
                 <div class="table-actions">
-                    <button class="btn-tool" onclick="exportToCSV('empTable', 'employees_report.csv')"><span data-i18n="export_excel">تصدير Excel</span></button>
                     <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
                 </div>
                 <table class="data-table"><thead><tr><th data-i18n="emp_name">الموظف</th><th data-i18n="job_title">الوظيفة</th><th data-i18n="date">التاريخ</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="empTable"></tbody></table>
@@ -267,24 +258,22 @@
                     <button class="btn-primary" onclick="addUser()" data-i18n="add_user">إضافة مستخدم</button>
                 </div>
                 <div class="table-actions">
-                    <button class="btn-tool" onclick="exportToCSV('usersTable', 'users_report.csv')"><span data-i18n="export_excel">تصدير Excel</span></button>
                     <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
                 </div>
                 <table class="data-table"><thead><tr><th data-i18n="username">اسم المستخدم</th><th data-i18n="role">الدور</th><th data-i18n="date">التاريخ</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="usersTable"></tbody></table>
             </div>
 
-            <!-- 6. أرشيف الملفات -->
+            <!-- 6. أرشيف الملفات (مع دعم رفع أي صيغة وزر التحميل) -->
             <div id="files" class="section-view">
                 <div class="form-box">
-                    <div class="form-group"><label data-i18n="select_file">اختر الملف</label><input type="file" id="fileInput" style="padding: 7px;"></div>
-                    <div class="form-group"><label data-i18n="file_desc">وصف الملف</label><input type="text" id="fileDesc" placeholder="تفاصيل الملف..."></div>
-                    <button class="btn-primary" onclick="addFile()" data-i18n="upload_file">رفع الملف</button>
+                    <div class="form-group"><label>اختر الملف أو الصورة</label><input type="file" id="fileInput" style="padding: 7px;"></div>
+                    <div class="form-group"><label>وصف الملف</label><input type="text" id="fileDesc" placeholder="تفاصيل الملف..."></div>
+                    <button class="btn-primary" onclick="uploadAndSaveFile()">رفع وحفظ الملف</button>
                 </div>
                 <div class="table-actions">
-                    <button class="btn-tool" onclick="exportToCSV('filesTable', 'files_report.csv')"><span data-i18n="export_excel">تصدير Excel</span></button>
-                    <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
+                    <button class="btn-tool" onclick="window.print()">طباعة التقرير</button>
                 </div>
-                <table class="data-table"><thead><tr><th data-i18n="file_name">اسم الملف</th><th data-i18n="file_desc">الوصف</th><th data-i18n="size">الحجم</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="filesTable"></tbody></table>
+                <table class="data-table"><thead><tr><th>اسم الملف</th><th>الوصف</th><th>الحجم</th><th>إجراء</th></tr></thead><tbody id="filesTable"></tbody></table>
             </div>
 
             <!-- 7. المبيعات -->
@@ -295,7 +284,6 @@
                     <button class="btn-primary" onclick="addSale()" data-i18n="add_sale">تسجيل مبيعة</button>
                 </div>
                 <div class="table-actions">
-                    <button class="btn-tool" onclick="exportToCSV('salesTable', 'sales_report.csv')"><span data-i18n="export_excel">تصدير Excel</span></button>
                     <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
                 </div>
                 <table class="data-table"><thead><tr><th data-i18n="statement">البيان</th><th data-i18n="amount">القيمة</th><th data-i18n="date">التاريخ</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="salesTable"></tbody></table>
@@ -309,7 +297,6 @@
                     <button class="btn-primary" onclick="addWarehouseItem()" data-i18n="add_product">إضافة للمخزن</button>
                 </div>
                 <div class="table-actions">
-                    <button class="btn-tool" onclick="exportToCSV('warehouseTable', 'warehouse_report.csv')"><span data-i18n="export_excel">تصدير Excel</span></button>
                     <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
                 </div>
                 <table class="data-table"><thead><tr><th data-i18n="product_name">المنتج</th><th data-i18n="quantity">الكمية</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="warehouseTable"></tbody></table>
@@ -323,7 +310,6 @@
                     <button class="btn-primary" onclick="addFinance()" data-i18n="add_trans">إضافة معاملة</button>
                 </div>
                 <div class="table-actions">
-                    <button class="btn-tool" onclick="exportToCSV('financeTable', 'finance_report.csv')"><span data-i18n="export_excel">تصدير Excel</span></button>
                     <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
                 </div>
                 <table class="data-table"><thead><tr><th data-i18n="statement">البيان</th><th data-i18n="amount">المبلغ</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="financeTable"></tbody></table>
@@ -340,7 +326,6 @@
                     <button class="btn-primary" onclick="addAttendance()" data-i18n="register">تسجيل</button>
                 </div>
                 <div class="table-actions">
-                    <button class="btn-tool" onclick="exportToCSV('attendanceTable', 'attendance_report.csv')"><span data-i18n="export_excel">تصدير Excel</span></button>
                     <button class="btn-tool" onclick="window.print()"><span data-i18n="print_table">طباعة التقرير</span></button>
                 </div>
                 <table class="data-table"><thead><tr><th data-i18n="emp_name">الموظف</th><th data-i18n="status">الحالة</th><th data-i18n="time">الوقت</th><th data-i18n="action">إجراء</th></tr></thead><tbody id="attendanceTable"></tbody></table>
@@ -363,19 +348,6 @@
                         <input type="color" id="settingAccentColor" value="#2563eb" style="height: 40px; cursor: pointer;">
                     </div>
                     <button class="btn-primary" onclick="saveSettings()" data-i18n="save_changes">حفظ التعديلات</button>
-                </div>
-
-                <!-- Backup & Restore Box -->
-                <div style="background: var(--bg-card); padding: 25px; border-radius: 12px; border: 1px solid var(--border-color); max-width: 600px;">
-                    <h3 style="margin-bottom: 15px; font-size: 18px;" data-i18n="backup_title">النسخ الاحتياطي واسترجاع البيانات</h3>
-                    <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 15px;" data-i18n="backup_desc">قم بتحميل نسخة احتياطية من بيانات السيستم أو استرجاعها في أي وقت.</p>
-                    <div style="display: flex; gap: 10px;">
-                        <button class="btn-primary" onclick="exportBackup()" data-i18n="export_backup">تحميل النسخة الاحتياطية</button>
-                        <label class="btn-tool" style="cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding: 10px 20px; height:42px;">
-                            <span data-i18n="import_backup">استرجاع البيانات</span>
-                            <input type="file" id="importFile" onchange="importBackup(event)" style="display:none">
-                        </label>
-                    </div>
                 </div>
             </div>
         </div>
@@ -408,9 +380,7 @@
                 users: "إدارة المستخدمين", files: "أرشيف الملفات", sales: "المبيعات", warehouse: "المخازن",
                 finance: "المالية", attendance: "الحضور والانصراف", settings: "الإعدادات", logout: "خروج",
                 total_emp: "إجمالي الموظفين", active_tasks: "المهام الجارية", it_tickets: "تذاكر الدعم الفني",
-                system_users: "مستخدمو النظام", welcome_title: "مرحباً بك يا مهندس محمد في نظام Kayan ERP",
-                welcome_desc: "النسخة الأسطورية Enterprise Ultimate تتضمن رسوم بيانية، إشعارات ذكية، نسخ احتياطي، وبحث عام.",
-                task_title: "عنوان المهمة", assignee: "المسؤول", status: "الحالة", action: "إجراء", add_task: "إضافة مهمة",
+                system_users: "مستخدمو النظام", task_title: "عنوان المهمة", assignee: "المسؤول", status: "الحالة", action: "إجراء", add_task: "إضافة مهمة",
                 issue: "المشكلة / الجهاز", department: "القسم الطالب", open_ticket: "فتح تذكرة", emp_name: "اسم الموظف",
                 job_title: "المسمى الوظيفي", register_emp: "تسجيل موظف", username: "اسم المستخدم", role: "الصلاحية",
                 add_user: "إضافة مستخدم", select_file: "اختر الملف", file_desc: "وصف الملف", upload_file: "رفع الملف",
@@ -422,18 +392,14 @@
                 dashboard_title: "لوحة التحكم الرئيسية", recent_activity: "سجل النشاطات الفورية للشركة", 
                 print_table: "طباعة التقرير", export_excel: "تصدير Excel",
                 sales_analytics: "تحليل المبيعات الشهرية", tasks_analytics: "توزيع حالة المهام",
-                accent_color_label: "لون الهوية الأساسي", backup_title: "النسخ الاحتياطي واسترجاع البيانات",
-                backup_desc: "قم بتحميل نسخة احتياطية من بيانات السيستم أو استرجاعها في أي وقت.",
-                export_backup: "تحميل النسخة الاحتياطية", import_backup: "استرجاع البيانات"
+                accent_color_label: "لون الهوية الأساسي"
             },
             en: {
                 home: "Home", tasks: "Task Management", it: "IT Support", hr: "HR Management",
                 users: "User Management", files: "File Archive", sales: "Sales", warehouse: "Warehouse",
                 finance: "Finance", attendance: "Attendance", settings: "Settings", logout: "Logout",
                 total_emp: "Total Employees", active_tasks: "Active Tasks", it_tickets: "IT Tickets",
-                system_users: "System Users", welcome_title: "Welcome, Eng. Mohammed, to Kayan ERP",
-                welcome_desc: "Enterprise Ultimate edition featuring charts, smart notifications, backup, and global search.",
-                task_title: "Task Title", assignee: "Assignee", status: "Status", action: "Action", add_task: "Add Task",
+                system_users: "System Users", task_title: "Task Title", assignee: "Assignee", status: "Status", action: "Action", add_task: "Add Task",
                 issue: "Issue / Device", department: "Department", open_ticket: "Open Ticket", emp_name: "Employee Name",
                 job_title: "Job Title", register_emp: "Register Employee", username: "Username", role: "Role",
                 add_user: "Add User", select_file: "Select File", file_desc: "File Description", upload_file: "Upload File",
@@ -445,9 +411,7 @@
                 dashboard_title: "Main Dashboard", recent_activity: "Real-time Activity Log", 
                 print_table: "Print Report", export_excel: "Export Excel",
                 sales_analytics: "Monthly Sales Analytics", tasks_analytics: "Tasks Status Distribution",
-                accent_color_label: "Primary Accent Color", backup_title: "Backup & Restore Data",
-                backup_desc: "Download system data backup or restore it anytime.",
-                export_backup: "Download Backup", import_backup: "Restore Data"
+                accent_color_label: "Primary Accent Color"
             }
         };
 
@@ -493,92 +457,15 @@
             }
         }
 
-        // تطبيق لون الهوية المخصص
         function applyAccentColor(color) {
             document.documentElement.style.setProperty('--primary', color);
             localStorage.setItem('kayan_accent', color);
         }
 
-        // تصدير الجداول إلى CSV
-        function exportToCSV(tableId, filename) {
-            let table = document.getElementById(tableId);
-            let rows = table.querySelectorAll('tr');
-            let csv = [];
-            rows.forEach(row => {
-                let cols = row.querySelectorAll('td, th');
-                let data = [];
-                cols.forEach((col, idx) => {
-                    if(idx < cols.length - 1) data.push('"' + col.innerText + '"');
-                });
-                csv.push(data.join(','));
-            });
-            let csvFile = new Blob(["\uFEFF" + csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
-            let downloadLink = document.createElement('a');
-            downloadLink.href = URL.createObjectURL(csvFile);
-            downloadLink.download = filename;
-            downloadLink.click();
-            showToast('تم تصدير التقرير بنجاح!', 'success');
-        }
-
-        // النسخ الاحتياطي والاسترجاع
-        function exportBackup() {
-            let backupData = {};
-            for (let i = 0; i < localStorage.length; i++) {
-                let key = localStorage.key(i);
-                backupData[key] = localStorage.getItem(key);
-            }
-            let blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
-            let link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `kayan_erp_backup_${new Date().toISOString().slice(0,10)}.json`;
-            link.click();
-            showToast('تم تحميل النسخة الاحتياطية بنجاح!', 'success');
-        }
-
-        function importBackup(event) {
-            let file = event.target.files[0];
-            if (!file) return;
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    let backupData = JSON.parse(e.target.result);
-                    for (let key in backupData) {
-                        localStorage.setItem(key, backupData[key]);
-                    }
-                    showToast('تم استرجاع البيانات بنجاح! جاري تحديث النظام...', 'success');
-                    setTimeout(() => location.reload(), 1500);
-                } catch (err) {
-                    showToast('فشل استرجاع الملف، تأكد من صحة الملف.', 'error');
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        // بحث عام سريع في السيستم
         function globalSearch(query) {
             if(!query) return;
             query = query.toLowerCase();
-            let sections = ['tasks', 'it', 'hr', 'users', 'sales', 'warehouse', 'finance', 'attendance'];
-            // مجرد تفعيل أول قسم يطابق أو التنبيه
             showToast(`جاري البحث عن: ${query}`, 'success');
-        }
-
-        function logActivity(text) {
-            let activities = JSON.parse(localStorage.getItem('kayan_activities')) || [];
-            activities.unshift({ text, time: new Date().toLocaleTimeString('ar-EG') });
-            if(activities.length > 15) activities.pop();
-            localStorage.setItem('kayan_activities', JSON.stringify(activities));
-            renderActivities();
-        }
-
-        function renderActivities() {
-            let activities = JSON.parse(localStorage.getItem('kayan_activities')) || [];
-            let html = '';
-            activities.forEach(a => {
-                html += `<li>${a.text} <span>${a.time}</span></li>`;
-            });
-            let list = document.getElementById('activityList');
-            if(list) list.innerHTML = html || '<li>لا توجد نشاطات مسجلة حديثاً</li>';
         }
 
         function saveSettings() {
@@ -610,7 +497,6 @@
             }
         }
 
-        // إعداد الرسوم البيانية Chart.js
         let salesChartInstance = null;
         let tasksChartInstance = null;
 
@@ -618,16 +504,13 @@
             const salesCtx = document.getElementById('salesChart').getContext('2d');
             const tasksCtx = document.getElementById('tasksChart').getContext('2d');
 
-            let salesData = getData('kayan_sales');
-            let tasksData = getData('kayan_tasks');
-
             salesChartInstance = new Chart(salesCtx, {
                 type: 'bar',
                 data: {
                     labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر'],
                     datasets: [{
                         label: 'المبيعات (ر.س)',
-                        data: [12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, salesData.length * 1000 + 10000],
+                        data: [12000, 19000, 15000, 25000, 22000, 30000, 28000, 35000, 42000],
                         backgroundColor: '#2563eb',
                         borderRadius: 6
                     }]
@@ -640,7 +523,7 @@
                 data: {
                     labels: ['جارِ التنفيذ', 'مكتملة', 'معلقة'],
                     datasets: [{
-                        data: [tasksData.length || 3, 5, 2],
+                        data: [3, 5, 2],
                         backgroundColor: ['#38bdf8', '#10b981', '#fbbf24']
                     }]
                 },
@@ -648,38 +531,12 @@
             });
         }
 
-        function updateCharts() {
-            if(salesChartInstance && tasksChartInstance) {
-                let tasksData = getData('kayan_tasks');
-                tasksChartInstance.data.datasets[0].data = [tasksData.length || 3, 5, 2];
-                tasksChartInstance.update();
-            }
-        }
-
         window.addEventListener('DOMContentLoaded', () => {
             applyLanguage();
             applyTheme();
             loadSettings();
-            renderActivities();
             initCharts();
-            let userData = JSON.parse(localStorage.getItem('kayan_user'));
-            if(userData) {
-                document.getElementById('userNameView').innerText = userData.name;
-                document.getElementById('userRoleView').innerText = userData.role;
-                
-                // تطبيق الصلاحيات الديناميكية للقائمة الجانبية لو موظف عادي
-                if(userData.role === 'HR') {
-                    document.querySelectorAll('.sidebar-menu li').forEach(li => {
-                        let sec = li.querySelector('a').getAttribute('data-section');
-                        if(['it', 'users', 'sales', 'warehouse', 'finance'].includes(sec)) li.style.display = 'none';
-                    });
-                } else if(userData.role === 'IT') {
-                    document.querySelectorAll('.sidebar-menu li').forEach(li => {
-                        let sec = li.querySelector('a').getAttribute('data-section');
-                        if(['hr', 'sales', 'warehouse', 'finance', 'attendance'].includes(sec)) li.style.display = 'none';
-                    });
-                }
-            }
+            loadAllData();
         });
 
         function switchSection(sectionId, element) {
@@ -689,210 +546,194 @@
             element.classList.add('active');
         }
 
-        function getData(key) { return JSON.parse(localStorage.getItem(key)) || []; }
-        function saveData(key, data) { localStorage.setItem(key, JSON.stringify(data)); updateStats(); updateCharts(); }
-        function updateStats() {
-            document.getElementById('statEmp').innerText = getData('kayan_emp').length;
-            document.getElementById('statTasks').innerText = getData('kayan_tasks').length;
-            document.getElementById('statIt').innerText = getData('kayan_it').length;
-            document.getElementById('statUsers').innerText = getData('kayan_users').length;
+        // جلب وعرض البيانات من MongoDB والتعامل مع الـ CRUD
+        async function loadAllData() {
+            fetchAndRender('tasks', 'tasksTable', t => `<tr><td>${t.name}</td><td>${t.assignee || '-'}</td><td><span style="color:#38bdf8">${t.status}</span></td><td><button class="btn-delete" onclick="deleteItem('tasks', '${t._id}')">حذف</button></td></tr>`);
+            fetchAndRender('it', 'itTable', t => `<tr><td>${t.issue}</td><td>${t.dept || '-'}</td><td><span style="color:#fbbf24">${t.status}</span></td><td><button class="btn-delete" onclick="deleteItem('it', '${t._id}')">حذف</button></td></tr>`);
+            fetchAndRender('emp', 'empTable', e => `<tr><td>${e.name}</td><td>${e.role}</td><td>${e.date}</td><td><button class="btn-delete" onclick="deleteItem('emp', '${e._id}')">حذف</button></td></tr>`);
+            fetchAndRender('users', 'usersTable', u => `<tr><td>${u.name}</td><td><span style="color:#4ade80">${u.role}</span></td><td>${u.date}</td><td><button class="btn-delete" onclick="deleteItem('users', '${u._id}')">حذف</button></td></tr>`);
+            loadFilesFromDB();
+            fetchAndRender('sales', 'salesTable', s => `<tr><td>${s.item}</td><td>${s.amount}</td><td>${s.date}</td><td><button class="btn-delete" onclick="deleteItem('sales', '${s._id}')">حذف</button></td></tr>`);
+            fetchAndRender('warehouse', 'warehouseTable', w => `<tr><td>${w.item}</td><td>${w.qty}</td><td><button class="btn-delete" onclick="deleteItem('warehouse', '${w._id}')">حذف</button></td></tr>`);
+            fetchAndRender('finance', 'financeTable', f => `<tr><td>${f.desc}</td><td>${f.amount}</td><td><button class="btn-delete" onclick="deleteItem('finance', '${f._id}')">حذف</button></td></tr>`);
+            fetchAndRender('attendance', 'attendanceTable', a => `<tr><td>${a.name}</td><td>${a.status}</td><td>${a.time}</td><td><button class="btn-delete" onclick="deleteItem('attendance', '${a._id}')">حذف</button></td></tr>`);
         }
 
-        function addTask() {
+        async function fetchAndRender(endpoint, tableId, rowTemplate) {
+            try {
+                let res = await fetch(`/api/${endpoint}`);
+                let data = await res.json();
+                let html = '';
+                data.forEach(item => { html += rowTemplate(item); });
+                document.getElementById(tableId).innerHTML = html;
+                updateStatsCount(endpoint, data.length);
+            } catch (err) { console.error(err); }
+        }
+
+        function updateStatsCount(endpoint, count) {
+            if(endpoint === 'emp') document.getElementById('statEmp').innerText = count;
+            if(endpoint === 'tasks') document.getElementById('statTasks').innerText = count;
+            if(endpoint === 'it') document.getElementById('statIt').innerText = count;
+            if(endpoint === 'users') document.getElementById('statUsers').innerText = count;
+        }
+
+        async function postData(endpoint, data) {
+            let res = await fetch(`/api/${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            return await res.json();
+        }
+
+        async function deleteItem(endpoint, id) {
+            if(confirm('هل أنت متأكد من الحذف؟')) {
+                await fetch(`/api/${endpoint}/${id}`, { method: 'DELETE' });
+                showToast('تم الحذف بنجاح', 'success');
+                loadAllData();
+            }
+        }
+
+        // دوال الإضافة لكل قسم
+        async function addTask() {
             let name = document.getElementById('taskName').value;
             let assignee = document.getElementById('taskAssignee').value;
             if(!name) return showToast('أدخل اسم المهمة', 'error');
-            let tasks = getData('kayan_tasks');
-            tasks.push({name, assignee, status: 'جارِ التنفيذ'});
-            saveData('kayan_tasks', tasks);
-            logActivity(`تم إضافة مهمة جديدة: ${name}`);
+            await postData('tasks', { name, assignee, status: 'جارِ التنفيذ' });
             showToast('تمت إضافة المهمة بنجاح!', 'success');
             document.getElementById('taskName').value = '';
             document.getElementById('taskAssignee').value = '';
-            renderTasks();
-        }
-        function renderTasks() {
-            let tasks = getData('kayan_tasks');
-            let html = '';
-            tasks.forEach((t, i) => { html += `<tr><td>${t.name}</td><td>${t.assignee || '-'}</td><td><span style="color:#38bdf8">${t.status}</span></td><td><button class="btn-delete" onclick="deleteItem('kayan_tasks', ${i}, renderTasks)">حذف</button></td></tr>`; });
-            document.getElementById('tasksTable').innerHTML = html;
+            loadAllData();
         }
 
-        function addItTicket() {
+        async function addItTicket() {
             let issue = document.getElementById('itIssue').value;
             let dept = document.getElementById('itDept').value;
             if(!issue) return showToast('أدخل المشكلة', 'error');
-            let tickets = getData('kayan_it');
-            tickets.push({issue, dept, status: 'مفتوحة'});
-            saveData('kayan_it', tickets);
-            logActivity(`فتح تذكرة دعم فني جديدة: ${issue}`);
+            await postData('it', { issue, dept, status: 'مفتوحة' });
             showToast('تم فتح التذكرة بنجاح!', 'success');
             document.getElementById('itIssue').value = '';
             document.getElementById('itDept').value = '';
-            renderIt();
-        }
-        function renderIt() {
-            let tickets = getData('kayan_it');
-            let html = '';
-            tickets.forEach((t, i) => { html += `<tr><td>${t.issue}</td><td>${t.dept || '-'}</td><td><span style="color:#fbbf24">${t.status}</span></td><td><button class="btn-delete" onclick="deleteItem('kayan_it', ${i}, renderIt)">حذف</button></td></tr>`; });
-            document.getElementById('itTable').innerHTML = html;
+            loadAllData();
         }
 
-        function addEmp() {
+        async function addEmp() {
             let name = document.getElementById('empName').value;
             let role = document.getElementById('empRole').value;
             if(!name) return showToast('أدخل اسم الموظف', 'error');
-            let emps = getData('kayan_emp');
-            emps.push({name, role, date: new Date().toLocaleDateString('ar-EG')});
-            saveData('kayan_emp', emps);
-            logActivity(`تسجيل موظف جديد: ${name}`);
+            await postData('emp', { name, role, date: new Date().toLocaleDateString('ar-EG') });
             showToast('تم تسجيل الموظف بنجاح!', 'success');
             document.getElementById('empName').value = '';
             document.getElementById('empRole').value = '';
-            renderEmp();
-        }
-        function renderEmp() {
-            let emps = getData('kayan_emp');
-            let html = '';
-            emps.forEach((e, i) => { html += `<tr><td>${e.name}</td><td>${e.role}</td><td>${e.date}</td><td><button class="btn-delete" onclick="deleteItem('kayan_emp', ${i}, renderEmp)">حذف</button></td></tr>`; });
-            document.getElementById('empTable').innerHTML = html;
+            loadAllData();
         }
 
-        function addUser() {
+        async function addUser() {
             let name = document.getElementById('userNameInput').value;
             let role = document.getElementById('userRoleInput').value;
             if(!name) return showToast('أدخل اسم المستخدم', 'error');
-            let users = getData('kayan_users');
-            users.push({name, role, date: new Date().toLocaleDateString('ar-EG')});
-            saveData('kayan_users', users);
-            logActivity(`إضافة مستخدم للنظام: ${name}`);
+            await postData('users', { name, role, date: new Date().toLocaleDateString('ar-EG') });
             showToast('تم إضافة المستخدم بنجاح!', 'success');
             document.getElementById('userNameInput').value = '';
-            renderUsers();
-        }
-        function renderUsers() {
-            let users = getData('kayan_users');
-            let html = '';
-            users.forEach((u, i) => { html += `<tr><td>${u.name}</td><td><span style="color:#4ade80">${u.role}</span></td><td>${u.date}</td><td><button class="btn-delete" onclick="deleteItem('kayan_users', ${i}, renderUsers)">حذف</button></td></tr>`; });
-            document.getElementById('usersTable').innerHTML = html;
+            loadAllData();
         }
 
-        function addFile() {
+        // رفع الملفات والصور بأي صيغة مع زر التحميل
+        async function uploadAndSaveFile() {
             let fileInput = document.getElementById('fileInput');
             let desc = document.getElementById('fileDesc').value;
-            if(fileInput.files.length === 0) return showToast('اختر ملفاً', 'error');
-            let file = fileInput.files[0];
-            let files = getData('kayan_files');
-            files.push({name: file.name, desc: desc || '-', size: (file.size / 1024).toFixed(1) + ' KB'});
-            saveData('kayan_files', files);
-            logActivity(`رفع ملف بالأرشيف: ${file.name}`);
-            showToast('تم رفع الملف بنجاح!', 'success');
-            document.getElementById('fileInput').value = '';
-            document.getElementById('fileDesc').value = '';
-            renderFiles();
-        }
-        function renderFiles() {
-            let files = getData('kayan_files');
-            let html = '';
-            files.forEach((f, i) => { html += `<tr><td>${f.name}</td><td>${f.desc}</td><td>${f.size}</td><td><button class="btn-delete" onclick="deleteItem('kayan_files', ${i}, renderFiles)">حذف</button></td></tr>`; });
-            document.getElementById('filesTable').innerHTML = html;
+            if(fileInput.files.length === 0) return showToast('اختر ملفاً أولاً', 'error');
+            
+            let formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                showToast('جاري رفع الملف...', 'success');
+                let uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
+                let uploadResult = await uploadRes.json();
+                if(!uploadResult.success) return showToast('فشل رفع الملف', 'error');
+
+                await postData('files', {
+                    name: uploadResult.originalName,
+                    desc: desc || '-',
+                    size: uploadResult.size,
+                    filePath: uploadResult.filePath
+                });
+
+                showToast('تم رفع وحفظ الملف بنجاح!', 'success');
+                document.getElementById('fileInput').value = '';
+                document.getElementById('fileDesc').value = '';
+                loadFilesFromDB();
+            } catch (err) {
+                showToast('حدث خطأ أثناء الرفع', 'error');
+            }
         }
 
-        function addSale() {
+        async function loadFilesFromDB() {
+            try {
+                let res = await fetch('/api/files');
+                let files = await res.json();
+                let html = '';
+                files.forEach(f => {
+                    let fileName = f.filePath ? f.filePath.split('/').pop() : '';
+                    html += `<tr>
+                        <td>${f.name}</td>
+                        <td>${f.desc}</td>
+                        <td>${f.size || '-'}</td>
+                        <td>
+                            ${fileName ? `<a href="/api/download/${fileName}" class="btn-tool" style="padding:4px 8px; font-size:11px;" download>تحميل</a>` : ''}
+                            <button class="btn-delete" onclick="deleteItem('files', '${f._id}')">حذف</button>
+                        </td>
+                    </tr>`;
+                });
+                document.getElementById('filesTable').innerHTML = html;
+            } catch(err) { console.error(err); }
+        }
+
+        async function addSale() {
             let item = document.getElementById('saleItem').value;
             let amount = document.getElementById('saleAmount').value;
             if(!item || !amount) return showToast('أدخل البيانات', 'error');
-            let sales = getData('kayan_sales');
-            sales.push({item, amount, date: new Date().toLocaleDateString('ar-EG')});
-            saveData('kayan_sales', sales);
-            logActivity(`تسجيل مبيعة جديدة بقيمة ${amount}`);
+            await postData('sales', { item, amount: Number(amount), date: new Date().toLocaleDateString('ar-EG') });
             showToast('تم تسجيل المبيعة بنجاح!', 'success');
             document.getElementById('saleItem').value = '';
             document.getElementById('saleAmount').value = '';
-            renderSales();
-        }
-        function renderSales() {
-            let sales = getData('kayan_sales');
-            let html = '';
-            sales.forEach((s, i) => { html += `<tr><td>${s.item}</td><td>${s.amount}</td><td>${s.date}</td><td><button class="btn-delete" onclick="deleteItem('kayan_sales', ${i}, renderSales)">حذف</button></td></tr>`; });
-            document.getElementById('salesTable').innerHTML = html;
+            loadAllData();
         }
 
-        function addWarehouseItem() {
+        async function addWarehouseItem() {
             let item = document.getElementById('wareItem').value;
             let qty = document.getElementById('wareQty').value;
             if(!item) return showToast('أدخل المنتج', 'error');
-            let wh = getData('kayan_warehouse');
-            wh.push({item, qty: qty || 0});
-            saveData('kayan_warehouse', wh);
-            logActivity(`إضافة منتج للمخزن: ${item}`);
+            await postData('warehouse', { item, qty: Number(qty) || 0 });
             showToast('تمت الإضافة للمخزن بنجاح!', 'success');
             document.getElementById('wareItem').value = '';
             document.getElementById('wareQty').value = '';
-            renderWarehouse();
-        }
-        function renderWarehouse() {
-            let wh = getData('kayan_warehouse');
-            let html = '';
-            wh.forEach((w, i) => { html += `<tr><td>${w.item}</td><td>${w.qty}</td><td><button class="btn-delete" onclick="deleteItem('kayan_warehouse', ${i}, renderWarehouse)">حذف</button></td></tr>`; });
-            document.getElementById('warehouseTable').innerHTML = html;
+            loadAllData();
         }
 
-        function addFinance() {
+        async function addFinance() {
             let desc = document.getElementById('finDesc').value;
             let amount = document.getElementById('finAmount').value;
             if(!desc || !amount) return showToast('أدخل البيانات', 'error');
-            let fin = getData('kayan_finance');
-            fin.push({desc, amount});
-            saveData('kayan_finance', fin);
-            logActivity(`إضافة معاملة مالية: ${desc}`);
+            await postData('finance', { desc, amount: Number(amount) });
             showToast('تمت إضافة المعاملة بنجاح!', 'success');
             document.getElementById('finDesc').value = '';
             document.getElementById('finAmount').value = '';
-            renderFinance();
-        }
-        function renderFinance() {
-            let fin = getData('kayan_finance');
-            let html = '';
-            fin.forEach((f, i) => { html += `<tr><td>${f.desc}</td><td>${f.amount}</td><td><button class="btn-delete" onclick="deleteItem('kayan_finance', ${i}, renderFinance)">حذف</button></td></tr>`; });
-            document.getElementById('financeTable').innerHTML = html;
+            loadAllData();
         }
 
-        function addAttendance() {
+        async function addAttendance() {
             let name = document.getElementById('attName').value;
             let status = document.getElementById('attStatus').value;
             if(!name) return showToast('أدخل اسم الموظف', 'error');
-            let att = getData('kayan_att');
-            att.push({name, status, time: new Date().toLocaleString('ar-EG')});
-            saveData('kayan_att', att);
-            logActivity(`تسجيل حضور/انصراف لـ: ${name}`);
+            await postData('attendance', { name, status, time: new Date().toLocaleString('ar-EG') });
             showToast('تم تسجيل الحضور بنجاح!', 'success');
             document.getElementById('attName').value = '';
-            renderAttendance();
+            loadAllData();
         }
-        function renderAttendance() {
-            let att = getData('kayan_att');
-            let html = '';
-            att.forEach((a, i) => { html += `<tr><td>${a.name}</td><td>${a.status}</td><td>${a.time}</td><td><button class="btn-delete" onclick="deleteItem('kayan_att', ${i}, renderAttendance)">حذف</button></td></tr>`; });
-            document.getElementById('attendanceTable').innerHTML = html;
-        }
-
-        function deleteItem(key, index, func) {
-            let data = getData(key);
-            data.splice(index, 1);
-            saveData(key, data);
-            func();
-            showToast('تم الحذف بنجاح', 'success');
-        }
-
-        window.onload = function() {
-            renderTasks(); renderIt(); renderEmp(); renderUsers();
-            renderFiles(); renderSales(); renderWarehouse(); renderFinance();
-            renderAttendance(); updateStats(); renderActivities();
-        };
 
         function logout() {
-            localStorage.removeItem('kayan_user');
             window.location.href = 'login.html';
         }
     </script>
