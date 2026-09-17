@@ -11,8 +11,8 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// الاتصال بقاعدة البيانات مع إنشاء المستخدمين تلقائياً لو القاعدة فاضية
-const MONGO_URI = "mongodb+srv://medoomran201035_db_user:1234aCluster0.vku26ro.mongodb.net/kayan_erp?retryWrites=true&w=majority";
+// الاتصال بقاعدة البيانات مع الرابط الصحيح (بوجود علامة @ الفاصلة)
+const MONGO_URI = "mongodb+srv://medoomran201035_db_user:1234aCluster0@cluster0.vku26ro.mongodb.net/kayan_erp?retryWrites=true&w=majority";
 
 const userSchema = new mongoose.Schema({
     name: String,
