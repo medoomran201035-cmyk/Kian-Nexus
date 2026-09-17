@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kayan ERP - Google Full Enterprise Ecosystem</title>
+    <title>Kayan Enterprise - Google Cloud ERP Ecosystem</title>
     <!-- Bootstrap 5 CSS RTL -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
     <!-- Font Awesome Icons -->
@@ -34,7 +34,7 @@
             width: 100%;
             align-items: stretch;
         }
-        /* Google Cloud Console Style Sidebar */
+        /* Sidebar Styling */
         #sidebar {
             min-width: 300px;
             max-width: 300px;
@@ -45,12 +45,24 @@
             flex-direction: column;
             justify-content: space-between;
             transition: all 0.3s ease;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        #sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        #sidebar::-webkit-scrollbar-thumb {
+            background: var(--google-border);
+            border-radius: 4px;
         }
         .sidebar-header {
             padding: 16px 20px;
             display: flex;
             align-items: center;
             border-bottom: 1px solid var(--google-border);
+            background: rgba(0,0,0,0.1);
         }
         .sidebar-header h3 {
             font-size: 1.1rem;
@@ -63,17 +75,7 @@
         }
         #sidebar ul.components {
             padding: 12px 10px;
-            overflow-y: auto;
-            max-height: calc(100vh - 150px);
         }
-        #sidebar ul.components::-webkit-scrollbar {
-            width: 4px;
-        }
-        #sidebar ul.components::-webkit-scrollbar-thumb {
-            background: var(--google-border);
-            border-radius: 4px;
-        }
-        /* القوائم والأزرار المنسدلة */
         #sidebar ul li a, .menu-dropdown-btn {
             padding: 9px 14px;
             font-size: 0.85rem;
@@ -120,7 +122,10 @@
             color: #fff;
             background: var(--google-surface-hover);
         }
-        /* User Footer */
+        .menu-dropdown-btn i.ms-auto {
+            transition: transform 0.3s ease;
+        }
+        /* Footer */
         .sidebar-footer {
             padding: 12px 16px;
             background: rgba(0,0,0,0.2);
@@ -151,7 +156,7 @@
             font-size: 0.72rem;
             color: var(--google-text-secondary);
         }
-        /* Navbar & Top Bar */
+        /* Top Navbar */
         .google-navbar {
             background: var(--google-surface);
             border-bottom: 1px solid var(--google-border);
@@ -173,7 +178,7 @@
             border-color: var(--google-blue);
             box-shadow: none;
         }
-        /* Content Area */
+        /* Main Content Area */
         #content {
             width: 100%;
             padding: 24px;
@@ -214,7 +219,7 @@
 <body>
 
     <div id="wrapper">
-        <!-- Sidebar (Google Full Ecosystem Architecture) -->
+        <!-- Sidebar -->
         <nav id="sidebar">
             <div>
                 <div class="sidebar-header">
@@ -222,135 +227,147 @@
                 </div>
 
                 <ul class="list-unstyled components">
-                    <!-- لوحة التحكم -->
-                    <li class="active" onclick="switchSection('dashboard', this)">
-                        <a><i class="fas fa-chart-pie"></i> لوحة التحكم الرئيسية</a>
+                    <!-- 1. لوحة التحكم والتحليلات -->
+                    <li>
+                        <button class="menu-dropdown-btn" onclick="toggleSubmenu('dash-submenu', this)">
+                            <i class="fas fa-chart-pie"></i> لوحة التحكم والتحليلات <i class="fas fa-chevron-down ms-auto small"></i>
+                        </button>
+                        <ul id="dash-submenu" class="submenu">
+                            <li onclick="switchSection('dashboard', this)" class="active"><a>لوحة التحكم الرئيسية</a></li>
+                            <li onclick="switchSection('kpi', this)"><a>مؤشرات الأداء الحيوية (KPI)</a></li>
+                        </ul>
                     </li>
 
-                    <!-- 1. البنية التحتية ومراكز البيانات (Google IT & Infrastructure) -->
+                    <!-- 2. البنية ومراكز البيانات -->
                     <li>
                         <button class="menu-dropdown-btn" onclick="toggleSubmenu('infra-submenu', this)">
-                            <i class="fas fa-server"></i> البنية ومراكز البيانات <i class="fas fa-chevron-down ms-auto small"></i>
+                            <i class="fas fa-server"></i> بنية ومراكز البيانات <i class="fas fa-chevron-down ms-auto small"></i>
                         </button>
                         <ul id="infra-submenu" class="submenu">
                             <li onclick="switchSection('servers', this)"><a>السيرفرات الافتراضية (Hyper-V)</a></li>
-                            <li onclick="switchSection('ipam', this)"><a>شبكات MikroTik و DHCP (IPAM)</a></li>
-                            <li onclick="switchSection('helpdesk', this)"><a>الدعم الفني الداخلي (IT Helpdesk)</a></li>
+                            <li onclick="switchSection('ipam', this)"><a>شبكات MikroTik و DHCP</a></li>
+                            <li onclick="switchSection('ping', this)"><a>مراقبة السيرفرات (Uptime)</a></li>
                         </ul>
                     </li>
 
-                    <!-- 2. الأمن السيبراني والثقة والأمان (Security, Trust & Privacy) -->
+                    <!-- 3. الدعم الفني والصيانة -->
+                    <li>
+                        <button class="menu-dropdown-btn" onclick="toggleSubmenu('helpdesk-submenu', this)">
+                            <i class="fas fa-headset"></i> الدعم الفني والصيانة <i class="fas fa-chevron-down ms-auto small"></i>
+                        </button>
+                        <ul id="helpdesk-submenu" class="submenu">
+                            <li onclick="switchSection('tickets', this)"><a>تذاكر الأعطال النشطة</a></li>
+                            <li onclick="switchSection('printers', this)"><a>إدارة طابعات الشبكة والأذونات</a></li>
+                            <li onclick="switchSection('preventive', this)"><a>الصيانة الوقائية والدورية</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- 4. الأمن السيبراني والتدقيق -->
                     <li>
                         <button class="menu-dropdown-btn" onclick="toggleSubmenu('security-submenu', this)">
-                            <i class="fas fa-shield-alt"></i> الأمن السيبراني والأمان <i class="fas fa-chevron-down ms-auto small"></i>
+                            <i class="fas fa-shield-alt"></i> الأمن السيبراني والتدقيق <i class="fas fa-chevron-down ms-auto small"></i>
                         </button>
                         <ul id="security-submenu" class="submenu">
-                            <li onclick="switchSection('firewalls', this)"><a>جدران الحماية والصلاحيات</a></li>
-                            <li onclick="switchSection('audit', this)"><a>سجلات التدقيق (Audit Logs)</a></li>
+                            <li onclick="switchSection('ad', this)"><a>صلاحيات Active Directory</a></li>
+                            <li onclick="switchSection('firewall', this)"><a>جدران الحماية (Firewall)</a></li>
+                            <li onclick="switchSection('audit', this)"><a>سجل التدقيق ومراقبة النشاط</a></li>
                         </ul>
                     </li>
 
-                    <!-- 3. الموارد البشرية (People Operations / HR) -->
+                    <!-- 5. الموارد البشرية وبصمة -->
                     <li>
                         <button class="menu-dropdown-btn" onclick="toggleSubmenu('people-submenu', this)">
-                            <i class="fas fa-users-cog"></i> الموارد البشرية (People Ops) <i class="fas fa-chevron-down ms-auto small"></i>
+                            <i class="fas fa-users-cog"></i> الموارد البشرية وبصمة <i class="fas fa-chevron-down ms-auto small"></i>
                         </button>
                         <ul id="people-submenu" class="submenu">
-                            <li onclick="switchSection('structure', this)"><a>الهيكل التنظيمي والفروع</a></li>
-                            <li onclick="switchSection('hr', this)"><a>شؤون الموظفين والرواتب</a></li>
-                            <li onclick="switchSection('attendance', this)"><a>حضور وانصراف (ZKTeco)</a></li>
+                            <li onclick="switchSection('structure', this)"><a>الهيكل التنظيمي للموظفين</a></li>
+                            <li onclick="switchSection('attendance', this)"><a>سجلات البصمة (ZKTeco)</a></li>
+                            <li onclick="switchSection('ess', this)"><a>بوابة الخدمة الذاتية (ESS)</a></li>
                         </ul>
                     </li>
 
-                    <!-- 4. البحث والهندسة والذكاء الاصطناعي (Google DeepMind & R&D) -->
+                    <!-- 6. الذكاء الاصطناعي -->
                     <li>
                         <button class="menu-dropdown-btn" onclick="toggleSubmenu('ai-submenu', this)">
                             <i class="fas fa-brain"></i> الذكاء الاصطناعي و DeepMind <i class="fas fa-chevron-down ms-auto small"></i>
                         </button>
                         <ul id="ai-submenu" class="submenu">
-                            <li onclick="switchSection('cctv', this)"><a>تحليلات الكاميرات (CCTV AI Vision)</a></li>
-                            <li onclick="switchSection('models', this)"><a>نماذج ومعالجة البيانات (YOLO)</a></li>
+                            <li onclick="switchSection('cctv', this)"><a>تحليلات الكاميرات (YOLO Vision)</a></li>
+                            <li onclick="switchSection('alerts', this)"><a>تنبيهات المخالفات الذكية</a></li>
                         </ul>
                     </li>
 
-                    <!-- 5. الشؤون المالية والقانونية (Finance & Legal / ZATCA) -->
+                    <!-- 7. المالية والمشتريات -->
                     <li>
                         <button class="menu-dropdown-btn" onclick="toggleSubmenu('finance-submenu', this)">
-                            <i class="fas fa-file-invoice-dollar"></i> المالية والفوترة <i class="fas fa-chevron-down ms-auto small"></i>
+                            <i class="fas fa-file-invoice-dollar"></i> المالية والمشتريات <i class="fas fa-chevron-down ms-auto small"></i>
                         </button>
                         <ul id="finance-submenu" class="submenu">
                             <li onclick="switchSection('zatca', this)"><a>الفوترة الإلكترونية (ZATCA)</a></li>
-                            <li onclick="switchSection('accounts', this)"><a>الحسابات العامة (رصين Raseen)</a></li>
+                            <li onclick="switchSection('accounts', this)"><a>الحسابات العامة (رصين)</a></li>
+                            <li onclick="switchSection('procurement', this)"><a>المشتريات وعروض الأسعار</a></li>
                         </ul>
                     </li>
 
-                    <!-- 6. المبيعات وعلاقات العملاء (Sales & Customer Operations) -->
+                    <!-- 8. المبيعات وعلاقات العملاء -->
                     <li onclick="switchSection('sales', this)">
                         <a><i class="fas fa-handshake"></i> المبيعات وعلاقات العملاء</a>
                     </li>
 
-                    <!-- 7. أدوات الإنتاجية والتعاون (Google Workspace) -->
+                    <!-- 9. الأصول والمخزون التقني -->
                     <li>
-                        <button class="menu-dropdown-btn" onclick="toggleSubmenu('workspace-submenu', this)">
-                            <i class="fas fa-th-large"></i> أدوات Workspace المؤسسية <i class="fas fa-chevron-down ms-auto small"></i>
+                        <button class="menu-dropdown-btn" onclick="toggleSubmenu('assets-submenu', this)">
+                            <i class="fas fa-laptop-code"></i> الأصول والمخزون التقني <i class="fas fa-chevron-down ms-auto small"></i>
                         </button>
-                        <ul id="workspace-submenu" class="submenu">
-                            <li onclick="switchSection('mail', this)"><a>البريد الإلكتروني المؤسسي (cPanel)</a></li>
-                            <li onclick="switchSection('drive', this)"><a>التخزين السحابي والمستندات</a></li>
-                            <li onclick="switchSection('calendar', this)"><a>التقويم وجدولة الاجتماعات</a></li>
+                        <ul id="assets-submenu" class="submenu">
+                            <li onclick="switchSection('assets', this)"><a>عهد الأجهزة للموظفين</a></li>
+                            <li onclick="switchSection('inventory', this)"><a>المخزون وقطع الغيار (Spare Parts)</a></li>
                         </ul>
                     </li>
 
-                    <!-- 8. الأجهزة والعهد التقنية (Android & Hardware) -->
-                    <li onclick="switchSection('assets', this)">
-                        <a><i class="fas fa-laptop-code"></i> الأصول والعهد التقنية (Hardware)</a>
-                    </li>
-
-                    <!-- 9. الخرائط واللوجستيات (Google Maps & Fleet) -->
+                    <!-- 10. أسطول السيارات -->
                     <li onclick="switchSection('fleet', this)">
-                        <a><i class="fas fa-car-side"></i> إدارة أسطول السيارات (Fleet)</a>
+                        <a><i class="fas fa-car-side"></i> إدارة أسطول السيارات</a>
                     </li>
 
-                    <!-- 10. الإعلام والتعاميم (YouTube & Corporate Media) -->
-                    <li onclick="switchSection('messages', this)">
-                        <a><i class="fas fa-bullhorn"></i> الرسائل والتعاميم المؤسسية</a>
-                    </li>
-
-                    <!-- الإعدادات العامة -->
-                    <li onclick="switchSection('settings', this)">
-                        <a><i class="fas fa-cog"></i> الإعدادات العامة</a>
+                    <!-- 11. الحوكمة والتراخيص والتعاميم -->
+                    <li>
+                        <button class="menu-dropdown-btn" onclick="toggleSubmenu('admin-submenu', this)">
+                            <i class="fas fa-cogs"></i> الحوكمة والإعدادات <i class="fas fa-chevron-down ms-auto small"></i>
+                        </button>
+                        <ul id="admin-submenu" class="submenu">
+                            <li onclick="switchSection('licenses', this)"><a>العقود والتراخيص والاشتراكات</a></li>
+                            <li onclick="switchSection('messages', this)"><a>الرسائل والتعاميم الوطنية</a></li>
+                            <li onclick="switchSection('settings', this)"><a>الوضع العام وصلاحيات النظام</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
 
-            <!-- User Footer -->
+            <!-- Footer -->
             <div class="sidebar-footer">
                 <div class="user-avatar">م</div>
                 <div class="user-info">
                     <h6>محمد فيصل صلاح عمران</h6>
-                    <span>مدير النظام [Admin]</span>
+                    <span>مدير أنظمة [Admin]</span>
                 </div>
             </div>
         </nav>
 
-        <!-- Main Content -->
+        <!-- Main Content Area -->
         <main id="content">
-            <!-- Top Navbar with Google Project Selector -->
+            <!-- Top Navbar -->
             <nav class="google-navbar navbar navbar-expand-lg navbar-dark px-4 py-3">
                 <div class="container-fluid d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center gap-3">
-                        <span class="navbar-brand mb-0 h6 text-light" id="page-title">
-                            <i class="fas fa-chart-pie text-info me-2"></i> لوحة التحكم الرئيسية
-                        </span>
-                    </div>
-                    
+                    <span class="navbar-brand mb-0 h6 text-light" id="page-title">
+                        <i class="fas fa-chart-pie text-info me-2"></i> لوحة التحكم الرئيسية
+                    </span>
                     <div class="d-flex align-items-center gap-3">
                         <div class="d-flex align-items-center gap-2">
-                            <span class="text-secondary small">الفرع / المشروع النشط:</span>
+                            <span class="text-secondary small">الفرع النشط:</span>
                             <select class="form-select form-select-sm project-selector">
                                 <option selected>فرع الرياض - الإدارة العامة</option>
                                 <option>فرع المستودع الرئيسي</option>
-                                <option>فرع الدمام والشرقية</option>
                             </select>
                         </div>
                         <span class="badge bg-secondary text-light px-3 py-2"><i class="fas fa-circle text-success me-1 small"></i> متصل بالسيرفر</span>
@@ -358,58 +375,41 @@
                 </div>
             </nav>
 
-            <!-- 1. لوحة التحكم -->
+            <!-- 1. لوحة التحكم الرئيسية -->
             <div id="section-dashboard" class="section-view active">
                 <div class="row g-4 mb-4">
                     <div class="col-md-3">
                         <div class="card card-custom stat-card p-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div><h6 class="text-secondary small mb-1">السيرفرات والشبكة</h6></div>
-                                <i class="fas fa-server text-info"></i>
-                            </div>
-                            <h4 class="mt-2 mb-0 fw-bold">100% نشط</h4>
+                            <h6 class="text-secondary small mb-1">حالة السيرفرات</h6>
+                            <h4 class="mt-2 mb-0 fw-bold text-success">100% متصل</h4>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="card card-custom stat-card p-3" style="border-right-color: var(--google-green);">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div><h6 class="text-secondary small mb-1">العهد والأصول</h6></div>
-                                <i class="fas fa-laptop-code text-success"></i>
-                            </div>
+                            <h6 class="text-secondary small mb-1">العهد والأصول</h6>
                             <h4 class="mt-2 mb-0 fw-bold" id="stat-assets-count">جاري التحميل...</h4>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="card card-custom stat-card p-3" style="border-right-color: var(--google-yellow);">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div><h6 class="text-secondary small mb-1">التذاكر والدعم</h6></div>
-                                <i class="fas fa-headset text-warning"></i>
-                            </div>
+                            <h6 class="text-secondary small mb-1">التذاكر المفتوحة</h6>
                             <h4 class="mt-2 mb-0 fw-bold">3 نشطة</h4>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="card card-custom stat-card p-3" style="border-right-color: var(--google-red);">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div><h6 class="text-secondary small mb-1">كاميرات CCTV</h6></div>
-                                <i class="fas fa-video text-danger"></i>
-                            </div>
+                            <h6 class="text-secondary small mb-1">كاميرات CCTV</h6>
                             <h4 class="mt-2 mb-0 fw-bold">16 متصلة</h4>
                         </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card card-custom p-4">
-                            <h5 class="text-light mb-3"><i class="fab fa-google text-primary me-2"></i> منصة Kayan ERP المؤسسية المتكاملة</h5>
-                            <p class="text-secondary mb-0">تم تضمين كافة تفاصيل أقسام شركة جوجل (البنية السحابية، الأمن السيبراني، الموارد البشرية، الذكاء الاصطناعي، والفوترة الإلكترونية) داخل هذه الواجهة.</p>
-                        </div>
-                    </div>
+                <div class="card card-custom p-4">
+                    <h5 class="text-light mb-3"><i class="fab fa-google text-primary me-2"></i> مرحباً بك يا بشمهندس محمد في منصة Kayan Enterprise</h5>
+                    <p class="text-secondary mb-0">النظام يعمل بكامل طاقته التشغيلية والتقنية، ومزود بالشجرة التنظيمية الكاملة لإدارة كافة قطاعات الشركة.</p>
                 </div>
             </div>
 
-            <!-- 2. الأصول والعهد التقنية (مثال جدول متصل بالـ API) -->
+            <!-- 2. الأصول والعهد التقنية -->
             <div id="section-assets" class="section-view">
                 <div class="card card-custom p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -425,25 +425,81 @@
                                     <th>الرقم التسلسلي (Serial)</th>
                                     <th>الحالة</th>
                                     <th>الموظف المسؤول</th>
-                                    <th>الإجراءات</th>
                                 </tr>
                             </thead>
                             <tbody id="assets-table-body">
-                                <tr><td colspan="6" class="text-center text-secondary">جاري جلب البيانات...</td></tr>
+                                <tr><td colspan="5" class="text-center text-secondary">جاري جلب البيانات...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- بقية الأقسام الافتراضية التفصيلية -->
-            <div id="section-generic" class="section-view">
+            <!-- 3. تذاكر الدعم الفني -->
+            <div id="section-tickets" class="section-view">
                 <div class="card card-custom p-4">
-                    <h5 id="generic-title" class="text-light mb-3">قسم الإدارة والتشغيل</h5>
-                    <p class="text-secondary mb-0">هذا القسم مرتبط بهيكلة النظام وجاهز لتنفيذ العمليات والإدارات الخاصة به وفق معايير Google Enterprise.</p>
+                    <h5 class="text-light mb-3"><i class="fas fa-headset text-warning me-2"></i> تذاكر الدعم الفني والأعطال</h5>
+                    <div class="table-responsive">
+                        <table class="table table-custom align-middle">
+                            <thead>
+                                <tr>
+                                    <th>رقم التذكرة</th>
+                                    <th>القسم</th>
+                                    <th>نوع العطل</th>
+                                    <th>الأولوية</th>
+                                    <th>الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>#TK-1001</code></td>
+                                    <td>المبيعات</td>
+                                    <td>عطل طابعة الشبكة الرئيسية</td>
+                                    <td><span class="badge bg-danger">عاجل</span></td>
+                                    <td><span class="badge bg-warning text-dark">قيد العمل</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
+            <!-- 4. الفوترة الإلكترونية (ZATCA) -->
+            <div id="section-zatca" class="section-view">
+                <div class="card card-custom p-4">
+                    <h5 class="text-light mb-3"><i class="fas fa-file-invoice-dollar text-success me-2"></i> الفوترة الإلكترونية والربط الضريبي (ZATCA)</h5>
+                    <div class="table-responsive">
+                        <table class="table table-custom align-middle">
+                            <thead>
+                                <tr>
+                                    <th>رقم الفاتورة</th>
+                                    <th>العميل</th>
+                                    <th>المبلغ (SAR)</th>
+                                    <th>الضريبة (15%)</th>
+                                    <th>الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>INV-2026-001</code></td>
+                                    <td>شركة الأفق التقني</td>
+                                    <td>5,750.00</td>
+                                    <td>750.00</td>
+                                    <td><span class="badge bg-success">معتمدة (Phase 2)</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. السجلات والاتصال العام للأقسام -->
+            <div id="section-generic" class="section-view">
+                <div class="card card-custom p-4">
+                    <h5 id="generic-title" class="text-light mb-3">قسم التشغيل والتحكم</h5>
+                    <p class="text-secondary mb-0">هذا القسم مدرج ضمن شجرة الإدارات وجاهز لاستقبال البيانات والعمليات الخاصة به.</p>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -453,12 +509,11 @@
         function toggleSubmenu(submenuId, buttonElement) {
             const submenu = document.getElementById(submenuId);
             const icon = buttonElement.querySelector('.fa-chevron-down');
-            
             submenu.classList.toggle('show');
             if(submenu.classList.contains('show')) {
-                icon.style.transform = 'rotate(180deg)';
+                if(icon) icon.style.transform = 'rotate(180deg)';
             } else {
-                icon.style.transform = 'rotate(0deg)';
+                if(icon) icon.style.transform = 'rotate(0deg)';
             }
         }
 
@@ -473,10 +528,12 @@
                 targetView.classList.add('active');
             } else {
                 document.getElementById('section-generic').classList.add('active');
-                document.getElementById('generic-title').innerText = element.innerText.trim();
+                if(element) document.getElementById('generic-title').innerText = element.innerText.trim();
             }
 
-            document.getElementById('page-title').innerHTML = `<i class="fas fa-cube text-info me-2"></i> ${element.innerText.trim()}`;
+            if(element) {
+                document.getElementById('page-title').innerHTML = `<i class="fas fa-cube text-info me-2"></i> ${element.innerText.trim()}`;
+            }
             
             if(sectionId === 'assets') fetchAssets();
         }
@@ -490,7 +547,7 @@
                 document.getElementById('stat-assets-count').innerText = assets.length + ' أصل';
                 
                 if(assets.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="6" class="text-center text-secondary">لا توجد أصول مسجلة حالياً.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="5" class="text-center text-secondary">لا توجد أصول مسجلة حالياً.</td></tr>`;
                     return;
                 }
 
@@ -503,13 +560,12 @@
                             <td><code>${asset.serialNumber || 'N/A'}</code></td>
                             <td><span class="badge bg-primary text-light">${asset.status || 'Active'}</span></td>
                             <td>${asset.assignedTo || 'المستودع'}</td>
-                            <td><button class="btn btn-sm btn-dark text-info border-secondary"><i class="fas fa-edit"></i></button></td>
                         </tr>
                     `;
                 });
             } catch (error) {
                 console.error('خطأ في الاتصال:', error);
-                document.getElementById('assets-table-body').innerHTML = `<tr><td colspan="6" class="text-center text-danger">خطأ في الاتصال بقاعدة البيانات.</td></tr>`;
+                document.getElementById('assets-table-body').innerHTML = `<tr><td colspan="5" class="text-center text-danger">خطأ في الاتصال بقاعدة البيانات.</td></tr>`;
             }
         }
 
