@@ -6,13 +6,13 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// تشغيل الملفات الثابتة من فولدر public
-app.use(express.static(path.join(__dirname, 'public')));
+// لو أي حد كتب /login.html يوديه فوراً على index.html
+app.get('/login.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
-// مسارات API افتراضية عشان تمنع التحميل المعلق وتخلي الداشبورد تستقر
-app.get('/api/stats', (req, res) => res.json({ employees: 0, tasks: 0, sales: 0 }));
-app.get('/api/employees', (req, res) => res.json([]));
-app.get('/api/dashboard', (req, res) => res.json({ status: 'success' }));
+// تشغيل الملفات الثابتة
+app.use(express.static(path.join(__dirname, 'public')));
 
 // الصفحة الرئيسية
 app.get('/', (req, res) => {
