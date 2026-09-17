@@ -50,13 +50,21 @@
             height: 100vh;
             overflow-y: auto;
         }
+        /* Scrollbar styling - Widened and enhanced for easy grabbing */
         #sidebar::-webkit-scrollbar {
-            width: 4px;
+            width: 10px;
+        }
+        #sidebar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
         }
         #sidebar::-webkit-scrollbar-thumb {
-            background: var(--google-border);
-            border-radius: 4px;
+            background: #5f6368;
+            border-radius: 6px;
         }
+        #sidebar::-webkit-scrollbar-thumb:hover {
+            background: var(--google-blue);
+        }
+        
         .sidebar-header {
             padding: 16px 20px;
             display: flex;
@@ -330,7 +338,18 @@
                         <a><i class="fas fa-car-side"></i> إدارة أسطول السيارات</a>
                     </li>
 
-                    <!-- 11. الحوكمة والإعدادات العامة -->
+                    <!-- 11. إدارة المشاريع والمهام (القسم الجديد) -->
+                    <li>
+                        <button class="menu-dropdown-btn" onclick="toggleSubmenu('projects-submenu', this)">
+                            <i class="fas fa-project-diagram"></i> إدارة المشاريع والمهام <i class="fas fa-chevron-down ms-auto small"></i>
+                        </button>
+                        <ul id="projects-submenu" class="submenu">
+                            <li onclick="switchSection('projects', this)"><a>متابعة المشاريع الكبرى</a></li>
+                            <li onclick="switchSection('tasks', this)"><a>توزيع المهام اليومية</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- 12. الحوكمة والإعدادات العامة -->
                     <li>
                         <button class="menu-dropdown-btn" onclick="toggleSubmenu('admin-submenu', this)">
                             <i class="fas fa-cogs"></i> الحوكمة والإعدادات العامة <i class="fas fa-chevron-down ms-auto small"></i>
@@ -375,131 +394,86 @@
                 </div>
             </nav>
 
-            <!-- 1. لوحة التحكم الرئيسية -->
+            <!-- 1. Dashboard -->
             <div id="section-dashboard" class="section-view active">
                 <div class="row g-4 mb-4">
-                    <div class="col-md-3">
-                        <div class="card card-custom stat-card p-3">
-                            <h6 class="text-secondary small mb-1">حالة السيرفرات</h6>
-                            <h4 class="mt-2 mb-0 fw-bold text-success">100% متصل</h4>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card card-custom stat-card p-3" style="border-right-color: var(--google-green);">
-                            <h6 class="text-secondary small mb-1">العهد والأصول</h6>
-                            <h4 class="mt-2 mb-0 fw-bold" id="stat-assets-count">جاري التحميل...</h4>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card card-custom stat-card p-3" style="border-right-color: var(--google-yellow);">
-                            <h6 class="text-secondary small mb-1">التذاكر المفتوحة</h6>
-                            <h4 class="mt-2 mb-0 fw-bold">3 نشطة</h4>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card card-custom stat-card p-3" style="border-right-color: var(--google-red);">
-                            <h6 class="text-secondary small mb-1">كاميرات CCTV</h6>
-                            <h4 class="mt-2 mb-0 fw-bold">16 متصلة</h4>
-                        </div>
-                    </div>
+                    <div class="col-md-3"><div class="card card-custom stat-card p-3"><h6 class="text-secondary small mb-1">حالة السيرفرات</h6><h4 class="mt-2 mb-0 fw-bold text-success">100% متصل</h4></div></div>
+                    <div class="col-md-3"><div class="card card-custom stat-card p-3" style="border-right-color: var(--google-green);"><h6 class="text-secondary small mb-1">العهد والأصول</h6><h4 class="mt-2 mb-0 fw-bold" id="stat-assets-count">جاري التحميل...</h4></div></div>
+                    <div class="col-md-3"><div class="card card-custom stat-card p-3" style="border-right-color: var(--google-yellow);"><h6 class="text-secondary small mb-1">التذاكر المفتوحة</h6><h4 class="mt-2 mb-0 fw-bold">3 نشطة</h4></div></div>
+                    <div class="col-md-3"><div class="card card-custom stat-card p-3" style="border-right-color: var(--google-red);"><h6 class="text-secondary small mb-1">كاميرات CCTV</h6><h4 class="mt-2 mb-0 fw-bold">16 متصلة</h4></div></div>
                 </div>
-                <div class="card card-custom p-4">
-                    <h5 class="text-light mb-3"><i class="fab fa-google text-primary me-2"></i> مرحباً بك يا بشمهندس محمد في منصة Kayan Enterprise</h5>
-                    <p class="text-secondary mb-0">تم تصحيح وتدقيق كافة أسماء الإدارات والشعب التقنية والإدارية لتتوافق مع معايير أنظمة الـ ERP العالمية.</p>
-                </div>
+                <div class="card card-custom p-4"><h5 class="text-light mb-3"><i class="fab fa-google text-primary me-2"></i> مرحباً بك يا بشمهندس محمد في منصة Kayan Enterprise</h5><p class="text-secondary mb-0">النظام يعمل بكامل كفاءته التشغيلية والتقنية بكافة الأقسام والمؤشرات الحية.</p></div>
             </div>
 
-            <!-- 2. الأصول والعهد التقنية -->
+            <!-- 2. KPI -->
+            <div id="section-kpi" class="section-view"><div class="card card-custom p-4"><h5>مؤشرات الأداء الحيوية (KPI)</h5><p class="text-secondary">متابعة الأداء التشغيلي والتقني للشركة.</p></div></div>
+            <!-- 3. Servers -->
+            <div id="section-servers" class="section-view"><div class="card card-custom p-4"><h5>السيرفرات الافتراضية (Hyper-V Manager)</h5><p class="text-secondary">إدارة وتشغيل الأجهزة الافتراضية والـ Virtual Switches.</p></div></div>
+            <!-- 4. IPAM -->
+            <div id="section-ipam" class="section-view"><div class="card card-custom p-4"><h5>شبكات MikroTik و DHCP</h5><p class="text-secondary">إدارة العناوين والراوترات وإعدادات الـ VLAN.</p></div></div>
+            <!-- 5. Ping -->
+            <div id="section-ping" class="section-view"><div class="card card-custom p-4"><h5>مراقبة السيرفرات (Uptime)</h5><p class="text-secondary">تتبع حالة استجابة الأجهزة والاتصال الحي.</p></div></div>
+            <!-- 6. Tickets -->
+            <div id="section-tickets" class="section-view"><div class="card card-custom p-4"><h5>تذاكر الأعطال النشطة</h5><p class="text-secondary">متابعة طلبات الدعم الفني وحالة الإصلاح الفوري.</p></div></div>
+            <!-- 7. Printers -->
+            <div id="section-printers" class="section-view"><div class="card card-custom p-4"><h5>إدارة طابعات الشبكة والأذونات</h5><p class="text-secondary">تحديد صلاحيات طباعة الأقسام وتتبع الأعطال.</p></div></div>
+            <!-- 8. Preventive -->
+            <div id="section-preventive" class="section-view"><div class="card card-custom p-4"><h5>الصيانة الوقائية والدورية</h5><p class="text-secondary">جداول صيانة الأجهزة والأنظمة بشكل دوري.</p></div></div>
+            <!-- 9. AD -->
+            <div id="section-ad" class="section-view"><div class="card card-custom p-4"><h5>إدارة Active Directory الصلاحيات</h5><p class="text-secondary">التحكم في حسابات المستخدمين وسياسات المجموعات GPO.</p></div></div>
+            <!-- 10. Firewall -->
+            <div id="section-firewall" class="section-view"><div class="card card-custom p-4"><h5>جدران الحماية وقواعد الأمان</h5><p class="text-secondary">تأمين المنافذ وقواعد الحماية لشبكة الشركة.</p></div></div>
+            <!-- 11. Audit -->
+            <div id="section-audit" class="section-view"><div class="card card-custom p-4"><h5>سجل التدقيق ومراقبة النشاط</h5><p class="text-secondary">تتبع سجلات الدخول والتعديلات على النظام.</p></div></div>
+            <!-- 12. Structure -->
+            <div id="section-structure" class="section-view"><div class="card card-custom p-4"><h5>الهيكل التنظيمي للموظفين</h5><p class="text-secondary">قائمة الموظفين والأقسام والمسميات الوظيفية.</p></div></div>
+            <!-- 13. Attendance -->
+            <div id="section-attendance" class="section-view"><div class="card card-custom p-4"><h5>سجلات البصمة (ZKTeco)</h5><p class="text-secondary">متابعة حضور وانصراف الموظفين وسجلات الأجهزة.</p></div></div>
+            <!-- 14. ESS -->
+            <div id="section-ess" class="section-view"><div class="card card-custom p-4"><h5>بوابة الخدمة الذاتية (ESS)</h5><p class="text-secondary">طلبات الإجازات وخدمات الموظفين الذاتية.</p></div></div>
+            <!-- 15. CCTV -->
+            <div id="section-cctv" class="section-view"><div class="card card-custom p-4"><h5>تحليلات الكاميرات (YOLO Vision)</h5><p class="text-secondary">مراقبة وتشغيل سكربتات تحليل الفيديوهات بالذكاء الاصطناعي.</p></div></div>
+            <!-- 16. Alerts -->
+            <div id="section-alerts" class="section-view"><div class="card card-custom p-4"><h5>تنبيهات المخالفات الذكية</h5><p class="text-secondary">سجل رصد التنبيهات الأمنية والتشغيلية تلقائياً.</p></div></div>
+            <!-- 17. Zatca -->
+            <div id="section-zatca" class="section-view"><div class="card card-custom p-4"><h5>الفوترة الإلكترونية (ZATCA)</h5><p class="text-secondary">متابعة الفواتير المعتمدة وفق متطلبات المرحلة الثانية.</p></div></div>
+            <!-- 18. Accounts -->
+            <div id="section-accounts" class="section-view"><div class="card card-custom p-4"><h5>الحسابات العامة (رصين)</h5><p class="text-secondary">دفتر القيود اليومية والمراكز المالية.</p></div></div>
+            <!-- 19. Procurement -->
+            <div id="section-procurement" class="section-view"><div class="card card-custom p-4"><h5>المشتريات وعروض الأسعار</h5><p class="text-secondary">إدارة طلبات الشراء وعروض الموردين الخارجيين.</p></div></div>
+            <!-- 20. Sales -->
+            <div id="section-sales" class="section-view"><div class="card card-custom p-4"><h5>المبيعات وعلاقات العملاء</h5><p class="text-secondary">متابعة صفقات العملاء ومسار المبيعات (CRM).</p></div></div>
+            
+            <!-- 21. Assets -->
             <div id="section-assets" class="section-view">
                 <div class="card card-custom p-4">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="text-light m-0"><i class="fas fa-laptop-code text-primary me-2"></i> إدارة الأصول والعهد التقنية</h5>
+                        <h5 class="m-0">عهد الأجهزة للموظفين</h5>
                         <button class="btn btn-outline-light btn-sm" onclick="fetchAssets()"><i class="fas fa-sync-alt me-1"></i> تحديث</button>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-custom align-middle">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>اسم الأصل / الجهاز</th>
-                                    <th>الرقم التسلسلي (Serial)</th>
-                                    <th>الحالة</th>
-                                    <th>الموظف المسؤول</th>
-                                </tr>
-                            </thead>
-                            <tbody id="assets-table-body">
-                                <tr><td colspan="5" class="text-center text-secondary">جاري جلب البيانات...</td></tr>
-                            </tbody>
+                            <thead><tr><th>#</th><th>اسم الأصل / الجهاز</th><th>الرقم التسلسلي</th><th>الحالة</th><th>الموظف المسؤول</th></tr></thead>
+                            <tbody id="assets-table-body"><tr><td colspan="5" class="text-center text-secondary">جاري جلب البيانات...</td></tr></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- 3. تذاكر الدعم الفني -->
-            <div id="section-tickets" class="section-view">
-                <div class="card card-custom p-4">
-                    <h5 class="text-light mb-3"><i class="fas fa-headset text-warning me-2"></i> تذاكر الدعم الفني والأعطال</h5>
-                    <div class="table-responsive">
-                        <table class="table table-custom align-middle">
-                            <thead>
-                                <tr>
-                                    <th>رقم التذكرة</th>
-                                    <th>القسم</th>
-                                    <th>نوع العطل</th>
-                                    <th>الأولوية</th>
-                                    <th>الحالة</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><code>#TK-1001</code></td>
-                                    <td>المبيعات</td>
-                                    <td>عطل طابعة الشبكة الرئيسية</td>
-                                    <td><span class="badge bg-danger">عاجل</span></td>
-                                    <td><span class="badge bg-warning text-dark">قيد العمل</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 4. الفوترة الإلكترونية (ZATCA) -->
-            <div id="section-zatca" class="section-view">
-                <div class="card card-custom p-4">
-                    <h5 class="text-light mb-3"><i class="fas fa-file-invoice-dollar text-success me-2"></i> الفوترة الإلكترونية والربط الضريبي (ZATCA)</h5>
-                    <div class="table-responsive">
-                        <table class="table table-custom align-middle">
-                            <thead>
-                                <tr>
-                                    <th>رقم الفاتورة</th>
-                                    <th>العميل</th>
-                                    <th>المبلغ (SAR)</th>
-                                    <th>الضريبة (15%)</th>
-                                    <th>الحالة</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><code>INV-2026-001</code></td>
-                                    <td>شركة الأفق التقني</td>
-                                    <td>5,750.00</td>
-                                    <td>750.00</td>
-                                    <td><span class="badge bg-success">معتمدة (Phase 2)</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 5. السجلات والاتصال العام للأقسام -->
-            <div id="section-generic" class="section-view">
-                <div class="card card-custom p-4">
-                    <h5 id="generic-title" class="text-light mb-3">قسم التشغيل والتحكم</h5>
-                    <p class="text-secondary mb-0">هذا القسم مدرج ضمن شجرة الإدارات وجاهز لاستقبال البيانات والعمليات الخاصة به.</p>
-                </div>
-            </div>
+            <!-- 22. Inventory -->
+            <div id="section-inventory" class="section-view"><div class="card card-custom p-4"><h5>المخزون وقطع الغيار (Spare Parts)</h5><p class="text-secondary">إدارة وتتبع قطع الغيار التقنية وأحبار الطابعات.</p></div></div>
+            <!-- 23. Fleet -->
+            <div id="section-fleet" class="section-view"><div class="card card-custom p-4"><h5>إدارة أسطول السيارات</h5><p class="text-secondary">متابعة حركة سيارات الشركة والصيانة الدورية.</p></div></div>
+            <!-- 24. Projects -->
+            <div id="section-projects" class="section-view"><div class="card card-custom p-4"><h5>متابعة المشاريع الكبرى</h5><p class="text-secondary">إدارة وتتبع نسب إنجاز المشاريع التشغيلية والإستراتيجية للشركة.</p></div></div>
+            <!-- 25. Tasks -->
+            <div id="section-tasks" class="section-view"><div class="card card-custom p-4"><h5>توزيع المهام اليومية</h5><p class="text-secondary">جدول مهام الفرق والأقسام وحالة التنفيذ ومتابعة الإنجاز.</p></div></div>
+            <!-- 26. Licenses -->
+            <div id="section-licenses" class="section-view"><div class="card card-custom p-4"><h5>العقود والتراخيص والاشتراكات</h5><p class="text-secondary">متابعة تواريخ انتهاء التراخيص البرمجية والعقود.</p></div></div>
+            <!-- 27. Messages -->
+            <div id="section-messages" class="section-view"><div class="card card-custom p-4"><h5>الرسائل والتعاميم المؤسسية</h5><p class="text-secondary">نشر التعاميم الإدارية الداخلية للموظفين.</p></div></div>
+            <!-- 28. Settings -->
+            <div id="section-settings" class="section-view"><div class="card card-custom p-4"><h5>إعدادات النظام والصلاحيات</h5><p class="text-secondary">التحكم في إعدادات المنصة ومستويات وصول المديرين.</p></div></div>
         </main>
     </div>
 
@@ -526,9 +500,6 @@
             const targetView = document.getElementById('section-' + sectionId);
             if (targetView) {
                 targetView.classList.add('active');
-            } else {
-                document.getElementById('section-generic').classList.add('active');
-                if(element) document.getElementById('generic-title').innerText = element.innerText.trim();
             }
 
             if(element) {
@@ -544,8 +515,10 @@
                 const assets = await response.json();
                 
                 const tbody = document.getElementById('assets-table-body');
-                document.getElementById('stat-assets-count').innerText = assets.length + ' أصل';
+                const countElem = document.getElementById('stat-assets-count');
+                if(countElem) countElem.innerText = assets.length + ' أصل';
                 
+                if(!tbody) return;
                 if(assets.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="5" class="text-center text-secondary">لا توجد أصول مسجلة حالياً.</td></tr>`;
                     return;
@@ -565,7 +538,8 @@
                 });
             } catch (error) {
                 console.error('خطأ في الاتصال:', error);
-                document.getElementById('assets-table-body').innerHTML = `<tr><td colspan="5" class="text-center text-danger">خطأ في الاتصال بقاعدة البيانات.</td></tr>`;
+                const tbody = document.getElementById('assets-table-body');
+                if(tbody) tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger">خطأ في الاتصال بقاعدة البيانات.</td></tr>`;
             }
         }
 
