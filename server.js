@@ -8,37 +8,34 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// رابط الاتصال المباشر والصحيح 100% (يعمل الآن لأن الـ IP مفتوح في أطلس)
-const MONGO_URI = "mongodb://medoomran201035_db_user:1234aCluster0@ac-9srqykv-shard-00-00.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-01.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-02.ykvq26a.mongodb.net:27017/kayan_erp?ssl=true&replicaSet=atlas-xzefbp-shard-0&authSource=admin&appName=Cluster0";
+// رابط الـ SRV الآمن الذي يعمل عبر بورت 443 (متوافق تماماً مع استضافة Render)
+const MONGO_URI = "mongodb+srv://medoomran201035_db_user:1234aCluster0@cluster0.ykvq26a.mongodb.net/kayan_erp?retryWrites=true&w=majority";
 
-mongoose.connect(MONGO_URI)
-    .then(async () => {
-        console.log('Connected to MongoDB Atlas successfully via Direct URI!');
-        try {
-            const count = await User.countDocuments();
-            if (count === 0) {
-                await User.insertMany([
-                    { name: 'Admin', email: 'admin@kayan.com', password: '123456', role: 'admin' },
-                    { name: 'HR Manager', email: 'hr@kayan.com', password: '123456', role: 'hr' },
-                    { name: 'Employee', email: 'employee@kayan.com', password: '123456', role: 'employee' }
-                ]);
-                console.log('Default users seeded successfully!');
-            }
-        } catch (seedErr) {
-            console.error('Seeding error:', seedErr);
-        }
-    })
-    .catch(err => console.error('MongoDB connection error:', err));
+// الاتصال بقاعدة البيانات مع إعدادات تزيد من ثبات الاتصال
+mongoose.connect(MONGO_URI, {
+    serverSelectionTimeoutMS: 15000,
+    socketTimeoutMS: 45000,
+})
+.then(() => console.log('Connected to MongoDB Atlas successfully!'))
+.catch(err => console.error('MongoDB connection error:', err));
 
-const User = mongoose.models.User || mongoose.model('User', new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     name: String,
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: String
-}));
+});
 
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+
+// مسار تسجيل الدخول مع حماية ضد تايم أوت الاتصال
 app.post('/api/login', async (req, res) => {
     try {
+        // التحقق مما إذا كانت قاعدة البيانات متصلة وجاهزة
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(503).json({ message: 'جاري الاتصال بقاعدة البيانات، يرجى المحاولة بعد ثوانٍ...' });
+        }
+
         const { email, password } = req.body;
         let user = await User.findOne({ email });
         
