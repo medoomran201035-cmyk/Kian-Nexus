@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-// الاتصال بقاعدة البيانات وإنشاء المستخدمين الافتراضيين تلقائياً
-mongoose.connect(MONGO_URI, { family: 4 })
+// الاتصال بقاعدة البيانات مع مهلة زمنية كافية
+mongoose.connect(MONGO_URI, { family: 4, serverSelectionTimeoutMS: 20000 })
     .then(async () => {
         console.log('Connected to MongoDB Atlas successfully!');
         try {
@@ -43,9 +43,13 @@ mongoose.connect(MONGO_URI, { family: 4 })
     })
     .catch(err => console.error('MongoDB connection error:', err));
 
-// مسار تسجيل الدخول
+// مسار تسجيل الدخول مع فحص حالة الاتصال
 app.post('/api/login', async (req, res) => {
     try {
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(503).json({ message: 'جاري الاتصال بقاعدة البيانات، يرجى المحاولة بعد ثوانٍ قليلة' });
+        }
+
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         
@@ -73,26 +77,12 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// جلب قائمة المستخدمين (لصفحة إدارة المستخدمين)
 app.get('/api/users', async (req, res) => {
     try {
         const users = await User.find({}, '-password');
         res.json(users);
     } catch (err) {
         res.status(500).json({ message: err.message });
-    }
-});
-
-// إضافة مستخدم جديد
-app.post('/api/users', async (req, res) => {
-    try {
-        const { name, email, password, role } = req.body;
-        const hashedPassword = await bcrypt.hash(password || '123456', 10);
-        const newUser = new User({ name, email, password: hashedPassword, role: role || 'employee' });
-        await newUser.save();
-        res.status(201).json({ message: 'تم إضافة المستخدم بنجاح' });
-    } catch (err) {
-        res.status(500).json({ message: 'خطأ أثناء الإضافة: ' + err.message });
     }
 });
 
