@@ -8,12 +8,12 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// رابط الاتصال المباشر المصحح (بدون إجبار replicaSet خاطئ لضمان الاتصال الفوري)
-const MONGO_URI = "mongodb://medoomran201035_db_user:1234aCluster0@ac-9srqykv-shard-00-00.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-01.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-02.ykvq26a.mongodb.net:27017/kayan_erp?ssl=true&authSource=admin";
+// رابط الـ SRV القياسي لـ MongoDB Atlas
+const MONGO_URI = "mongodb+srv://medoomran201035_db_user:1234aCluster0@cluster0.ykvq26a.mongodb.net/kayan_erp?retryWrites=true&w=majority";
 
-// الاتصال بقاعدة البيانات
 mongoose.connect(MONGO_URI, {
     serverSelectionTimeoutMS: 15000,
+    socketTimeoutMS: 45000,
 })
 .then(async () => {
     console.log('Connected to MongoDB Atlas successfully!');
@@ -22,8 +22,7 @@ mongoose.connect(MONGO_URI, {
         if (count === 0) {
             await User.insertMany([
                 { name: 'Admin', email: 'admin@kayan.com', password: '123456', role: 'admin' },
-                { name: 'HR Manager', email: 'hr@kayan.com', password: '123456', role: 'hr' },
-                { name: 'Employee', email: 'employee@kayan.com', password: '123456', role: 'employee' }
+                { name: 'HR Manager', email: 'hr@kayan.com', password: '123456', role: 'hr' }
             ]);
             console.log('Default users seeded successfully!');
         }
@@ -42,7 +41,6 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-// مسار تسجيل الدخول
 app.post('/api/login', async (req, res) => {
     try {
         if (mongoose.connection.readyState !== 1) {
