@@ -11,8 +11,8 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// الرابط الصحيح والمطابق تماماً لشاشتك الحالية مع الـ ReplicaSet الصحيح
-const MONGO_URI = "mongodb://medoomran201035_db_user:1234aCluster0@ac-9srqykv-shard-00-00.vku26ro.mongodb.net:27017,ac-9srqykv-shard-01-vku26ro.mongodb.net:27017,ac-9srqykv-shard-02-vku26ro.mongodb.net:27017/kayan_erp?ssl=true&replicaSet=atlas-xzefbp-shard-0&authSource=admin&appName=Cluster0";
+// الرابط الصحيح المطابق لشاشتك الحالية (ykvq26a)
+const MONGO_URI = "mongodb://medoomran201035_db_user:1234aCluster0@ac-9srqykv-shard-00-00.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-01.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-02.ykvq26a.mongodb.net:27017/kayan_erp?ssl=true&replicaSet=atlas-xzefbp-shard-0&authSource=admin&appName=Cluster0";
 
 const userSchema = new mongoose.Schema({
     name: String,
@@ -78,9 +78,9 @@ app.post('/api/login', async (req, res) => {
                 role: user.role
             }
         });
-    } catch (err) {
+    } err => {
         console.error('Login error:', err);
-        res.status(500).json({ message: 'حدث خطأ في السيرفر: ' + err.message });
+        res.status(500).json({ message: 'حدث خطأ في السيرفر' });
     }
 });
 
