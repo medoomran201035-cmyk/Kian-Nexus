@@ -151,6 +151,25 @@
             border-radius: 12px;
         }
 
+        /* تنسيق شجرة الفروع الهرمية */
+        .tree-branch {
+            border-right: 2px dashed var(--border-color);
+            padding-right: 20px;
+            margin-right: 15px;
+            margin-top: 10px;
+        }
+        .tree-node {
+            background: rgba(33, 38, 45, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            transition: 0.2s;
+        }
+        .tree-node:hover {
+            border-color: var(--accent-color);
+        }
+
         .kanban-col {
             background: rgba(22, 27, 34, 0.6);
             border: 1px solid var(--border-color);
@@ -191,7 +210,14 @@
                         </a>
                     </li>
 
-                    <!-- 2. الموارد البشرية -->
+                    <!-- 2. الهيكل التنظيمي وشجرة الفروع -->
+                    <li>
+                        <a class="sidebar-link" onclick="switchSection('org-tree', 'الهيكل التنظيمي وشجرة الفروع', this)">
+                            <div><i class="fa-solid fa-sitemap"></i><span>الهيكل التنظيمي والفروع</span></div>
+                        </a>
+                    </li>
+
+                    <!-- 3. الموارد البشرية -->
                     <li class="menu-item">
                         <div class="sidebar-link menu-toggle" onclick="toggleSubmenu(this)">
                             <div><i class="fa-solid fa-users-gear"></i><span>الموارد البشرية</span></div>
@@ -200,52 +226,74 @@
                         <ul class="submenu">
                             <li><a class="submenu-link" onclick="switchSection('hr', 'لوحة تحكم الموارد البشرية', this)"><i class="fa-solid fa-gauge me-2"></i> لوحة تحكم HR</a></li>
                             <li><a class="submenu-link" onclick="switchSection('biometric', 'البصمة والحضور الحية', this)"><i class="fa-solid fa-fingerprint me-2"></i> البصمة والحضور</a></li>
+                            <li><a class="submenu-link" onclick="switchSection('ess', 'بوابة الخدمة الذاتية للموظفين', this)"><i class="fa-solid fa-id-badge me-2"></i> الخدمة الذاتية (ESS)</a></li>
                             <li><a class="submenu-link" onclick="switchSection('documents', 'مستكشف الملفات السحابية', this)"><i class="fa-solid fa-cloud-arrow-up me-2"></i> السحابة والمستندات</a></li>
                         </ul>
                     </li>
 
-                    <!-- 3. الأصول والعهد التقنية -->
+                    <!-- 4. المالية والفوترة (ZATCA) -->
+                    <li>
+                        <a class="sidebar-link" onclick="switchSection('zatca', 'الفوترة الإلكترونية والزكاة (ZATCA)', this)">
+                            <div><i class="fa-solid fa-receipt"></i><span>الفوترة الإلكترونية (ZATCA)</span></div>
+                        </a>
+                    </li>
+
+                    <!-- 5. مراقبة البنية التحتية والشبكات -->
+                    <li>
+                        <a class="sidebar-link" onclick="switchSection('infrastructure', 'مراقبة البنية التحتية والسيرفرات', this)">
+                            <div><i class="fa-solid fa-network-wired"></i><span>مراقبة الشبكات والسيرفرات</span></div>
+                        </a>
+                    </li>
+
+                    <!-- 6. الأصول والعهد التقنية -->
                     <li>
                         <a class="sidebar-link" onclick="switchSection('assets', 'إدارة الأصول والعهد التقنية', this)">
                             <div><i class="fa-solid fa-laptop-code"></i><span>الأصول والعهد التقنية</span></div>
                         </a>
                     </li>
 
-                    <!-- 4. المشاريع والمهام -->
+                    <!-- 7. المشاريع والمهام -->
                     <li>
                         <a class="sidebar-link" onclick="switchSection('projects', 'إدارة المشاريع والمهام (Kanban)', this)">
                             <div><i class="fa-solid fa-kanban"></i><span>المشاريع والمهام</span></div>
                         </a>
                     </li>
 
-                    <!-- 5. العملاء والمبيعات -->
+                    <!-- 8. العملاء والمبيعات -->
                     <li>
                         <a class="sidebar-link" onclick="switchSection('crm', 'إدارة علاقات العملاء CRM', this)">
                             <div><i class="fa-solid fa-handshake"></i><span>العملاء والمبيعات</span></div>
                         </a>
                     </li>
 
-                    <!-- 6. مركز التواصل والرسائل -->
+                    <!-- 9. تحليل الفيديو والذكاء الاصطناعي -->
+                    <li>
+                        <a class="sidebar-link" onclick="switchSection('ai-cctv', 'نظام تحليل الفيديو والذكاء الاصطناعي', this)">
+                            <div><i class="fa-solid fa-video"></i><span>الذكاء الاصطناعي وCCTV</span></div>
+                        </a>
+                    </li>
+
+                    <!-- 10. مركز التواصل والرسائل -->
                     <li>
                         <a class="sidebar-link" onclick="switchSection('chat', 'مركز التواصل والرسائل الداخلية', this)">
                             <div><i class="fa-solid fa-comments"></i><span>الرسائل والتعاميم</span></div>
                         </a>
                     </li>
 
-                    <!-- 7. الصلاحيات والأمان -->
+                    <!-- 11. الصلاحيات والأمان -->
                     <li class="menu-item">
                         <div class="sidebar-link menu-toggle" onclick="toggleSubmenu(this)">
                             <div><i class="fa-solid fa-shield-halved"></i><span>الصلاحيات والأمان</span></div>
                             <i class="fa-solid fa-chevron-down submenu-arrow"></i>
                         </div>
                         <ul class="submenu">
-                            <li><a class="submenu-link" onclick="switchSection('security', 'الصلاحيات والأدوار', this)"><i class="fa-solid fa-key me-2"></i> الصلاحيات والأدوار</a></li>
+                            <li><a class="submenu-link" onclick="switchSection('security', 'مصفوفة الصلاحيات والأدوار', this)"><i class="fa-solid fa-table-cells me-2"></i> مصفوفة الصلاحيات (RBAC)</a></li>
                             <li><a class="submenu-link" onclick="switchSection('audit', 'سجل التدقيق المباشر', this)"><i class="fa-solid fa-clock-rotate-left me-2"></i> سجل التدقيق</a></li>
                             <li><a class="submenu-link" onclick="switchSection('backup', 'مركز النسخ الاحتياطي', this)"><i class="fa-solid fa-database me-2"></i> النسخ الاحتياطي</a></li>
                         </ul>
                     </li>
 
-                    <!-- 8. الإعدادات -->
+                    <!-- 12. الإعدادات -->
                     <li>
                         <a class="sidebar-link" onclick="switchSection('settings', 'إعدادات المؤسسة والنظام', this)">
                             <div><i class="fa-solid fa-gears"></i><span>الإعدادات العامة</span></div>
@@ -271,7 +319,7 @@
                         <p class="text-secondary small mb-0">مرحباً بك مجدداً يا بشمهندس محمد في نظام Kayan ERP المتكامل</p>
                     </div>
                     <div class="d-flex align-items-center gap-3">
-                        <!-- تبديل الثيمات المتقدم -->
+                        <!-- تبديل الثيمات -->
                         <div class="dropdown">
                             <button class="btn btn-sm btn-outline-secondary text-light dropdown-toggle" data-bs-toggle="dropdown"><i class="fa-solid fa-palette me-1"></i> الثيم</button>
                             <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end border-secondary shadow">
@@ -362,16 +410,74 @@
                     </div>
                 </div>
 
-                <!-- 2. لوحة تحكم الموارد البشرية (HR) -->
+                <!-- 2. الهيكل التنظيمي وشجرة الفروع -->
+                <div id="section-org-tree" class="content-section" style="display: none;">
+                    <div class="card p-4 shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h4 class="text-info mb-1"><i class="fa-solid fa-sitemap me-2"></i> الهيكل التنظيمي وشجرة الفروع المتشعبة</h4>
+                                <p class="text-secondary small mb-0">إدارة الإدارات الرئيسية، الفروع التشغيلية التابعة، والأقسام الداخلية.</p>
+                            </div>
+                            <button class="btn btn-sm btn-success" onclick="alert('فتح نافذة إضافة إدارة أو فرع جديد')"><i class="fa-solid fa-plus me-1"></i> إضافة فرع / إدارة</button>
+                        </div>
+
+                        <div class="tree-container">
+                            <div class="tree-node border-primary">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="fa-solid fa-landmark text-primary me-2 fs-5"></i>
+                                        <span class="fw-bold text-light fs-6">الإدارة العامة والتشغيل (المركز الرئيسي - الرياض)</span>
+                                    </div>
+                                    <span class="badge bg-primary">الرئيس التنفيذي / الإدارة</span>
+                                </div>
+                            </div>
+
+                            <div class="tree-branch">
+                                <div class="tree-node">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <i class="fa-solid fa-building text-info me-2"></i>
+                                            <span class="fw-semibold text-light">فرع حي العارض (الفرع التشغيلي الرئيسي)</span>
+                                        </div>
+                                        <span class="badge bg-success">نشط</span>
+                                    </div>
+                                </div>
+                                <div class="tree-branch">
+                                    <div class="tree-node py-2"><i class="fa-solid fa-laptop-code text-warning me-2"></i> قسم تقنية المعلومات والدعم الفني (إشراف: محمد فيصل)</div>
+                                    <div class="tree-node py-2"><i class="fa-solid fa-cash-register text-success me-2"></i> قسم مبيعات المعرض وخدمة العملاء</div>
+                                    <div class="tree-node py-2"><i class="fa-solid fa-warehouse text-secondary me-2"></i> المستودع الفرعي والعهد التقنية</div>
+                                </div>
+                            </div>
+
+                            <div class="tree-branch">
+                                <div class="tree-node">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <i class="fa-solid fa-building text-info me-2"></i>
+                                            <span class="fw-semibold text-light">فرع طريق الملك فهد (فرع الأعمال التجارية)</span>
+                                        </div>
+                                        <span class="badge bg-success">نشط</span>
+                                    </div>
+                                </div>
+                                <div class="tree-branch">
+                                    <div class="tree-node py-2"><i class="fa-solid fa-file-invoice-dollar text-info me-2"></i> إدارة الحسابات والتحصيل المالي</div>
+                                    <div class="tree-node py-2"><i class="fa-solid fa-headset text-warning me-2"></i> مركز الاتصالات وتطوير الأعمال (Call Center)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. الموارد البشرية -->
                 <div id="section-hr" class="content-section" style="display: none;">
                     <div class="card p-4 shadow-sm">
                         <h4 class="text-info mb-3"><i class="fa-solid fa-users-gear me-2"></i> إدارة الموارد البشرية وشؤون الموظفين</h4>
-                        <p class="text-secondary">إدارة عقود الموظفين، مسيرات الرواتب، والإجازات.</p>
+                        <p class="text-secondary">إدارة عقود الموظفين، مسيرات الرواتب، والإجازات مرتبطة بالفروع.</p>
                         <button class="btn btn-sm btn-success w-25 mb-3" onclick="alert('تم فتح نافذة إضافة موظف جديد')"><i class="fa-solid fa-user-plus me-1"></i> إضافة موظف جديد</button>
                     </div>
                 </div>
 
-                <!-- 3. الحضور والغياب الحية -->
+                <!-- 4. البصمة والحضور -->
                 <div id="section-biometric" class="content-section" style="display: none;">
                     <div class="card p-4 shadow-sm">
                         <h4 class="text-info mb-3"><i class="fa-solid fa-fingerprint me-2"></i> محطة ربط البصمة والحضور الحية</h4>
@@ -381,7 +487,7 @@
                                 <thead>
                                     <tr>
                                         <th>الموظف</th>
-                                        <th>القسم</th>
+                                        <th>الفرع / القسم</th>
                                         <th>وقت الدخول</th>
                                         <th>وقت الخروج</th>
                                         <th>الحالة</th>
@@ -390,14 +496,14 @@
                                 <tbody>
                                     <tr>
                                         <td>محمد فيصل</td>
-                                        <td>الإدارة التقنية</td>
+                                        <td>فرع العارض - التقنية</td>
                                         <td>08:00 ص</td>
                                         <td>--:--</td>
                                         <td><span class="badge bg-success">حاضر (في العمل)</span></td>
                                     </tr>
                                     <tr>
                                         <td>أحمد خالد</td>
-                                        <td>الموارد البشرية</td>
+                                        <td>فرع الملك فهد - الموارد البشرية</td>
                                         <td>08:15 ص</td>
                                         <td>--:--</td>
                                         <td><span class="badge bg-warning text-dark">تأخير بسيط</span></td>
@@ -408,30 +514,136 @@
                     </div>
                 </div>
 
-                <!-- 4. المستكشف السحابي للملفات -->
+                <!-- [إضافة جديدة 1] بوابة الخدمة الذاتية للموظفين (ESS) -->
+                <div id="section-ess" class="content-section" style="display: none;">
+                    <div class="card p-4 shadow-sm">
+                        <h4 class="text-info mb-3"><i class="fa-solid fa-id-badge me-2"></i> بوابة الخدمة الذاتية للموظفين (ESS)</h4>
+                        <p class="text-secondary">يتيح لكل موظف تقديم طلبات الإجازات، السلف، واستعراض مسيرات الرواتب الشخصية.</p>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-4">
+                                <div class="card p-3 bg-dark">
+                                    <h6>رصيد الإجازات المتاح</h6>
+                                    <h3 class="text-success">21 يوم</h3>
+                                    <button class="btn btn-sm btn-outline-info mt-2" onclick="alert('تم تقديم طلب إجازة جديد بنجاح')">طلب إجازة جديدة</button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card p-3 bg-dark">
+                                    <h6>السلفة الشخصية المتاحة</h6>
+                                    <h3 class="text-warning">5,000 ر.س</h3>
+                                    <button class="btn btn-sm btn-outline-warning mt-2" onclick="alert('تم إرسال طلب سلفة مالية للإدارة')">طلب سلفة مالية</button>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card p-3 bg-dark">
+                                    <h6>تعريف الراتب</h6>
+                                    <h3 class="text-light">معتمد رسمي</h3>
+                                    <button class="btn btn-sm btn-outline-success mt-2" onclick="alert('جاري تحميل شهادة تعريف الراتب PDF...')">تحميل تعريف الراتب</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- [إضافة جديدة 2] الفوترة الإلكترونية والزكاة (ZATCA) -->
+                <div id="section-zatca" class="content-section" style="display: none;">
+                    <div class="card p-4 shadow-sm">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="text-info mb-0"><i class="fa-solid fa-receipt me-2"></i> الفوترة الإلكترونية والمتوافقة مع ZATCA</h4>
+                            <span class="badge bg-success p-2">متوافق مع المرحلة الثانية (الربط والتكامل)</span>
+                        </div>
+                        <p class="text-secondary">إصدار فواتير المبيعات الضريبية مع توليد QR Code مشفر وحساب ضريبة القيمة المضافة (15%).</p>
+                        <div class="table-responsive">
+                            <table class="table table-dark align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>رقم الفواتير</th>
+                                        <th>العميل</th>
+                                        <th>المبلغ غير شامل الضريبة</th>
+                                        <th>قيمة الضريبة (15%)</th>
+                                        <th>المجموع الكلي</th>
+                                        <th>QR Code</th>
+                                        <th>الإجراء</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>INV-2026-001</td>
+                                        <td>شركة التقنية المتقدمة</td>
+                                        <td>1,000 ر.س</td>
+                                        <td>150 ر.س</td>
+                                        <td>1,150 ر.س</td>
+                                        <td><i class="fa-solid fa-qrcode fs-4 text-info"></i></td>
+                                        <td><button class="btn btn-sm btn-outline-primary" onclick="alert('جاري طباعة الفلافتر الضريبية...')">طباعة</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- [إضافة جديدة 3] مراقبة البنية التحتية والسيرفرات -->
+                <div id="section-infrastructure" class="content-section" style="display: none;">
+                    <div class="card p-4 shadow-sm">
+                        <h4 class="text-info mb-3"><i class="fa-solid fa-network-wired me-2"></i> مراقبة البنية التحتية وحالة الأجهزة (Infrastructure Monitor)</h4>
+                        <p class="text-secondary">متابعة الاتصال اللحظي لراوترات MikroTik، سيرفرات الحوسبة السحابية، وأجهزة البصمة بالفروع.</p>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="card p-3 border-success">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="text-light">راوتر MikroTik - فرع العارض</h6>
+                                        <span class="badge bg-success">Online (Ping: 4ms)</span>
+                                    </div>
+                                    <p class="text-secondary small mt-2 mb-0">IP: 192.168.88.1 | Uptime: 45 Days</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card p-3 border-success">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="text-light">سيرفر MongoDB الرئيسي</h6>
+                                        <span class="badge bg-success">Active (Load: 12%)</span>
+                                    </div>
+                                    <p class="text-secondary small mt-2 mb-0">Cloud VPS | Storage: 45% used</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card p-3 border-warning">
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="text-light">جهاز بصمة ZKTeco MB2000</h6>
+                                        <span class="badge bg-warning text-dark">Sync Delay</span>
+                                    </div>
+                                    <p class="text-secondary small mt-2 mb-0">Branch: King Fahd Rd</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. المستكشف السحابي للملفات -->
                 <div id="section-documents" class="content-section" style="display: none;">
                     <div class="card p-4 shadow-sm">
                         <h4 class="text-info mb-3"><i class="fa-solid fa-cloud-arrow-up me-2"></i> مستكشف الملفات والسحابة الداخلية</h4>
                         <div class="border border-dashed border-secondary rounded p-4 text-center mb-3">
                             <i class="fa-solid fa-cloud-arrow-up fs-1 text-secondary mb-2"></i>
-                            <p class="text-light mb-1">اسحب الملفات هنا أو اضغط لرفع المستندات الرسمية وعقود الموظفين</p>
+                            <p class="text-light mb-1">اسحب الملفات هنا أو اضغط لرفع المستندات الرسمية وعقود الفروع</p>
                             <button class="btn btn-sm btn-outline-info mt-2" onclick="alert('جاري فتح مستعرض الملفات للرفع...')">اختيار ملفات</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- 5. إدارة الأصول والعهد التقنية -->
+                <!-- 6. إدارة الأصول والعهد التقنية -->
                 <div id="section-assets" class="content-section" style="display: none;">
                     <div class="card p-4 shadow-sm">
                         <h4 class="text-info mb-3"><i class="fa-solid fa-laptop-code me-2"></i> إدارة الأصول والعهد التقنية</h4>
-                        <p class="text-secondary">تتبع أجهزة اللابتوب، الراوترات، والكاميرات الموزعة على الأقسام.</p>
+                        <p class="text-secondary">تتبع أجهزة اللابتوب، الراوترات، وكاميرات المراقبة الموزعة على الفروع.</p>
                         <div class="table-responsive">
                             <table class="table table-dark align-middle">
                                 <thead>
                                     <tr>
                                         <th>كود الأصل</th>
                                         <th>نوع الجهاز</th>
-                                        <th>الموظف المسؤول</th>
+                                        <th>الفرع التابع</th>
+                                        <th>المسؤول</th>
                                         <th>حالة الصيانة</th>
                                     </tr>
                                 </thead>
@@ -439,12 +651,14 @@
                                     <tr>
                                         <td>AST-501</td>
                                         <td>Dell Latitude 5520</td>
+                                        <td>فرع العارض</td>
                                         <td>محمد فيصل</td>
                                         <td><span class="badge bg-success">ممتاز</span></td>
                                     </tr>
                                     <tr>
                                         <td>AST-502</td>
                                         <td>MikroTik Router hEX</td>
+                                        <td>فرع الملك فهد</td>
                                         <td>قسم الشبكات</td>
                                         <td><span class="badge bg-success">يعمل بكفاءة</span></td>
                                     </tr>
@@ -454,7 +668,7 @@
                     </div>
                 </div>
 
-                <!-- 6. لوحة إدارة المشاريع والمهام (Kanban) -->
+                <!-- 7. لوحة إدارة المشاريع والمهام (Kanban) -->
                 <div id="section-projects" class="content-section" style="display: none;">
                     <div class="card p-4 shadow-sm">
                         <h4 class="text-info mb-3"><i class="fa-solid fa-kanban me-2"></i> لوحة إدارة المشاريع والمهام (Kanban)</h4>
@@ -462,42 +676,70 @@
                             <div class="col-md-4">
                                 <div class="kanban-col">
                                     <h6 class="text-warning fw-bold mb-3">قيد الانتظار</h6>
-                                    <div class="kanban-card">تحديث سيرفرات الكلاود</div>
+                                    <div class="kanban-card">تحديث سيرفرات الكلاود للفرع الجديد</div>
                                     <div class="kanban-card">مراجعة عقود الموردين</div>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="kanban-col">
                                     <h6 class="text-info fw-bold mb-3">قيد التنفيذ</h6>
-                                    <div class="kanban-card">تطوير واجهات نظام Kayan ERP</div>
+                                    <div class="kanban-card">تطوير واجهات نظام Kayan ERP وشجرة الفروع</div>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="kanban-col">
                                     <h6 class="text-success fw-bold mb-3">تم الانتهاء</h6>
-                                    <div class="kanban-card">تركيب كاميرات المراقبة الجديدة</div>
+                                    <div class="kanban-card">تركيب كاميرات المراقبة لفرع العارض</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 7. إدارة علاقات العملاء CRM والمبيعات -->
+                <!-- 8. إدارة علاقات العملاء CRM والمبيعات -->
                 <div id="section-crm" class="content-section" style="display: none;">
                     <div class="card p-4 shadow-sm">
                         <h4 class="text-info mb-3"><i class="fa-solid fa-handshake me-2"></i> إدارة علاقات العملاء وعروض الأسعار</h4>
-                        <p class="text-secondary">قائمة العملاء المحتملين ومتابعة صفقات المبيعات.</p>
+                        <p class="text-secondary">قائمة العملاء المحتملين ومتابعة صفقات المبيعات لكل فرع.</p>
                         <button class="btn btn-sm btn-outline-primary w-25" onclick="alert('فتح نافذة إضافة عميل جديد')">إضافة عميل جديد</button>
                     </div>
                 </div>
 
-                <!-- 8. مركز التواصل والرسائل الداخلية -->
+                <!-- [إضافة جديدة 4] نظام تحليل الفيديو والذكاء الاصطناعي -->
+                <div id="section-ai-cctv" class="content-section" style="display: none;">
+                    <div class="card p-4 shadow-sm">
+                        <h4 class="text-info mb-3"><i class="fa-solid fa-video me-2"></i> نظام تحليل الفيديو والذكاء الاصطناعي (YOLO & CCTV Analytics)</h4>
+                        <p class="text-secondary">مراقبة كاميرات المستودعات والفروع تلقائياً لرصد المخالفات واكتشاف الحركة.</p>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="card p-3 bg-dark border-secondary">
+                                    <h6 class="text-warning">بث كاميرا المستودع الرئيسي</h6>
+                                    <div class="bg-black rounded p-4 text-center my-2 text-muted" style="height: 180px; display: flex; align-items: center; justify-content: center;">
+                                        <span>[ بث حي مدعوم بنماذج YOLOv11 ]</span>
+                                    </div>
+                                    <span class="badge bg-success">الحالة: آمن (لا توجد مخالفات ظاهرة)</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card p-3 bg-dark border-secondary">
+                                    <h6 class="text-info">سجل التنبيهات الأمنية التلقائية</h6>
+                                    <ul class="list-group list-group-flush bg-transparent small mt-2">
+                                        <li class="list-group-item bg-transparent text-light border-secondary">18:30 - رصد دخول غير مصرح به للمستودع الفرعي.</li>
+                                        <li class="list-group-item bg-transparent text-light border-secondary">14:15 - تنبيه ارتداء معدات الوقاية الشخصية (PPE).</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 9. مركز التواصل والرسائل الداخلية -->
                 <div id="section-chat" class="content-section" style="display: none;">
                     <div class="card p-4 shadow-sm">
                         <h4 class="text-info mb-3"><i class="fa-solid fa-comments me-2"></i> مركز التواصل والتعاميم الإدارية</h4>
                         <div class="bg-dark p-3 rounded border border-secondary mb-3" style="height: 200px; overflow-y: auto;">
-                            <div class="text-secondary small mb-2"><strong>الإدارة العليا:</strong> تم إطلاق نظام Kayan ERP بنجاح للجميع.</div>
-                            <div class="text-light small mb-2"><strong>محمد فيصل:</strong> تم ضبط إعدادات الشبكة بنجاح.</div>
+                            <div class="text-secondary small mb-2"><strong>الإدارة العامة:</strong> تم اعتماد الهيكل التنظيمي الجديد وتحديث فروع الرياض.</div>
+                            <div class="text-light small mb-2"><strong>محمد فيصل:</strong> تم ضبط ربط شبكات فرع العارض بنجاح.</div>
                         </div>
                         <div class="input-group">
                             <input type="text" id="chatInput" class="form-control bg-dark text-light border-secondary" placeholder="اكتب تعميم أو رسالة للفريق...">
@@ -506,26 +748,62 @@
                     </div>
                 </div>
 
-                <!-- 9. الصلاحيات والأمان -->
+                <!-- [إضافة جديدة 5] مصفوفة الصلاحيات المتقدمة (RBAC Matrix) -->
                 <div id="section-security" class="content-section" style="display: none;">
                     <div class="card p-4 shadow-sm">
-                        <h4 class="text-warning mb-3"><i class="fa-solid fa-shield-halved me-2"></i> الصلاحيات والأدوار المتقدمة</h4>
-                        <p class="text-secondary">إدارة صلاحيات المستخدمين والمجموعات الوظيفية داخل النظام.</p>
+                        <h4 class="text-warning mb-3"><i class="fa-solid fa-table-cells me-2"></i> مصفوفة الصلاحيات والأدوار المتقدمة (RBAC Matrix)</h4>
+                        <p class="text-secondary">التحكم الدقيق بصلاحيات (قراءة، كتابة، حذف، تعديل) لكل دور إداري على وحدات النظام.</p>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-bordered align-middle text-center">
+                                <thead>
+                                    <tr>
+                                        <th>الوحدة / القسم</th>
+                                        <th>مدير النظام (Admin)</th>
+                                        <th>مدير الموارد البشرية</th>
+                                        <th>المحاسب المالي</th>
+                                        <th>فني الدعم التقني</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-start">لوحة التحكم والمؤشرات</td>
+                                        <td><i class="fa-solid fa-check text-success"></i></td>
+                                        <td><i class="fa-solid fa-check text-success"></i></td>
+                                        <td><i class="fa-solid fa-check text-success"></i></td>
+                                        <td><i class="fa-solid fa-xmark text-danger"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start">الفوترة الإلكترونية (ZATCA)</td>
+                                        <td><i class="fa-solid fa-check text-success"></i></td>
+                                        <td><i class="fa-solid fa-xmark text-danger"></i></td>
+                                        <td><i class="fa-solid fa-check text-success"></i></td>
+                                        <td><i class="fa-solid fa-xmark text-danger"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start">مراقبة الشبكات والأصول</td>
+                                        <td><i class="fa-solid fa-check text-success"></i></td>
+                                        <td><i class="fa-solid fa-xmark text-danger"></i></td>
+                                        <td><i class="fa-solid fa-xmark text-danger"></i></td>
+                                        <td><i class="fa-solid fa-check text-success"></i></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 10. سجل التدقيق المباشر -->
+                <!-- 11. سجل التدقيق المباشر -->
                 <div id="section-audit" class="content-section" style="display: none;">
                     <div class="card p-4 shadow-sm">
                         <h4 class="text-warning mb-3"><i class="fa-solid fa-clock-rotate-left me-2"></i> سجل التدقيق والأنشطة الأمنية</h4>
                         <ul class="list-group list-group-flush bg-transparent">
-                            <li class="list-group-item bg-transparent text-light border-secondary"><small class="text-muted">منذ 5 دقائق:</small> قام المستخدم (محمد فيصل) بتعديل صلاحيات النظام.</li>
+                            <li class="list-group-item bg-transparent text-light border-secondary"><small class="text-muted">منذ 5 دقائق:</small> قام المستخدم (محمد فيصل) بتحديث شجرة الفروع التنظيمية.</li>
                             <li class="list-group-item bg-transparent text-light border-secondary"><small class="text-muted">منذ ساعة:</small> تم أخذ نسخة احتياطية لقاعدة البيانات بنجاح.</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- 11. مركز النسخ الاحتياطي والطوارئ -->
+                <!-- 12. مركز النسخ الاحتياطي والطوارئ -->
                 <div id="section-backup" class="content-section" style="display: none;">
                     <div class="card p-4 shadow-sm">
                         <h4 class="text-danger mb-3"><i class="fa-solid fa-database me-2"></i> مركز النسخ الاحتياطي واستعادة البيانات</h4>
@@ -534,11 +812,11 @@
                     </div>
                 </div>
 
-                <!-- 12. الإعدادات العامة -->
+                <!-- 13. الإعدادات العامة -->
                 <div id="section-settings" class="content-section" style="display: none;">
                     <div class="card p-4 shadow-sm">
                         <h4 class="text-secondary mb-3"><i class="fa-solid fa-gears me-2"></i> إعدادات المؤسسة والنظام العامة</h4>
-                        <p class="text-secondary">تعديل بيانات الشركة، الشعار، وإعدادات الاتصال.</p>
+                        <p class="text-secondary">تعديل بيانات الشركة، الشعار، وإعدادات الفروع.</p>
                     </div>
                 </div>
 
@@ -558,13 +836,14 @@
                 </div>
                 <div class="list-group list-group-flush" id="commandList" style="max-height: 300px; overflow-y: auto;">
                     <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('dashboard', 'لوحة التحكم والمؤشرات', this)"><i class="fa-solid fa-house me-2 text-info"></i> لوحة التحكم</a>
-                    <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('hr', 'لوحة تحكم الموارد البشرية', this)"><i class="fa-solid fa-users-gear me-2 text-info"></i> إدارة الموارد البشرية</a>
-                    <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('biometric', 'البصمة والحضور الحية', this)"><i class="fa-solid fa-fingerprint me-2 text-success"></i> الحضور والغياب الحية</a>
+                    <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('org-tree', 'الهيكل التنظيمي وشجرة الفروع', this)"><i class="fa-solid fa-sitemap me-2 text-primary"></i> الهيكل التنظيمي والفروع</a>
+                    <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('zatca', 'الفوترة الإلكترونية والزكاة (ZATCA)', this)"><i class="fa-solid fa-receipt me-2 text-success"></i> الفوترة الإلكترونية (ZATCA)</a>
+                    <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('infrastructure', 'مراقبة البنية التحتية والسيرفرات', this)"><i class="fa-solid fa-network-wired me-2 text-warning"></i> مراقبة الشبكات والسيرفرات</a>
+                    <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('ess', 'بوابة الخدمة الذاتية للموظفين', this)"><i class="fa-solid fa-id-badge me-2 text-info"></i> بوابة الخدمة الذاتية (ESS)</a>
+                    <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('ai-cctv', 'نظام تحليل الفيديو والذكاء الاصطناعي', this)"><i class="fa-solid fa-video me-2 text-danger"></i> تحليل الفيديو والذكاء الاصطناعي</a>
                     <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('assets', 'إدارة الأصول والعهد التقنية', this)"><i class="fa-solid fa-laptop-code me-2 text-warning"></i> الأصول والعهد التقنية</a>
                     <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('projects', 'إدارة المشاريع والمهام (Kanban)', this)"><i class="fa-solid fa-kanban me-2 text-primary"></i> إدارة المشاريع والمهام</a>
-                    <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('crm', 'إدارة علاقات العملاء CRM', this)"><i class="fa-solid fa-handshake me-2 text-info"></i> العملاء والمبيعات CRM</a>
-                    <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('chat', 'مركز التواصل والرسائل الداخلية', this)"><i class="fa-solid fa-comments me-2 text-success"></i> مركز التواصل والرسائل</a>
-                    <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('backup', 'مركز النسخ الاحتياطي', this)"><i class="fa-solid fa-database me-2 text-danger"></i> مركز النسخ الاحتياطي</a>
+                    <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('security', 'مصفوفة الصلاحيات والأدوار', this)"><i class="fa-solid fa-table-cells me-2 text-warning"></i> مصفوفة الصلاحيات (RBAC)</a>
                 </div>
             </div>
         </div>
@@ -601,7 +880,7 @@
                 }
             });
 
-            // استرجاع الملاحظات والتايم
+            // استرجاع الملاحظات والثيمات
             if(localStorage.getItem('kayan_notes')) {
                 document.getElementById('quickNotes').value = localStorage.getItem('kayan_notes');
             }
