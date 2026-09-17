@@ -1,95 +1,139 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const cors = require('cors');
-const path = require('path');
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل دخول - Kayan ERP</title>
+    <style>
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-card {
+            background: #1e293b;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 24px;
+            color: #38bdf8;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: #fff;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        input:focus {
+            border-color: #38bdf8;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #0369a1;
+        }
+        #message {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .success { color: #4ade80; }
+        .error { color: #f87171; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>تسجيل دخول - Kayan ERP</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">البريد الإلكتروني</label>
+                <input type="email" id="email" required value="admin@kayan.com">
+            </div>
+            <div class="form-group">
+                <label for="password">كلمة المرور</label>
+                <input type="password" id="password" required value="123456">
+            </div>
+            <button type="submit">دخول للنظام</button>
+        </form>
+        <div id="message"></div>
+    </div>
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('message');
 
-app.use(express.json());
-app.use(cors());
-app.use(express.static(path.join(__dirname, 'public')));
+            messageDiv.textContent = 'جاري التحقق وتسجيل الدخول...';
+            messageDiv.className = '';
 
-const MONGO_URI = "mongodb://medoomran201035_db_user:1234aCluster0@ac-9srqykv-shard-00-00.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-01.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-02.ykvq26a.mongodb.net:27017/kayan_erp?ssl=true&replicaSet=atlas-xzefbp-shard-0&authSource=admin&appName=Cluster0";
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
 
-const userSchema = new mongoose.Schema({
-    name: String,
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    role: String
-});
+                const data = await response.json();
 
-const User = mongoose.models.User || mongoose.model('User', userSchema);
+                if (response.ok) {
+                    messageDiv.textContent = data.message || 'تم تسجيل الدخول بنجاح';
+                    messageDiv.className = 'success';
+                    
+                    // حفظ بيانات المستخدم في التخزين المحلي
+                    if (data.user) {
+                        localStorage.setItem('kayan_user', JSON.stringify(data.user));
+                    }
 
-// الاتصال بقاعدة البيانات مع مهلة زمنية كافية
-mongoose.connect(MONGO_URI, { family: 4, serverSelectionTimeoutMS: 20000 })
-    .then(async () => {
-        console.log('Connected to MongoDB Atlas successfully!');
-        try {
-            const count = await User.countDocuments();
-            if (count === 0) {
-                const hashedPassword = await bcrypt.hash('123456', 10);
-                await User.insertMany([
-                    { name: 'Admin', email: 'admin@kayan.com', password: hashedPassword, role: 'admin' },
-                    { name: 'HR Manager', email: 'hr@kayan.com', password: hashedPassword, role: 'hr' },
-                    { name: 'Employee', email: 'employee@kayan.com', password: hashedPassword, role: 'employee' }
-                ]);
-                console.log('Default users seeded successfully!');
+                    // الانتقال تلقائياً للوحة التحكم أو الصفحة الرئيسية بعد ثانية
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000);
+                } else {
+                    messageDiv.textContent = data.message || 'فشل تسجيل الدخول';
+                    messageDiv.className = 'error';
+                }
             }
-        } catch (seedErr) {
-            console.error('Seeding error:', seedErr);
-        }
-    })
-    .catch(err => console.error('MongoDB connection error:', err));
-
-// مسار تسجيل الدخول مع فحص حالة الاتصال
-app.post('/api/login', async (req, res) => {
-    try {
-        if (mongoose.connection.readyState !== 1) {
-            return res.status(503).json({ message: 'جاري الاتصال بقاعدة البيانات، يرجى المحاولة بعد ثوانٍ قليلة' });
-        }
-
-        const { email, password } = req.body;
-        const user = await User.findOne({ email });
-        
-        if (!user) {
-            return res.status(401).json({ message: 'البريد الإلكتروني غير مسجل' });
-        }
-
-        const isMatch = (password === '123456' || await bcrypt.compare(password, user.password));
-        if (!isMatch) {
-            return res.status(401).json({ message: 'كلمة المرور غير صحيحة' });
-        }
-
-        res.json({
-            message: 'تم تسجيل الدخول بنجاح',
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role
+            catch (err) {
+                messageDiv.textContent = 'حدث خطأ في الاتصال بالسيرفر';
+                messageDiv.className = 'error';
             }
         });
-    } catch (err) {
-        console.error('Login error:', err);
-        res.status(500).json({ message: 'حدث خطأ في السيرفر: ' + err.message });
-    }
-});
-
-app.get('/api/users', async (req, res) => {
-    try {
-        const users = await User.find({}, '-password');
-        res.json(users);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
-    }
-});
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+    </script>
+</body>
+</html>
