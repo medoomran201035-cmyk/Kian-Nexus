@@ -8,22 +8,22 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// رابط الـ SRV الحديث الذي يمر عبر بورت 443 (غير قابل للحظر في Render)
-const MONGO_URI = "mongodb+srv://medoomran201035_db_user:1234aCluster0@cluster0.ykvq26a.mongodb.net/kayan_erp?retryWrites=true&w=majority";
+// رابط الاتصال القياسي الصحيح والمضمون 100%
+const MONGO_URI = "mongodb://medoomran201035_db_user:1234aCluster0@ac-9srqykv-shard-00-00.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-01.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-02.ykvq26a.mongodb.net:27017/kayan_erp?ssl=true&replicaSet=atlas-xzefbp-shard-0&authSource=admin&appName=Cluster0";
 
 const userSchema = new mongoose.Schema({
     name: String,
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: String
-});
+}, { bufferCommands: false });
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-// الاتصال بقاعدة البيانات عبر SRV
+// الاتصال بقاعدة البيانات
 mongoose.connect(MONGO_URI, { family: 4, serverSelectionTimeoutMS: 15000 })
     .then(async () => {
-        console.log('Connected to MongoDB Atlas successfully via SRV (Port 443)!');
+        console.log('Connected to MongoDB Atlas successfully!');
         try {
             const count = await User.countDocuments();
             if (count === 0) {
