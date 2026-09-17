@@ -11,8 +11,8 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// رابط الاتصال القياسي (Standard) المحدث من حسابك
-const MONGO_URI = "mongodb://medoomran201035_db_user:1234aCluster0@ac-9srqykv-shard-00-00.vku26ro.mongodb.net:27017,ac-9srqykv-shard-01-vku26ro.mongodb.net:27017,ac-9srqykv-shard-02-vku26ro.mongodb.net:27017/?ssl=true&replicaSet=atlas-rzefbp-shard-0&authSource=admin&retryWrites=true&w=majority";
+// رابط الاتصال القياسي الصحيح المطابق للـ Cluster الأساسي
+const MONGO_URI = "mongodb://medoomran201035_db_user:1234aCluster0@cluster0-shard-00-00.vku26ro.mongodb.net:27017,cluster0-shard-00-01.vku26ro.mongodb.net:27017,cluster0-shard-00-02.vku26ro.mongodb.net:27017/kayan_erp?ssl=true&replicaSet=atlas-vku26ro-shard-0&authSource=admin&retryWrites=true&w=majority";
 
 const userSchema = new mongoose.Schema({
     name: String,
