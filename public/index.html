@@ -1,529 +1,326 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="htmlRoot">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="pageTitle">Kayan Smart - Ultimate Enterprise ERP v4.5</title>
-    
-    <!-- Bootstrap 5 & FontAwesome -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Chart.js & SheetJS -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-    
+    <title>Kayan ERP - لوحة التحكم الشاملة</title>
+    <!-- Bootstrap 5 RTL CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    <!-- Font Awesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         :root {
-            --bg-main: #0d1117;
-            --bg-card: #161b22;
+            --sidebar-bg: #0d1117;
+            --sidebar-color: #c9d1d9;
+            --sidebar-hover: #1f6feb;
+            --sidebar-active-bg: rgba(31, 111, 235, 0.15);
+            --main-bg: #161b22;
+            --card-bg: #21262d;
             --border-color: #30363d;
-            --text-main: #c9d1d9;
-            --accent-color: #58a6ff;
         }
 
         body {
-            background-color: var(--bg-main);
-            color: var(--text-main);
+            background-color: var(--main-bg);
+            color: var(--sidebar-color);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow-x: hidden;
-            margin: 0;
-            padding: 0;
-            scroll-behavior: smooth;
         }
 
-        /* أشرطة التمرير الواضحة */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-main); }
-        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
-
-        /* بوابة تسجيل الدخول */
-        #loginOverlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: rgba(13, 17, 23, 0.95); z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
+        /* تخطيط الصفحة (Layout) */
+        .wrapper {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
         }
 
-        /* القائمة الجانبية */
+        /* تنسيق القائمة الجانبية (Sidebar) */
         .sidebar {
-            background-color: var(--bg-card);
-            border-color: var(--border-color);
-            height: 100vh; position: fixed; top: 0; width: 260px;
-            z-index: 100; overflow-y: auto; transition: all 0.3s ease;
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            border-left: 1px solid var(--border-color);
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            z-index: 1000;
+            overflow-y: auto;
+            transition: all 0.3s ease;
         }
-        [dir="rtl"] .sidebar { border-left: 1px solid var(--border-color); right: 0; }
-        [dir="ltr"] .sidebar { border-right: 1px solid var(--border-color); left: 0; }
 
-        .main-content {
-            padding: 25px; min-height: 100vh; overflow-y: auto; transition: all 0.3s ease;
+        .sidebar::-webkit-scrollbar {
+            width: 5px;
         }
-        [dir="rtl"] .main-content { margin-right: 260px; }
-        [dir="ltr"] .main-content { margin-left: 260px; }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+
+        /* روابط القائمة الجانبية */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            color: var(--sidebar-color);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            margin-bottom: 2px;
+        }
+
+        .sidebar-link div {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-link i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+            color: #8b949e;
+        }
+
+        .sidebar-link:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .sidebar-link:hover i {
+            color: #58a6ff;
+        }
+
+        .sidebar-link.active {
+            color: #58a6ff;
+            background-color: var(--sidebar-active-bg);
+            font-weight: 600;
+        }
+        .sidebar-link.active i {
+            color: #58a6ff;
+        }
+
+        /* القوائم المنسدلة (Submenus) مع الحركة الانسيابية */
+        .menu-item {
+            list-style: none;
+        }
+
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s ease;
+            list-style: none;
+            padding-right: 32px;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .menu-item.open .submenu {
+            max-height: 600px; /* مساحة كافية لتسع كل العناصر الفرعية */
+        }
+
+        .submenu-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            color: #8b949e;
+            text-decoration: none;
+            font-size: 0.88rem;
+            border-radius: 6px;
+            transition: 0.2s;
+            margin: 2px 0;
+        }
+
+        .submenu-link:hover {
+            color: #58a6ff;
+            background-color: rgba(88, 166, 255, 0.08);
+        }
+
+        .submenu-arrow {
+            font-size: 0.75rem;
+            transition: transform 0.3s ease;
+            color: #8b949e;
+        }
+
+        .menu-item.open .submenu-arrow {
+            transform: rotate(180deg);
+            color: #58a6ff;
+        }
+
+        /* منطقة المحتوى الرئيسي */
+        .main-content {
+            margin-right: 280px;
+            flex-grow: 1;
+            padding: 30px;
+        }
 
         .card {
-            background-color: var(--bg-card);
+            background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            color: var(--text-main);
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            margin-bottom: 25px;
+            color: var(--sidebar-color);
         }
-
-        .navbar-top {
-            background-color: var(--bg-card);
-            border-bottom: 1px solid var(--border-color);
-            padding: 15px 25px; border-radius: 12px; margin-bottom: 30px;
+        
+        .badge-num {
+            background-color: #30363d;
+            color: #c9d1d9;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
         }
-
-        .form-control, .form-select {
-            background-color: var(--bg-main);
-            border: 1px solid var(--border-color);
-            color: #fff;
-        }
-        .form-control:focus, .form-select:focus {
-            background-color: var(--bg-main);
-            border-color: var(--accent-color);
-            color: #fff;
-            box-shadow: 0 0 0 0.25rem rgba(88, 166, 255, 0.15);
-        }
-
-        .table { color: var(--text-main); }
-        .table-dark { background-color: var(--bg-card); }
-
-        .sidebar-link {
-            color: var(--text-main); text-decoration: none;
-            padding: 10px 15px; display: flex; align-items: center; justify-content: space-between;
-            border-radius: 8px; margin: 4px 12px; transition: 0.2s; font-weight: 500; white-space: nowrap;
-            cursor: pointer;
-        }
-        .sidebar-link div { display: flex; align-items: center; gap: 12px; }
-        .sidebar-link i { font-size: 1.1rem; width: 20px; text-align: center; }
-        .sidebar-link:hover, .sidebar-link.active { background-color: #21262d; color: var(--accent-color); }
-
-        textarea { resize: none; }
-        .calc-btn {
-            background-color: #21262d; border: 1px solid var(--border-color);
-            color: #fff; font-weight: bold; width: 22%; height: 38px;
-        }
-        .calc-btn:hover { background-color: #30363d; color: var(--accent-color); }
-
-        .section-divider {
-            border-bottom: 2px dashed var(--border-color);
-            margin: 40px 0 25px 0;
-            padding-bottom: 10px;
-        }
-
-        #backToTopBtn {
-            position: fixed; bottom: 25px;
-            background-color: var(--accent-color); color: #0d1117;
-            border: none; border-radius: 50%; width: 45px; height: 45px;
-            display: none; align-items: center; justify-content: center;
-            font-size: 1.2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 1000; cursor: pointer;
-        }
-        [dir="rtl"] #backToTopBtn { left: 25px; }
-        [dir="ltr"] #backToTopBtn { right: 25px; }
-        #backToTopBtn:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
 
-    <!-- بوابة تسجيل الدخول -->
-    <div id="loginOverlay">
-        <div class="card p-4 shadow-lg" style="width: 380px; border-color: var(--accent-color);">
-            <div class="text-center mb-4">
-                <i class="fa-solid fa-shield-halved fs-1 text-info mb-2"></i>
-                <h4 class="text-light fw-bold" id="loginBrandName">تسجيل دخول Kayan Smart</h4>
-                <p class="text-secondary small" data-i18n="loginSub">أدخل كلمة مرور مدير النظام للمتابعة</p>
-            </div>
-            <div class="mb-3">
-                <input type="password" id="loginPassword" class="form-control text-center" placeholder="admin">
-            </div>
-            <button onclick="handleLogin()" class="btn btn-info w-100 fw-bold text-dark" data-i18n="loginBtn">دخول النظام الآمن</button>
-            <div id="loginError" class="text-danger small text-center mt-2" style="display: none;" data-i18n="loginError">كلمة المرور غير صحيحة!</div>
-        </div>
-    </div>
-
-    <!-- القائمة الجانبية -->
-    <div class="sidebar d-flex flex-column justify-content-between p-3">
-        <div>
-            <div class="d-flex align-items-center gap-3 mb-4 px-2 pt-2">
-                <i id="sidebarLogoIcon" class="fa-solid fa-microchip fs-3" style="color: var(--accent-color);"></i>
-                <span id="sidebarBrandName" class="brand-title fw-bold fs-5 text-light">Kayan Smart</span>
-            </div>
-
-            <ul class="nav flex-column gap-1">
-                <li><a class="sidebar-link active" href="#section-home"><div><i class="fa-solid fa-house"></i><span data-i18n="navHome">الرئيسية واللوحة</span></div></a></li>
-                <li><a class="sidebar-link" href="#section-it"><div><i class="fa-solid fa-network-wired"></i><span data-i18n="navIt">الشبكات وتقنية المعلومات</span></div><i class="fa-solid fa-chevron-left small text-muted"></i></a></li>
-                <li><a class="sidebar-link" href="#section-hr"><div><i class="fa-solid fa-users-gear"></i><span data-i18n="navHr">الموارد البشرية والتوظيف</span></div><i class="fa-solid fa-chevron-left small text-muted"></i></a></li>
-                <li><a class="sidebar-link" href="#section-warehouse"><div><i class="fa-solid fa-warehouse"></i><span data-i18n="navWarehouse">المستودعات والمخزون</span></div><i class="fa-solid fa-chevron-left small text-muted"></i></a></li>
-                <li><a class="sidebar-link" href="#section-finance"><div><i class="fa-solid fa-file-invoice-dollar"></i><span data-i18n="navFinance">الحسابات والمالية</span></div><i class="fa-solid fa-chevron-left small text-muted"></i></a></li>
-                <li><a class="sidebar-link" href="#section-sales"><div><i class="fa-solid fa-chart-line"></i><span data-i18n="navSales">المبيعات وخدمة العملاء</span></div><i class="fa-solid fa-chevron-left small text-muted"></i></a></li>
-                <li><a class="sidebar-link" href="#section-purchases"><div><i class="fa-solid fa-cart-shopping"></i><span data-i18n="navPurchases">المشتريات والموردين</span></div><i class="fa-solid fa-chevron-left small text-muted"></i></a></li>
-                <li><a class="sidebar-link" href="#section-projects"><div><i class="fa-solid fa-diagram-project"></i><span data-i18n="navProjects">المشاريع والصيانة</span></div><i class="fa-solid fa-chevron-left small text-muted"></i></a></li>
-                <li><a class="sidebar-link" href="#section-reports"><div><i class="fa-solid fa-calendar-days"></i><span data-i18n="navReports">المهام والتقارير اليومية</span></div><i class="fa-solid fa-chevron-left small text-muted"></i></a></li>
-                <li><a class="sidebar-link" href="#section-legal"><div><i class="fa-solid fa-scale-balanced"></i><span data-i18n="navLegal">القضايا والدعاوى</span></div><i class="fa-solid fa-chevron-left small text-muted"></i></a></li>
-                <li><a class="sidebar-link" href="#section-ceo"><div><i class="fa-solid fa-user-tie"></i><span data-i18n="navCeo">المدير التنفيذي</span></div><i class="fa-solid fa-chevron-left small text-muted"></i></a></li>
-                <li><a class="sidebar-link" href="#section-settings"><div><i class="fa-solid fa-gears"></i><span data-i18n="navSettings">إعدادات النظام</span></div><i class="fa-solid fa-chevron-left small text-muted"></i></a></li>
-                <li><a class="sidebar-link" href="#section-ai"><div><i class="fa-solid fa-brain"></i><span data-i18n="navAi">الذكاء الاصطناعي</span></div><i class="fa-solid fa-chevron-left small text-muted"></i></a></li>
-                <li><a class="sidebar-link" href="#section-profile"><div><i class="fa-solid fa-id-badge"></i><span data-i18n="navProfile">الصفحة الشخصية</span></div><i class="fa-solid fa-chevron-left small text-muted"></i></a></li>
-            </ul>
-        </div>
-        <div class="user-info p-3 border-top border-secondary text-secondary small mt-3">
-            <div class="user-info-text text-light fw-semibold">م/ محمد فيصل صلاح عمران</div>
-            <div style="font-size: 11px;" class="text-info mt-1"><i class="fa-solid fa-circle-check ms-1 text-success"></i> <span data-i18n="adminRole">مدير النظام الأساسي</span></div>
-        </div>
-    </div>
-
-    <!-- المحتوى الرئيسي -->
-    <div class="main-content" id="mainContentArea">
+    <div class="wrapper">
         
-        <!-- الشريط العلوي -->
-        <div class="navbar-top d-flex justify-content-between align-items-center flex-wrap gap-3">
-            <div class="d-flex align-items-center gap-3">
-                <h4 class="m-0 text-light fw-bold" data-i18n="mainHeader">نظام كيان سمارت المتكامل - اللوحة الإدارية الموحدة</h4>
-                <button onclick="toggleLanguage()" class="btn btn-sm btn-outline-warning fw-bold" id="langToggleBtn">EN / عربي</button>
-            </div>
-            
-            <div class="d-flex align-items-center gap-3">
-                <div class="d-none d-lg-flex align-items-center text-secondary small border-end border-secondary pe-3">
-                    <span id="liveGreeting" class="text-light fw-semibold ms-2">أهلاً بك</span>
-                    | <span id="liveClock" class="ms-2 font-monospace text-info">--:--:--</span>
-                </div>
-
-                <div class="d-flex gap-2 no-print">
-                    <button onclick="exportData()" class="btn btn-sm btn-outline-secondary" title="JSON"><i class="fa-solid fa-download"></i></button>
-                    <button onclick="window.print()" class="btn btn-sm btn-outline-info" title="Print"><i class="fa-solid fa-print"></i></button>
-                    <button onclick="handleLogout()" class="btn btn-sm btn-outline-danger" title="Lock"><i class="fa-solid fa-lock"></i></button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= 1. الرئيسية واللوحة ================= -->
-        <div id="section-home">
-            <div class="row g-3 mb-4">
-                <div class="col-md-3 col-sm-6"><div class="card p-3 text-center"><div class="text-secondary small mb-1" data-i18n="stat1">إجمالي الكادر</div><h3 class="fw-bold text-light m-0">24</h3></div></div>
-                <div class="col-md-3 col-sm-6"><div class="card p-3 text-center"><div class="text-secondary small mb-1" data-i18n="stat2">تذاكر الدعم والتوظيف</div><h3 class="fw-bold text-warning m-0" id="openTicketsCount">8</h3></div></div>
-                <div class="col-md-3 col-sm-6"><div class="card p-3 text-center"><div class="text-secondary small mb-1" data-i18n="stat3">مهام اليوم المنجزة</div><h3 class="fw-bold text-info m-0">12 / 15</h3></div></div>
-                <div class="col-md-3 col-sm-6"><div class="card p-3 text-center"><div class="text-secondary small mb-1" data-i18n="stat4">صافي الأرباح</div><h3 class="fw-bold text-success m-0">185,400 SAR</h3></div></div>
-            </div>
-
-            <div class="row g-4">
-                <div class="col-lg-8">
-                    <div class="card p-4">
-                        <h5 class="text-light mb-3"><i class="fa-solid fa-chart-line ms-2"></i> <span data-i18n="chartTitle">مؤشر الأداء البياني للإيرادات</span></h5>
-                        <div style="height: 280px;"><canvas id="salesChart"></canvas></div>
+        <!-- القائمة الجانبية (Sidebar) -->
+        <div class="sidebar d-flex flex-column justify-content-between p-3">
+            <div>
+                <!-- رأس القائمة -->
+                <div class="d-flex align-items-center gap-3 mb-4 px-2 pt-2">
+                    <i class="fa-solid fa-microchip fs-3 text-info"></i>
+                    <div>
+                        <span class="fw-bold fs-6 text-light d-block">binrabie / Kayan</span>
+                        <span class="text-secondary" style="font-size: 11px;">نظام إدارة المؤسسة الذكي</span>
                     </div>
                 </div>
-                <div class="col-lg-4 d-flex flex-column gap-3">
-                    <div class="card p-4">
-                        <h6 class="text-light mb-2"><i class="fa-solid fa-note-sticky ms-2"></i> <span data-i18n="notesTitle">ملاحظات سريعة</span></h6>
-                        <textarea id="quickNotes" class="form-control mb-2" rows="3" placeholder="ملاحظاتك الإدارية..."></textarea>
-                        <div id="saveStatus" class="text-success small text-end" style="font-size: 11px;">تم الحفظ تلقائياً ✓</div>
-                    </div>
-                    <div class="card p-4">
-                        <h6 class="text-light mb-2"><i class="fa-solid fa-calculator ms-2"></i> الحاسبة المالية</h6>
-                        <input type="text" id="calcDisplay" class="form-control form-control-sm mb-2 text-end font-monospace fs-5" readonly value="0">
-                        <div class="d-flex justify-content-between gap-1 mb-1">
-                            <button class="btn btn-sm calc-btn" onclick="calcAppend('7')">7</button>
-                            <button class="btn btn-sm calc-btn" onclick="calcAppend('8')">8</button>
-                            <button class="btn btn-sm calc-btn" onclick="calcAppend('9')">9</button>
-                            <button class="btn btn-sm calc-btn text-warning" onclick="calcAppend('/')">÷</button>
+
+                <!-- عناصر القائمة -->
+                <ul class="nav flex-column gap-1">
+                    <!-- 1. لوحة التحكم الرئيسية -->
+                    <li>
+                        <a class="sidebar-link active" href="#section-home">
+                            <div><i class="fa-solid fa-house"></i><span>لوحة التحكم</span></div>
+                        </a>
+                    </li>
+
+                    <!-- 2. الموارد البشرية والتوظيف -->
+                    <li class="menu-item">
+                        <div class="sidebar-link menu-toggle" onclick="toggleSubmenu(this)">
+                            <div><i class="fa-solid fa-users-gear"></i><span>الموارد البشرية</span></div>
+                            <i class="fa-solid fa-chevron-down submenu-arrow"></i>
                         </div>
-                        <div class="d-flex justify-content-between gap-1 mb-1">
-                            <button class="btn btn-sm calc-btn" onclick="calcAppend('4')">4</button>
-                            <button class="btn btn-sm calc-btn" onclick="calcAppend('5')">5</button>
-                            <button class="btn btn-sm calc-btn" onclick="calcAppend('6')">6</button>
-                            <button class="btn btn-sm calc-btn text-warning" onclick="calcAppend('*')">×</button>
+                        <ul class="submenu">
+                            <li><a href="#hr-dashboard" class="submenu-link"><i class="fa-solid fa-gauge"></i> لوحة التحكم</a></li>
+                            <li><a href="#hr-staff" class="submenu-link"><span class="badge-num">1</span> شؤون الموظفين</a></li>
+                            <li><a href="#hr-daily" class="submenu-link"><span class="badge-num">2</span> العمليات اليومية</a></li>
+                            <li><a href="#hr-payroll" class="submenu-link"><span class="badge-num">3</span> المالية والرواتب</a></li>
+                            <li><a href="#hr-ats" class="submenu-link"><span class="badge-num">4</span> التطوير والتوظيف</a></li>
+                            <li><a href="#hr-admin" class="submenu-link"><span class="badge-num">5</span> الإدارية</a></li>
+                            <li><a href="#hr-services" class="submenu-link"><span class="badge-num">6</span> الامتثال والخدمات</a></li>
+                            <li><a href="#hr-reports" class="submenu-link"><i class="fa-solid fa-chart-bar"></i> التقارير</a></li>
+                            <li><a href="#hr-settings" class="submenu-link"><i class="fa-solid fa-sliders"></i> إعدادات HR</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- 3. الصلاحيات والأمان -->
+                    <li class="menu-item">
+                        <div class="sidebar-link menu-toggle" onclick="toggleSubmenu(this)">
+                            <div><i class="fa-solid fa-shield-halved"></i><span>الصلاحيات</span></div>
+                            <i class="fa-solid fa-chevron-down submenu-arrow"></i>
                         </div>
-                        <div class="d-flex justify-content-between gap-1 mb-1">
-                            <button class="btn btn-sm calc-btn" onclick="calcAppend('1')">1</button>
-                            <button class="btn btn-sm calc-btn" onclick="calcAppend('2')">2</button>
-                            <button class="btn btn-sm calc-btn" onclick="calcAppend('3')">3</button>
-                            <button class="btn btn-sm calc-btn text-warning" onclick="calcAppend('-')">-</button>
+                        <ul class="submenu">
+                            <li><a href="#sec-roles" class="submenu-link"><i class="fa-solid fa-key"></i> الصلاحيات والأدوار</a></li>
+                            <li><a href="#sec-users" class="submenu-link"><i class="fa-solid fa-users"></i> المستخدمين</a></li>
+                            <li><a href="#sec-sigs" class="submenu-link"><i class="fa-solid fa-file-signature"></i> توقيعات الموظفين</a></li>
+                            <li><a href="#sec-app" class="submenu-link"><i class="fa-solid fa-mobile-screen"></i> حساب التطبيق</a></li>
+                            <li><a href="#sec-logs" class="submenu-link"><i class="fa-solid fa-clock-rotate-left"></i> سجل النشاطات</a></li>
+                            <li><a href="#sec-monitor" class="submenu-link"><i class="fa-solid fa-user-shield"></i> المراقبة الأمنية</a></li>
+                            <li><a href="#sec-server" class="submenu-link"><i class="fa-solid fa-server"></i> مراقبة السيرفر</a></li>
+                            <li><a href="#sec-2fa" class="submenu-link"><i class="fa-solid fa-lock"></i> التحقق بخطوتين</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- 4. المهام والتقارير اليومية -->
+                    <li>
+                        <a class="sidebar-link" href="#section-reports">
+                            <div><i class="fa-solid fa-calendar-days"></i><span>المهام والتقارير اليومية</span></div>
+                        </a>
+                    </li>
+
+                    <!-- 5. القضايا والدعاوى -->
+                    <li>
+                        <a class="sidebar-link" href="#section-legal">
+                            <div><i class="fa-solid fa-scale-balanced"></i><span>القضايا والدعاوى</span></div>
+                        </a>
+                    </li>
+
+                    <!-- 6. المدير التنفيذي -->
+                    <li class="menu-item">
+                        <div class="sidebar-link menu-toggle" onclick="toggleSubmenu(this)">
+                            <div><i class="fa-solid fa-user-tie"></i><span>المدير التنفيذي</span></div>
+                            <i class="fa-solid fa-chevron-down submenu-arrow"></i>
                         </div>
-                        <div class="d-flex justify-content-between gap-1">
-                            <button class="btn btn-sm calc-btn" onclick="calcAppend('0')">0</button>
-                            <button class="btn btn-sm calc-btn text-danger" onclick="calcClear()">C</button>
-                            <button class="btn btn-sm calc-btn text-success" onclick="calcCompute()">=</button>
-                            <button class="btn btn-sm calc-btn text-warning" onclick="calcAppend('+')">+</button>
+                        <ul class="submenu">
+                            <li><a href="#ceo-kpis" class="submenu-link"><i class="fa-solid fa-chart-pie"></i> المؤشرات العليا</a></li>
+                            <li><a href="#ceo-reports" class="submenu-link"><i class="fa-solid fa-file-contract"></i> التقارير الاستراتيجية</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- 7. الإعدادات -->
+                    <li class="menu-item">
+                        <div class="sidebar-link menu-toggle" onclick="toggleSubmenu(this)">
+                            <div><i class="fa-solid fa-gears"></i><span>الإعدادات</span></div>
+                            <i class="fa-solid fa-chevron-down submenu-arrow"></i>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+                        <ul class="submenu">
+                            <li><a href="#set-general" class="submenu-link"><i class="fa-solid fa-sliders"></i> إعدادات النظام العامة</a></li>
+                            <li><a href="#set-theme" class="submenu-link"><i class="fa-solid fa-palette"></i> تخصيص الواجهة</a></li>
+                        </ul>
+                    </li>
 
-        <div class="section-divider"></div>
-
-        <!-- ================= 2. الشبكات وتقنية المعلومات ================= -->
-        <div id="section-it">
-            <h3 class="text-light fw-bold mb-3"><i class="fa-solid fa-network-wired text-info ms-2"></i> <span data-i18n="navIt">الشبكات وتقنية المعلومات (IT)</span></h3>
-            <div class="row g-4">
-                <div class="col-12">
-                    <div class="card p-4">
-                        <h5 class="text-light mb-3"><i class="fa-solid fa-server ms-2"></i> لوحة حالة البنية التحتية والشبكة</h5>
-                        <div class="row g-3">
-                            <div class="col-md-3"><div class="p-3 border border-secondary rounded bg-dark"><div class="text-secondary small">راوتر MikroTik الرئيسي</div><h6 class="text-success mt-1 mb-0"><i class="fa-solid fa-circle text-success" style="font-size:10px;"></i> متصل (Ping: 2ms)</h6></div></div>
-                            <div class="col-md-3"><div class="p-3 border border-secondary rounded bg-dark"><div class="text-secondary small">السيرفر السحابي (Cloud)</div><h6 class="text-success mt-1 mb-0"><i class="fa-solid fa-circle text-success" style="font-size:10px;"></i> يعمل بكفاءة</h6></div></div>
-                            <div class="col-md-3"><div class="p-3 border border-secondary rounded bg-dark"><div class="text-secondary small">جهاز البصمة ZKTeco MB2000</div><h6 class="text-success mt-1 mb-0"><i class="fa-solid fa-circle text-success" style="font-size:10px;"></i> متزامن (Synced)</h6></div></div>
-                            <div class="col-md-3"><div class="p-3 border border-secondary rounded bg-dark"><div class="text-secondary small">كاميرات المراقبة NVR</div><h6 class="text-warning mt-1 mb-0"><i class="fa-solid fa-circle text-warning" style="font-size:10px;"></i> 15/16 متصلة</h6></div></div>
+                    <!-- 8. الذكاء الاصطناعي -->
+                    <li class="menu-item">
+                        <div class="sidebar-link menu-toggle" onclick="toggleSubmenu(this)">
+                            <div><i class="fa-solid fa-brain"></i><span>الذكاء الاصطناعي</span></div>
+                            <i class="fa-solid fa-chevron-down submenu-arrow"></i>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-divider"></div>
-
-        <!-- ================= 3. الموارد البشرية والتوظيف ================= -->
-        <div id="section-hr">
-            <h3 class="text-light fw-bold mb-3"><i class="fa-solid fa-users-gear text-info ms-2"></i> <span data-i18n="navHr">الموارد البشرية والتوظيف (HR & Recruitment)</span></h3>
-            
-            <div class="card p-4 mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                    <h5 class="text-light m-0">إدارة الكادر الوظيفي والرواتب</h5>
-                    <div class="d-flex gap-2">
-                        <input type="text" id="hrEmpName" class="form-control form-control-sm" placeholder="اسم الموظف">
-                        <input type="text" id="hrEmpRole" class="form-control form-control-sm" placeholder="الدور الوظيفي">
-                        <input type="text" id="hrEmpSalary" class="form-control form-control-sm" placeholder="الراتب" style="width: 100px;">
-                        <button class="btn btn-sm btn-outline-success" onclick="addHrEmployee()">إضافة موظف</button>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table align-middle" id="hrEmployeesTable">
-                        <thead><tr class="text-secondary"><th>اسم الموظف</th><th>الدور الوظيفي</th><th>الراتب الأساسي</th><th>حالة البصمة</th><th>إجراء</th></tr></thead>
-                        <tbody id="hrTableBody">
-                            <tr><td>م/ محمد فيصل صلاح</td><td>مدير النظم والشبكات</td><td>12,000 SAR</td><td><span class="badge bg-success">حاضر</span></td><td>-</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                    <h5 class="text-light m-0"><i class="fa-solid fa-user-plus ms-2"></i> قسم التوظيف ومتابعة المتقدمين (ATS)</h5>
-                    <div class="d-flex gap-2">
-                        <input type="text" id="applicantName" class="form-control form-control-sm" placeholder="اسم المتقدم">
-                        <input type="text" id="applicantJob" class="form-control form-control-sm" placeholder="الوظيفة المستهدفة">
-                        <button class="btn btn-sm btn-outline-info" onclick="addApplicant()">تسجيل متقدم</button>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table align-middle">
-                        <thead><tr class="text-secondary"><th>اسم المتقدم</th><th>الوظيفة المطلوبة</th><th>تاريخ التقديم</th><th>حالة الترشيح</th><th>إجراء</th></tr></thead>
-                        <tbody id="recruitmentTableBody">
-                            <tr><td>خالد عبد الله</td><td>مسؤول دعم فني (IT)</td><td>2026-09-17</td><td><span class="badge bg-warning text-dark">قيد المقابلة</span></td><td><button class="btn btn-sm text-danger" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-divider"></div>
-
-        <!-- ================= 4. المستودعات والمخزون ================= -->
-        <div id="section-warehouse">
-            <h3 class="text-light fw-bold mb-3"><i class="fa-solid fa-warehouse text-info ms-2"></i> <span data-i18n="navWarehouse">المستودعات والمخزون</span></h3>
-            <div class="card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="text-light m-0">متابعة الأصناف والكميات</h5>
-                    <div class="d-flex gap-2">
-                        <input type="text" id="newItemName" class="form-control form-control-sm" placeholder="اسم المنتج">
-                        <input type="number" id="newItemQty" class="form-control form-control-sm" placeholder="الكمية" style="width: 90px;">
-                        <button class="btn btn-sm btn-outline-info" onclick="addWarehouseItem()">إضافة صنف</button>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table align-middle">
-                        <thead><tr class="text-secondary"><th>اسم الصنف</th><th>الكمية</th><th>الحالة</th><th>إجراء</th></tr></thead>
-                        <tbody id="warehouseTableBody">
-                            <tr><td>راوتر MikroTik RB750Gr3</td><td>4</td><td><span class="badge bg-danger">منخفض</span></td><td><button class="btn btn-sm text-danger" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-divider"></div>
-
-        <!-- ================= 5. الحسابات والمالية ================= -->
-        <div id="section-finance">
-            <h3 class="text-light fw-bold mb-3"><i class="fa-solid fa-file-invoice-dollar text-info ms-2"></i> <span data-i18n="navFinance">الحسابات والمالية</span></h3>
-            <div class="card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="text-light m-0">سجل الإيرادات والمصروفات</h5>
-                    <div class="d-flex gap-2">
-                        <input type="text" id="finDesc" class="form-control form-control-sm" placeholder="البيان">
-                        <input type="number" id="finAmount" class="form-control form-control-sm" placeholder="المبلغ" style="width: 100px;">
-                        <button class="btn btn-sm btn-outline-success" onclick="addFinanceTxn()">تسجيل</button>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table align-middle">
-                        <thead><tr class="text-secondary"><th>البيان</th><th>المبلغ</th><th>الحالة</th><th>إجراء</th></tr></thead>
-                        <tbody id="financeTableBody">
-                            <tr><td>عقد توريد شبكة كاميرات</td><td class="text-success">+25,000 SAR</td><td><span class="badge bg-success">معتمد</span></td><td><button class="btn btn-sm text-danger" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-divider"></div>
-
-        <!-- ================= 6. المبيعات وخدمة العملاء ================= -->
-        <div id="section-sales">
-            <h3 class="text-light fw-bold mb-3"><i class="fa-solid fa-chart-line text-info ms-2"></i> <span data-i18n="navSales">المبيعات وخدمة العملاء</span></h3>
-            <div class="card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="text-light m-0">متابعة العملاء وعروض الأسعار</h5>
-                    <div class="d-flex gap-2">
-                        <input type="text" id="clientName" class="form-control form-control-sm" placeholder="اسم العميل">
-                        <input type="text" id="clientProject" class="form-control form-control-sm" placeholder="المشروع">
-                        <button class="btn btn-sm btn-outline-info" onclick="addClientCrm()">إضافة عميل</button>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table align-middle">
-                        <thead><tr class="text-secondary"><th>اسم العميل</th><th>المشروع</th><th>الحالة</th><th>إجراء</th></tr></thead>
-                        <tbody id="crmTableBody">
-                            <tr><td>شركة الأفق التجارية</td><td>تجهيز كاميرات</td><td><span class="badge bg-warning text-dark">معالجة</span></td><td><button class="btn btn-sm text-danger" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-divider"></div>
-
-        <!-- ================= 7. المشتريات والموردين ================= -->
-        <div id="section-purchases">
-            <h3 class="text-light fw-bold mb-3"><i class="fa-solid fa-cart-shopping text-info ms-2"></i> <span data-i18n="navPurchases">المشتريات والموردين</span></h3>
-            <div class="card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="text-light m-0">أوامر التوريد والمشتريات</h5>
-                    <div class="d-flex gap-2">
-                        <input type="text" id="supplierName" class="form-control form-control-sm" placeholder="اسم المورد">
-                        <input type="text" id="purchaseItem" class="form-control form-control-sm" placeholder="الأصناف">
-                        <button class="btn btn-sm btn-outline-warning" onclick="addPurchaseOrder()">إضافة</button>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table align-middle">
-                        <thead><tr class="text-secondary"><th>المورد</th><th>الأصناف</th><th>الحالة</th><th>إجراء</th></tr></thead>
-                        <tbody id="purchasesTableBody">
-                            <tr><td>مؤسسة التقنية</td><td>راوترات MikroTik</td><td><span class="badge bg-success">مستلم</span></td><td><button class="btn btn-sm text-danger" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-divider"></div>
-
-        <!-- ================= 8. المشاريع والصيانة ================= -->
-        <div id="section-projects">
-            <h3 class="text-light fw-bold mb-3"><i class="fa-solid fa-diagram-project text-info ms-2"></i> <span data-i18n="navProjects">المشاريع والصيانة</span></h3>
-            <div class="card p-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="text-light m-0">إدارة المشاريع وعقود الصيانة</h5>
-                    <div class="d-flex gap-2">
-                        <input type="text" id="projectName" class="form-control form-control-sm" placeholder="اسم المشروع">
-                        <input type="text" id="projectManager" class="form-control form-control-sm" placeholder="المهندس المسؤول">
-                        <button class="btn btn-sm btn-outline-info" onclick="addProjectItem()">إضافة مشروع</button>
-                    </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table align-middle">
-                        <thead><tr class="text-secondary"><th>المشروع</th><th>المهندس</th><th>الإنجاز</th><th>إجراء</th></tr></thead>
-                        <tbody id="projectsTableBody">
-                            <tr><td>سنترال Grandstream</td><td>م/ محمد فيصل</td><td><span class="badge bg-info text-dark">75%</span></td><td><button class="btn btn-sm text-danger" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-divider"></div>
-
-        <!-- ================= 9. المهام والتقارير اليومية ================= -->
-        <div id="section-reports">
-            <h3 class="text-light fw-bold mb-3"><i class="fa-solid fa-calendar-days text-info ms-2"></i> <span data-i18n="navReports">المهام والتقارير اليومية</span></h3>
-            <div class="card p-4">
-                <div class="input-group input-group-sm mb-3">
-                    <input type="text" id="taskInput" class="form-control" placeholder="مهمة تشغيلية جديدة...">
-                    <button class="btn btn-outline-info" onclick="addTask()">إضافة للمهام</button>
-                </div>
-                <ul id="taskList" class="list-group list-group-flush bg-transparent small">
-                    <li class="list-group-item bg-transparent text-light border-secondary">فحص إعدادات السيرفر والنسخ الاحتياطي <span class="badge bg-success float-end">منجز</span></li>
+                        <ul class="submenu">
+                            <li><a href="#ai-analytics" class="submenu-link"><i class="fa-solid fa-robot"></i> التحليل الذكي للبيانات</a></li>
+                            <li><a href="#ai-voice" class="submenu-link"><i class="fa-solid fa-microphone"></i> الأوامر الصوتية</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
+            
+            <!-- معلومات المستخدم في أسفل القائمة -->
+            <div class="user-info p-3 border-top border-secondary text-secondary small mt-3">
+                <div class="user-info-text text-light fw-semibold">محمد فيصل صلاح عمران</div>
+                <div style="font-size: 11px;" class="text-info">مدير النظام (Admin)</div>
+            </div>
         </div>
 
-        <div class="section-divider"></div>
-
-        <!-- ================= 10. القضايا والدعاوى ================= -->
-        <div id="section-legal">
-            <h3 class="text-light fw-bold mb-3"><i class="fa-solid fa-scale-balanced text-info ms-2"></i> <span data-i18n="navLegal">القضايا والدعاوى</span></h3>
-            <div class="card p-4">
-                <div class="table-responsive">
-                    <table class="table align-middle">
-                        <thead><tr class="text-secondary"><th>رقم القضية</th><th>الموضوع</th><th>الجهة القضائية</th><th>الحالة</th></tr></thead>
-                        <tbody>
-                            <tr><td>LC-2026-01</td><td>نزاع عقدي مع مورد أجهزة</td><td>المحكمة التجارية برياض</td><td><span class="badge bg-warning text-dark">قيد النظر</span></td></tr>
-                        </tbody>
-                    </table>
+        <!-- المحتوى الرئيسي -->
+        <div class="main-content">
+            <div class="container-fluid">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+                    <h2>مرحباً بك، محمد فيصل</h2>
+                    <span class="badge bg-success p-2">النظام يعمل بكفاءة 100%</span>
                 </div>
-            </div>
-        </div>
 
-        <div class="section-divider"></div>
-
-        <!-- ================= 11. المدير التنفيذي ================= -->
-        <div id="section-ceo">
-            <h3 class="text-light fw-bold mb-3"><i class="fa-solid fa-user-tie text-info ms-2"></i> <span data-i18n="navCeo">المدير التنفيذي</span></h3>
-            <div class="card p-4 bg-dark border-info">
-                <h5 class="text-light">الملخص التنفيذي واتخاذ القرار الاستراتيجي</h5>
-                <p class="text-secondary small mt-2">نسبة إنجاز الأهداف العامة للشركة بلغت <strong>91.4%</strong>. أداء الأقسام التشغيلية والتوظيف مستقر ويدعم خطط التوسع الكبرى.</p>
-            </div>
-        </div>
-
-        <div class="section-divider"></div>
-
-        <!-- ================= 12. إعدادات النظام ================= -->
-        <div id="section-settings">
-            <h3 class="text-light fw-bold mb-3"><i class="fa-solid fa-gears text-info ms-2"></i> <span data-i18n="navSettings">إعدادات النظام والهوية</span></h3>
-            <div class="card p-4">
-                <div class="mb-3">
-                    <label class="form-label text-secondary small">اسم الشركة / النظام:</label>
-                    <input type="text" id="settingBrandName" class="form-control" value="Kayan Smart">
-                </div>
-                <button class="btn btn-info w-100 fw-bold text-dark" onclick="saveBrandingSettings()">حفظ الإعدادات</button>
-            </div>
-        </div>
-
-        <div class="section-divider"></div>
-
-        <!-- ================= 13. الذكاء الاصطناعي ================= -->
-        <div id="section-ai">
-            <h3 class="text-light fw-bold mb-3"><i class="fa-solid fa-brain text-info ms-2"></i> <span data-i18n="navAi">الذكاء الاصطناعي (AI Analytics)</span></h3>
-            <div class="card p-4">
-                <p class="text-secondary">مساعد ذكي لتحليل أداء خوادم الشبكات وكشف التهديدات الأمنية عبر نماذج YOLO.</p>
-            </div>
-        </div>
-
-        <div class="section-divider"></div>
-
-        <!-- ================= 14. الصفحة الشخصية ================= -->
-        <div id="section-profile">
-            <h3 class="text-light fw-bold mb-3"><i class="fa-solid fa-id-badge text-info ms-2"></i> <span data-i18n="navProfile">الصفحة الشخصية</span></h3>
-            <div class="card p-4">
-                <div class="d-flex align-items-center gap-4">
-                    <div class="bg-primary text-light rounded-circle d-flex align-items-center justify-content-center fw-bold fs-2" style="width: 75px; height: 75px;">م</div>
-                    <div>
-                        <h4 class="text-light fw-bold mb-1">م/ محمد فيصل صلاح عمران</h4>
-                        <p class="text-info m-0">مدير النظام الأساسي ومسؤول الشبكات (IT & Enterprise Administrator)</p>
-                        <span class="text-secondary small">الموقع: الرياض، المملكة العربية السعودية | تاريخ الميلاد: 1/10/1998</span>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card p-4 rounded-4 shadow-sm">
+                            <h5 class="text-info mb-3"><i class="fa-solid fa-users me-2"></i> الموظفون النشطون</h5>
+                            <h3 class="fw-bold">128 موظف</h3>
+                            <p class="text-secondary small mb-0">حالة الحضور اليومي ممتازة</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card p-4 rounded-4 shadow-sm">
+                            <h5 class="text-warning mb-3"><i class="fa-solid fa-shield-halved me-2"></i> حالة الأمان</h5>
+                            <h3 class="fw-bold">محمي</h3>
+                            <p class="text-secondary small mb-0">لا توجد تنبيهات أمنية معلقة</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card p-4 rounded-4 shadow-sm">
+                            <h5 class="text-success mb-3"><i class="fa-solid fa-server me-2"></i> السيرفر والشبكة</h5>
+                            <h3 class="fw-bold">مستقر</h3>
+                            <p class="text-secondary small mb-0">استهلاك المعالج طبيعي</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -531,240 +328,21 @@
 
     </div>
 
-    <!-- زر العودة لأعلى -->
-    <button id="backToTopBtn" onclick="scrollToTop()"><i class="fa-solid fa-arrow-up"></i></button>
-
-    <!-- السكربتات -->
+    <!-- JavaScript لتفعيل القوائم المنسدلة -->
     <script>
-        const i18n = {
-            ar: {
-                loginSub: "أدخل كلمة مرور مدير النظام للمتابعة",
-                loginBtn: "دخول النظام الآمن",
-                loginError: "كلمة المرور غير صحيحة!",
-                navHome: "الرئيسية واللوحة",
-                navIt: "الشبكات وتقنية المعلومات",
-                navHr: "الموارد البشرية والتوظيف",
-                navWarehouse: "المستودعات والمخزون",
-                navFinance: "الحسابات والمالية",
-                navSales: "المبيعات وخدمة العملاء",
-                navPurchases: "المشتريات والموردين",
-                navProjects: "المشاريع والصيانة",
-                navReports: "المهام والتقارير اليومية",
-                navLegal: "القضايا والدعاوى",
-                navCeo: "المدير التنفيذي",
-                navSettings: "إعدادات النظام",
-                navAi: "الذكاء الاصطناعي",
-                navProfile: "الصفحة الشخصية",
-                adminRole: "مدير النظام الأساسي",
-                mainHeader: "نظام كيان سمارت المتكامل - اللوحة الإدارية الموحدة",
-                stat1: "إجمالي الكادر",
-                stat2: "تذاكر الدعم والتوظيف",
-                stat3: "مهام اليوم المنجزة",
-                stat4: "صافي الأرباح",
-                chartTitle: "مؤشر الأداء البياني للإيرادات",
-                notesTitle: "ملاحظات سريعة"
-            },
-            en: {
-                loginSub: "Enter admin password to continue",
-                loginBtn: "Secure Login",
-                loginError: "Incorrect password!",
-                navHome: "Dashboard & Home",
-                navIt: "IT & Network Management",
-                navHr: "HR & Recruitment",
-                navWarehouse: "Warehouse & Inventory",
-                navFinance: "Finance & Accounts",
-                navSales: "Sales & CRM",
-                navPurchases: "Purchases & Suppliers",
-                navProjects: "Projects & Maintenance",
-                navReports: "Daily Tasks & Reports",
-                navLegal: "Legal Cases",
-                navCeo: "Chief Executive (CEO)",
-                navSettings: "System Settings",
-                navAi: "Artificial Intelligence",
-                navProfile: "User Profile",
-                adminRole: "Chief System Administrator",
-                mainHeader: "Kayan Smart Enterprise ERP - Unified Dashboard",
-                stat1: "Total Staff",
-                stat2: "Support & HR Tickets",
-                stat3: "Completed Tasks",
-                stat4: "Net Profit",
-                chartTitle: "Revenue Performance Chart",
-                notesTitle: "Quick Notes"
-            }
-        };
-
-        let currentLang = localStorage.getItem('kayan_lang') || 'ar';
-
-        function applyLanguage(lang) {
-            currentLang = lang;
-            localStorage.setItem('kayan_lang', lang);
-            document.getElementById('htmlRoot').setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-            document.getElementById('htmlRoot').setAttribute('lang', lang);
-
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if(i18n[lang][key]) el.innerText = i18n[lang][key];
-            });
-        }
-
-        function toggleLanguage() {
-            applyLanguage(currentLang === 'ar' ? 'en' : 'ar');
-        }
-        applyLanguage(currentLang);
-
-        const mainArea = document.getElementById('mainContentArea');
-        const backBtn = document.getElementById('backToTopBtn');
-        mainArea.addEventListener('scroll', function() {
-            backBtn.style.display = mainArea.scrollTop > 300 ? 'flex' : 'none';
-        });
-        function scrollToTop() { mainArea.scrollTo({ top: 0, behavior: 'smooth' }); }
-
-        function handleLogin() {
-            const pass = document.getElementById('loginPassword').value;
-            if(pass === 'admin' || pass === 'محمد') {
-                document.getElementById('loginOverlay').style.display = 'none';
-                localStorage.setItem('kayan_logged_in', 'true');
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-            }
-        }
-        function handleLogout() {
-            localStorage.removeItem('kayan_logged_in');
-            document.getElementById('loginOverlay').style.display = 'flex';
-        }
-        if(localStorage.getItem('kayan_logged_in') === 'true') {
-            document.getElementById('loginOverlay').style.display = 'none';
-        }
-
-        // الملاحظات
-        const notesArea = document.getElementById('quickNotes');
-        const saveStatus = document.getElementById('saveStatus');
-        if(localStorage.getItem('kayan_quick_notes')) notesArea.value = localStorage.getItem('kayan_quick_notes');
-        notesArea.addEventListener('input', function() {
-            localStorage.setItem('kayan_quick_notes', this.value);
-            saveStatus.style.opacity = '1';
-            setTimeout(() => { saveStatus.style.opacity = '0.5'; }, 1000);
-        });
-
-        // دوال الإضافة
-        function addHrEmployee() {
-            const name = document.getElementById('hrEmpName').value.trim();
-            const role = document.getElementById('hrEmpRole').value.trim();
-            const sal = document.getElementById('hrEmpSalary').value.trim();
-            if(name && role && sal) {
-                document.getElementById('hrTableBody').innerHTML += `<tr><td>${name}</td><td>${role}</td><td>${sal} SAR</td><td><span class="badge bg-success">حاضر</span></td><td><button class="btn btn-sm text-danger" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td></tr>`;
-                document.getElementById('hrEmpName').value=''; document.getElementById('hrEmpRole').value=''; document.getElementById('hrEmpSalary').value='';
-            }
-        }
-
-        function addApplicant() {
-            const name = document.getElementById('applicantName').value.trim();
-            const job = document.getElementById('applicantJob').value.trim();
-            const today = new Date().toISOString().split('T')[0];
-            if(name && job) {
-                document.getElementById('recruitmentTableBody').innerHTML += `<tr><td>${name}</td><td>${job}</td><td>${today}</td><td><span class="badge bg-warning text-dark">تحت المراجعة</span></td><td><button class="btn btn-sm text-danger" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td></tr>`;
-                document.getElementById('applicantName').value=''; document.getElementById('applicantJob').value='';
-            }
-        }
-
-        function addWarehouseItem() {
-            const name = document.getElementById('newItemName').value.trim();
-            const qty = document.getElementById('newItemQty').value.trim();
-            if(name && qty) {
-                document.querySelector('#section-warehouse tbody').innerHTML += `<tr><td>${name}</td><td>${qty}</td><td><span class="badge bg-success">متوفر</span></td><td><button class="btn btn-sm text-danger" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td></tr>`;
-                document.getElementById('newItemName').value=''; document.getElementById('newItemQty').value='';
-            }
-        }
-
-        function addFinanceTxn() {
-            const desc = document.getElementById('finDesc').value.trim();
-            const amt = document.getElementById('finAmount').value.trim();
-            if(desc && amt) {
-                document.querySelector('#section-finance tbody').innerHTML += `<tr><td>${desc}</td><td class="text-success">+${amt} SAR</td><td><span class="badge bg-success">معتمد</span></td><td><button class="btn btn-sm text-danger" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td></tr>`;
-                document.getElementById('finDesc').value=''; document.getElementById('finAmount').value='';
-            }
-        }
-
-        function addClientCrm() {
-            const name = document.getElementById('clientName').value.trim();
-            const proj = document.getElementById('clientProject').value.trim();
-            if(name && proj) {
-                document.querySelector('#section-sales tbody').innerHTML += `<tr><td>${name}</td><td>${proj}</td><td><span class="badge bg-warning text-dark">معالجة</span></td><td><button class="btn btn-sm text-danger" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td></tr>`;
-                document.getElementById('clientName').value=''; document.getElementById('clientProject').value='';
-            }
-        }
-
-        function addPurchaseOrder() {
-            const sup = document.getElementById('supplierName').value.trim();
-            const item = document.getElementById('purchaseItem').value.trim();
-            if(sup && item) {
-                document.querySelector('#section-purchases tbody').innerHTML += `<tr><td>${sup}</td><td>${item}</td><td><span class="badge bg-success">مستلم</span></td><td><button class="btn btn-sm text-danger" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td></tr>`;
-                document.getElementById('supplierName').value=''; document.getElementById('purchaseItem').value='';
-            }
-        }
-
-        function addProjectItem() {
-            const name = document.getElementById('projectName').value.trim();
-            const mgr = document.getElementById('projectManager').value.trim();
-            if(name && mgr) {
-                document.querySelector('#section-projects tbody').innerHTML += `<tr><td>${name}</td><td>${mgr}</td><td><span class="badge bg-info text-dark">10%</span></td><td><button class="btn btn-sm text-danger" onclick="this.closest('tr').remove()"><i class="fa-solid fa-trash"></i></button></td></tr>`;
-                document.getElementById('projectName').value=''; document.getElementById('projectManager').value='';
-            }
-        }
-
-        function addTask() {
-            const t = document.getElementById('taskInput').value.trim();
-            if(t) {
-                document.getElementById('taskList').innerHTML += `<li class="list-group-item bg-transparent text-light border-secondary">${t} <span class="badge bg-warning text-dark float-end">قيد التنفيذ</span></li>`;
-                document.getElementById('taskInput').value='';
-            }
-        }
-
-        function loadBranding() {
-            const savedName = localStorage.getItem('kayan_brand_name') || 'Kayan Smart';
-            document.getElementById('sidebarBrandName').innerText = savedName;
-        }
-        loadBranding();
-        function saveBrandingSettings() {
-            const name = document.getElementById('settingBrandName').value.trim();
-            if(name) { localStorage.setItem('kayan_brand_name', name); loadBranding(); alert('تم حفظ الهوية بنجاح!'); }
-        }
-
-        function exportData() {
-            const data = { notes: localStorage.getItem('kayan_quick_notes') };
-            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = 'kayan_smart_backup.json'; a.click();
-        }
-
-        // الحاسبة
-        const calcDisplay = document.getElementById('calcDisplay');
-        function calcAppend(val) { if(calcDisplay.value === '0' && val !== '.') calcDisplay.value = ''; calcDisplay.value += val; }
-        function calcClear() { calcDisplay.value = '0'; }
-        function calcCompute() { try { calcDisplay.value = eval(calcDisplay.value); } catch { calcDisplay.value = 'خطأ'; } }
-
-        // الرسم البياني
-        const ctx = document.getElementById('salesChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-                datasets: [{
-                    label: 'Revenue (SAR)',
-                    data: [120000, 135000, 128000, 142000, 155000, 160000, 172000, 180000, 185400],
-                    borderColor: '#58a6ff', backgroundColor: 'rgba(88, 166, 255, 0.1)', borderWidth: 2, fill: true, tension: 0.3
-                }]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { labels: { color: '#c9d1d9' } } },
-                scales: {
-                    x: { ticks: { color: '#8b949e' }, grid: { color: '#30363d' } },
-                    y: { ticks: { color: '#8b949e' }, grid: { color: '#30363d' } }
+        function toggleSubmenu(element) {
+            const parentLi = element.parentElement;
+            
+            // غلق بقية القوائم المفتوحة (Accordion Behavior)
+            document.querySelectorAll('.menu-item').forEach(item => {
+                if (item !== parentLi) {
+                    item.classList.remove('open');
                 }
-            }
-        });
+            });
+
+            // تبديل حالة القائمة الحالية (فتح/غلق)
+            parentLi.classList.toggle('open');
+        }
     </script>
 </body>
 </html>
