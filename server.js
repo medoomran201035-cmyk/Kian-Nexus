@@ -11,8 +11,8 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// الرابط السحابي السريع مع إعدادات الاتصال الآمنة ومنع مشاكل الـ IPv6
-const MONGO_URI = "mongodb+srv://medoomran201035_db_user:1234aCluster0@cluster0.vku26ro.mongodb.net/kayan_erp?retryWrites=true&w=majority";
+// رابط الاتصال العادي (Standard) لتجاوز مشاكل DNS SRV على Render نهائياً
+const MONGO_URI = "mongodb://medoomran201035_db_user:1234aCluster0@cluster0-shard-00-00.vku26ro.mongodb.net:27017,cluster0-shard-00-01.vku26ro.mongodb.net:27017,cluster0-shard-00-02.vku26ro.mongodb.net:27017/kayan_erp?ssl=true&replicaSet=atlas-vku26ro-shard-0&authSource=admin&retryWrites=true&w=majority";
 
 const userSchema = new mongoose.Schema({
     name: String,
@@ -23,8 +23,8 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-// الاتصال بقاعدة البيانات مع إجبار استخدام IPv4 لمنع حدوث Timeout
-mongoose.connect(MONGO_URI, { family: 4 })
+// الاتصال بقاعدة البيانات
+mongoose.connect(MONGO_URI, { family: 4, serverSelectionTimeoutMS: 10000 })
     .then(async () => {
         console.log('Connected to MongoDB Atlas successfully!');
         try {
@@ -46,6 +46,10 @@ mongoose.connect(MONGO_URI, { family: 4 })
 
 app.post('/api/login', async (req, res) => {
     try {
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(500).json({ message: 'جاري الاتصال بقاعدة البيانات، يرجى المحاولة بعد ثوانٍ قليلة' });
+        }
+
         const { email } = req.body;
         let user = null;
 
