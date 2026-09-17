@@ -6,11 +6,11 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// تشغيل ملفات الـ public الثابتة
+// تشغيل الملفات الثابتة من فولدر public
 app.use(express.static(path.join(__dirname, 'public')));
 
-// توجيه الصفحة الرئيسية مباشرة إلى index.html بدون أي تسجيل دخول
-app.get('/', (req, res) => {
+// أي طلب للصفحة الرئيسية أو لو حد حاول يفتح login الممسوح، يوجهه مباشرة لـ index.html
+app.get(['/', '/login.html'], (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
