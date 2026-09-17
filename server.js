@@ -6,13 +6,13 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
-// تحويل أي طلب للرئيسية أو صفحة الدخول إلى الداشبورد مباشرة
-app.get(['/', '/login.html'], (req, res) => {
-    // لو اسم ملف الداشبورد عندك dashboard.html (لو اسمه index.html غيرها هنا)
-    res.sendFile(path.join(__dirname, 'public', 'dashboard.html'));
-});
-
+// تشغيل ملفات الـ public الثابتة
 app.use(express.static(path.join(__dirname, 'public')));
+
+// توجيه الصفحة الرئيسية مباشرة إلى index.html بدون أي تسجيل دخول
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
