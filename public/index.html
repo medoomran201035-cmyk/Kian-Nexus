@@ -238,10 +238,10 @@
                         </ul>
                     </li>
 
-                    <!-- 2. البنية ومراكز البيانات -->
+                    <!-- 2. البنية التحتية ومراكز البيانات -->
                     <li>
                         <button class="menu-dropdown-btn" onclick="toggleSubmenu('infra-submenu', this)">
-                            <i class="fas fa-server"></i> بنية ومراكز البيانات <i class="fas fa-chevron-down ms-auto small"></i>
+                            <i class="fas fa-server"></i> البنية ومراكز البيانات <i class="fas fa-chevron-down ms-auto small"></i>
                         </button>
                         <ul id="infra-submenu" class="submenu">
                             <li onclick="switchSection('servers', this)"><a>السيرفرات الافتراضية (Hyper-V)</a></li>
@@ -250,10 +250,10 @@
                         </ul>
                     </li>
 
-                    <!-- 3. الدعم الفني والصيانة -->
+                    <!-- 3. الدعم الفني والصيانة التقنية -->
                     <li>
                         <button class="menu-dropdown-btn" onclick="toggleSubmenu('helpdesk-submenu', this)">
-                            <i class="fas fa-headset"></i> الدعم الفني والصيانة <i class="fas fa-chevron-down ms-auto small"></i>
+                            <i class="fas fa-headset"></i> الدعم الفني والصيانة التقنية <i class="fas fa-chevron-down ms-auto small"></i>
                         </button>
                         <ul id="helpdesk-submenu" class="submenu">
                             <li onclick="switchSection('tickets', this)"><a>تذاكر الأعطال النشطة</a></li>
@@ -262,22 +262,22 @@
                         </ul>
                     </li>
 
-                    <!-- 4. الأمن السيبراني والتدقيق -->
+                    <!-- 4. الأمن السيبراني والامتثال -->
                     <li>
                         <button class="menu-dropdown-btn" onclick="toggleSubmenu('security-submenu', this)">
-                            <i class="fas fa-shield-alt"></i> الأمن السيبراني والتدقيق <i class="fas fa-chevron-down ms-auto small"></i>
+                            <i class="fas fa-shield-alt"></i> الأمن السيبراني والامتثال <i class="fas fa-chevron-down ms-auto small"></i>
                         </button>
                         <ul id="security-submenu" class="submenu">
-                            <li onclick="switchSection('ad', this)"><a>صلاحيات Active Directory</a></li>
-                            <li onclick="switchSection('firewall', this)"><a>جدران الحماية (Firewall)</a></li>
+                            <li onclick="switchSection('ad', this)"><a>إدارة Active Directory الصلاحيات</a></li>
+                            <li onclick="switchSection('firewall', this)"><a>جدران الحماية وقواعد الأمان</a></li>
                             <li onclick="switchSection('audit', this)"><a>سجل التدقيق ومراقبة النشاط</a></li>
                         </ul>
                     </li>
 
-                    <!-- 5. الموارد البشرية وبصمة -->
+                    <!-- 5. الموارد البشرية والبصمة -->
                     <li>
                         <button class="menu-dropdown-btn" onclick="toggleSubmenu('people-submenu', this)">
-                            <i class="fas fa-users-cog"></i> الموارد البشرية وبصمة <i class="fas fa-chevron-down ms-auto small"></i>
+                            <i class="fas fa-users-cog"></i> الموارد البشرية والبصمة <i class="fas fa-chevron-down ms-auto small"></i>
                         </button>
                         <ul id="people-submenu" class="submenu">
                             <li onclick="switchSection('structure', this)"><a>الهيكل التنظيمي للموظفين</a></li>
@@ -286,10 +286,10 @@
                         </ul>
                     </li>
 
-                    <!-- 6. الذكاء الاصطناعي -->
+                    <!-- 6. الذكاء الاصطناعي والرؤية الحاسوبية -->
                     <li>
                         <button class="menu-dropdown-btn" onclick="toggleSubmenu('ai-submenu', this)">
-                            <i class="fas fa-brain"></i> الذكاء الاصطناعي و DeepMind <i class="fas fa-chevron-down ms-auto small"></i>
+                            <i class="fas fa-brain"></i> الذكاء الاصطناعي والرؤية <i class="fas fa-chevron-down ms-auto small"></i>
                         </button>
                         <ul id="ai-submenu" class="submenu">
                             <li onclick="switchSection('cctv', this)"><a>تحليلات الكاميرات (YOLO Vision)</a></li>
@@ -325,20 +325,20 @@
                         </ul>
                     </li>
 
-                    <!-- 10. أسطول السيارات -->
+                    <!-- 10. إدارة أسطول السيارات -->
                     <li onclick="switchSection('fleet', this)">
                         <a><i class="fas fa-car-side"></i> إدارة أسطول السيارات</a>
                     </li>
 
-                    <!-- 11. الحوكمة والتراخيص والتعاميم -->
+                    <!-- 11. الحوكمة والإعدادات العامة -->
                     <li>
                         <button class="menu-dropdown-btn" onclick="toggleSubmenu('admin-submenu', this)">
-                            <i class="fas fa-cogs"></i> الحوكمة والإعدادات <i class="fas fa-chevron-down ms-auto small"></i>
+                            <i class="fas fa-cogs"></i> الحوكمة والإعدادات العامة <i class="fas fa-chevron-down ms-auto small"></i>
                         </button>
                         <ul id="admin-submenu" class="submenu">
                             <li onclick="switchSection('licenses', this)"><a>العقود والتراخيص والاشتراكات</a></li>
-                            <li onclick="switchSection('messages', this)"><a>الرسائل والتعاميم الوطنية</a></li>
-                            <li onclick="switchSection('settings', this)"><a>الوضع العام وصلاحيات النظام</a></li>
+                            <li onclick="switchSection('messages', this)"><a>الرسائل والتعاميم المؤسسية</a></li>
+                            <li onclick="switchSection('settings', this)"><a>إعدادات النظام والصلاحيات</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -405,7 +405,7 @@
                 </div>
                 <div class="card card-custom p-4">
                     <h5 class="text-light mb-3"><i class="fab fa-google text-primary me-2"></i> مرحباً بك يا بشمهندس محمد في منصة Kayan Enterprise</h5>
-                    <p class="text-secondary mb-0">النظام يعمل بكامل طاقته التشغيلية والتقنية، ومزود بالشجرة التنظيمية الكاملة لإدارة كافة قطاعات الشركة.</p>
+                    <p class="text-secondary mb-0">تم تصحيح وتدقيق كافة أسماء الإدارات والشعب التقنية والإدارية لتتوافق مع معايير أنظمة الـ ERP العالمية.</p>
                 </div>
             </div>
 
