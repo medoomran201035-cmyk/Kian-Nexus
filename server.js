@@ -8,21 +8,22 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const MONGO_URI = "mongodb://medoomran201035_db_user:1234aCluster0@ac-9srqykv-shard-00-00.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-01.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-02.ykvq26a.mongodb.net:27017/kayan_erp?ssl=true&replicaSet=atlas-xzefbp-shard-0&authSource=admin&appName=Cluster0";
+// رابط الـ SRV الحديث الذي يمر عبر بورت 443 (غير قابل للحظر في Render)
+const MONGO_URI = "mongodb+srv://medoomran201035_db_user:1234aCluster0@cluster0.ykvq26a.mongodb.net/kayan_erp?retryWrites=true&w=majority";
 
-// إلغاء الانتظار الطويل لكي يظهر الخطأ فوراً لو الاتصال مقطوع
 const userSchema = new mongoose.Schema({
     name: String,
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: String
-}, { bufferCommands: false });
+});
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-mongoose.connect(MONGO_URI, { family: 4, serverSelectionTimeoutMS: 5000 })
+// الاتصال بقاعدة البيانات عبر SRV
+mongoose.connect(MONGO_URI, { family: 4, serverSelectionTimeoutMS: 15000 })
     .then(async () => {
-        console.log('Connected to MongoDB Atlas successfully!');
+        console.log('Connected to MongoDB Atlas successfully via SRV (Port 443)!');
         try {
             const count = await User.countDocuments();
             if (count === 0) {
@@ -39,14 +40,9 @@ mongoose.connect(MONGO_URI, { family: 4, serverSelectionTimeoutMS: 5000 })
     })
     .catch(err => console.error('MongoDB connection error:', err));
 
+// مسار تسجيل الدخول
 app.post('/api/login', async (req, res) => {
     try {
-        if (mongoose.connection.readyState !== 1) {
-            return res.status(503).json({ 
-                message: 'قاعدة البيانات غير متصلة. تأكد من إضافة 0.0.0.0/0 في Network Access بمنصة MongoDB Atlas' 
-            });
-        }
-
         const { email, password } = req.body;
         let user = await User.findOne({ email });
         
@@ -74,7 +70,7 @@ app.post('/api/login', async (req, res) => {
         });
     } catch (err) {
         console.error('Login error:', err);
-        res.status(500).json({ message: 'فشل الاتصال بقاعدة البيانات. تأكد من تفعيل Allow Access from Anywhere (0.0.0.0/0) في أطلس.' });
+        res.status(500).json({ message: 'خطأ في السيرفر: ' + err.message });
     }
 });
 
