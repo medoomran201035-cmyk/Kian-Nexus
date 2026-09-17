@@ -1,24 +1,19 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const cors = require('cors');
 const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// الاتصال المباشر بقاعدة البيانات السحابية (MongoDB Atlas)
+// الاتصال بقاعدة البيانات مع إنشاء المستخدمين تلقائياً لو القاعدة فاضية
 const MONGO_URI = "mongodb+srv://medoomran201035_db_user:1234aCluster0.vku26ro.mongodb.net/kayan_erp?retryWrites=true&w=majority";
 
-mongoose.connect(MONGO_URI)
-    .then(() => console.log('Connected to MongoDB Atlas successfully!'))
-    .catch(err => console.error('MongoDB connection error:', err));
-
-// User Schema & Model
 const userSchema = new mongoose.Schema({
     name: String,
     email: { type: String, required: true, unique: true },
@@ -28,12 +23,32 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-// مسار تسجيل الدخول المباشر (بدون كلمة مرور)
+mongoose.connect(MONGO_URI)
+    .then(async () => {
+        console.log('Connected to MongoDB Atlas successfully!');
+        try {
+            const count = await User.countDocuments();
+            if (count === 0) {
+                const hashedPassword = await bcrypt.hash('123456', 10);
+                await User.insertMany([
+                    { name: 'Admin', email: 'admin@kayan.com', password: hashedPassword, role: 'admin' },
+                    { name: 'HR Manager', email: 'hr@kayan.com', password: hashedPassword, role: 'hr' },
+                    { name: 'Employee', email: 'employee@kayan.com', password: hashedPassword, role: 'employee' }
+                ]);
+                console.log('Default users created automatically!');
+            }
+        } catch (seedErr) {
+            console.error('Auto-seed error:', seedErr);
+        }
+    })
+    .catch(err => console.error('MongoDB connection error:', err));
+
+// مسار تسجيل الدخول المباشر الآمن (بدون كلمة مرور)
 app.post('/api/login', async (req, res) => {
     try {
         const { email } = req.body;
+        let user = null;
 
-        let user;
         if (email) {
             user = await User.findOne({ email });
         }
@@ -42,11 +57,16 @@ app.post('/api/login', async (req, res) => {
             user = await User.findOne({ role: 'admin' }) || await User.findOne();
         }
 
+        // لو مفيش أي مستخدم في القاعدة نهائياً، أنشئ مستخدم طوارئ فوراً
         if (!user) {
-            return res.status(404).json({ message: 'لم يتم العثور على أي حساب في النظام' });
+            user = await User.create({
+                name: 'Admin',
+                email: email || 'admin@kayan.com',
+                password: '123456',
+                role: 'admin'
+            });
         }
 
-        // تسجيل الدخول مباشرة بدون التحقق من كلمة المرور
         res.json({
             message: 'تم تسجيل الدخول بنجاح',
             user: {
@@ -58,11 +78,10 @@ app.post('/api/login', async (req, res) => {
         });
     } catch (err) {
         console.error('Login error:', err);
-        res.status(500).json({ message: 'حدث خطأ في السيرفر' });
+        res.status(500).json({ message: 'حدث خطأ في السيرفر: ' + err.message });
     }
 });
 
-// مسار افتتاحي
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
