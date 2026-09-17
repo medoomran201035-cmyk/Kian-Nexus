@@ -11,8 +11,8 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// رابط الاتصال القياسي الصحيح الدقيق الخاص بحسابك على أطلس
-const MONGO_URI = "mongodb://medoomran201035_db_user:1234aCluster0@ac-9srqykv-shard-00-00.vku26ro.mongodb.net:27017,ac-9srqykv-shard-01-vku26ro.mongodb.net:27017,ac-9srqykv-shard-02-vku26ro.mongodb.net:27017/kayan_erp?ssl=true&replicaSet=atlas-rzefbp-shard-0&authSource=admin&retryWrites=true&w=majority";
+// الرابط الصحيح والمطابق تماماً لشاشتك الحالية مع الـ ReplicaSet الصحيح
+const MONGO_URI = "mongodb://medoomran201035_db_user:1234aCluster0@ac-9srqykv-shard-00-00.vku26ro.mongodb.net:27017,ac-9srqykv-shard-01-vku26ro.mongodb.net:27017,ac-9srqykv-shard-02-vku26ro.mongodb.net:27017/kayan_erp?ssl=true&replicaSet=atlas-xzefbp-shard-0&authSource=admin&appName=Cluster0";
 
 const userSchema = new mongoose.Schema({
     name: String,
