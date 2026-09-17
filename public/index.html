@@ -50,7 +50,7 @@
             height: 100vh;
             overflow-y: auto;
         }
-        /* Scrollbar styling - Widened and enhanced for easy grabbing */
+        /* Enhanced Widened Scrollbar */
         #sidebar::-webkit-scrollbar {
             width: 10px;
         }
@@ -334,11 +334,19 @@
                     </li>
 
                     <!-- 10. إدارة أسطول السيارات -->
-                    <li onclick="switchSection('fleet', this)">
-                        <a><i class="fas fa-car-side"></i> إدارة أسطول السيارات</a>
+                    <li>
+                        <button class="menu-dropdown-btn" onclick="toggleSubmenu('fleet-submenu', this)">
+                            <i class="fas fa-car-side"></i> إدارة أسطول السيارات <i class="fas fa-chevron-down ms-auto small"></i>
+                        </button>
+                        <ul id="fleet-submenu" class="submenu">
+                            <li onclick="switchSection('fleet-movement', this)"><a>حركة السيارات والرحلات</a></li>
+                            <li onclick="switchSection('fleet-maintenance', this)"><a>الصيانة الدورية والفحص</a></li>
+                            <li onclick="switchSection('fleet-fuel', this)"><a>متابعة الوقود والمصروفات</a></li>
+                            <li onclick="switchSection('fleet-licenses', this)"><a>التراخيص والتأمين والمخالفات</a></li>
+                        </ul>
                     </li>
 
-                    <!-- 11. إدارة المشاريع والمهام (القسم الجديد) -->
+                    <!-- 11. إدارة المشاريع والمهام -->
                     <li>
                         <button class="menu-dropdown-btn" onclick="toggleSubmenu('projects-submenu', this)">
                             <i class="fas fa-project-diagram"></i> إدارة المشاريع والمهام <i class="fas fa-chevron-down ms-auto small"></i>
@@ -355,9 +363,9 @@
                             <i class="fas fa-cogs"></i> الحوكمة والإعدادات العامة <i class="fas fa-chevron-down ms-auto small"></i>
                         </button>
                         <ul id="admin-submenu" class="submenu">
-                            <li onclick="switchSection('licenses', this)"><a>العقود والتراخيص والاشتراكات</a></li>
-                            <li onclick="switchSection('messages', this)"><a>الرسائل والتعاميم المؤسسية</a></li>
-                            <li onclick="switchSection('settings', this)"><a>إعدادات النظام والصلاحيات</a></li>
+                            <li onclick="switchSection('licenses', this)"><a>العقود والتراخيص الرسمية</a></li>
+                            <li onclick="switchSection('messages', this)"><a>التعاميم والقرارات الإدارية</a></li>
+                            <li onclick="switchSection('settings', this)"><a>صلاحيات النظام وإعداداته</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -462,18 +470,21 @@
 
             <!-- 22. Inventory -->
             <div id="section-inventory" class="section-view"><div class="card card-custom p-4"><h5>المخزون وقطع الغيار (Spare Parts)</h5><p class="text-secondary">إدارة وتتبع قطع الغيار التقنية وأحبار الطابعات.</p></div></div>
-            <!-- 23. Fleet -->
-            <div id="section-fleet" class="section-view"><div class="card card-custom p-4"><h5>إدارة أسطول السيارات</h5><p class="text-secondary">متابعة حركة سيارات الشركة والصيانة الدورية.</p></div></div>
-            <!-- 24. Projects -->
+            
+            <!-- Fleet Sub-sections -->
+            <div id="section-fleet-movement" class="section-view"><div class="card card-custom p-4"><h5>حركة السيارات والرحلات</h5><p class="text-secondary">متابعة خطوط سير أسطول السيارات وتتبع الرحلات الميدانية.</p></div></div>
+            <div id="section-fleet-maintenance" class="section-view"><div class="card card-custom p-4"><h5>الصيانة الدورية والفحص</h5><p class="text-secondary">سجلات الصيانة، تغيير الورش، والفحص الدوري للسيارات.</p></div></div>
+            <div id="section-fleet-fuel" class="section-view"><div class="card card-custom p-4"><h5>متابعة الوقود والمصروفات</h5><p class="text-secondary">استهلاك الوقود، الفواتير، ومصروفات التشغيل للأسطول.</p></div></div>
+            <div id="section-fleet-licenses" class="section-view"><div class="card card-custom p-4"><h5>التراخيص والتأمين والمخالفات</h5><p class="text-secondary">تجديد الاستمارات، وثائق التأمين، ومتابعة المخالفات المرورية.</p></div></div>
+
+            <!-- Projects & Tasks -->
             <div id="section-projects" class="section-view"><div class="card card-custom p-4"><h5>متابعة المشاريع الكبرى</h5><p class="text-secondary">إدارة وتتبع نسب إنجاز المشاريع التشغيلية والإستراتيجية للشركة.</p></div></div>
-            <!-- 25. Tasks -->
             <div id="section-tasks" class="section-view"><div class="card card-custom p-4"><h5>توزيع المهام اليومية</h5><p class="text-secondary">جدول مهام الفرق والأقسام وحالة التنفيذ ومتابعة الإنجاز.</p></div></div>
-            <!-- 26. Licenses -->
-            <div id="section-licenses" class="section-view"><div class="card card-custom p-4"><h5>العقود والتراخيص والاشتراكات</h5><p class="text-secondary">متابعة تواريخ انتهاء التراخيص البرمجية والعقود.</p></div></div>
-            <!-- 27. Messages -->
-            <div id="section-messages" class="section-view"><div class="card card-custom p-4"><h5>الرسائل والتعاميم المؤسسية</h5><p class="text-secondary">نشر التعاميم الإدارية الداخلية للموظفين.</p></div></div>
-            <!-- 28. Settings -->
-            <div id="section-settings" class="section-view"><div class="card card-custom p-4"><h5>إعدادات النظام والصلاحيات</h5><p class="text-secondary">التحكم في إعدادات المنصة ومستويات وصول المديرين.</p></div></div>
+
+            <!-- Governance & Settings -->
+            <div id="section-licenses" class="section-view"><div class="card card-custom p-4"><h5>العقود والتراخيص الرسمية</h5><p class="text-secondary">متابعة تواريخ انتهاء التراخيص البرمجية والعقود الرسمية للشركة.</p></div></div>
+            <div id="section-messages" class="section-view"><div class="card card-custom p-4"><h5>التعاميم والقرارات الإدارية</h5><p class="text-secondary">نشر التعاميم والقرارات التنظيمية الداخلية للموظفين.</p></div></div>
+            <div id="section-settings" class="section-view"><div class="card card-custom p-4"><h5>صلاحيات النظام وإعداداته</h5><p class="text-secondary">التحكم في إعدادات المنصة ومستويات وصول المديرين والأمان العام.</p></div></div>
         </main>
     </div>
 
