@@ -8,22 +8,12 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// رابط الـ SRV الصحيح (يعمل عبر بورت 443 المسموح به في Render)
-const MONGO_URI = "mongodb+srv://medoomran201035_db_user:1234aCluster0@cluster0.ykvq26a.mongodb.net/kayan_erp?retryWrites=true&w=majority";
+// رابط الـ SRV المصحح بدقة بناءً على نطاق حسابك الفعلي
+const MONGO_URI = "mongodb+srv://medoomran201035_db_user:1234aCluster0@ykvq26a.mongodb.net/kayan_erp?retryWrites=true&w=majority";
 
-const userSchema = new mongoose.Schema({
-    name: String,
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    role: String
-});
-
-const User = mongoose.models.User || mongoose.model('User', userSchema);
-
-// الاتصال بقاعدة البيانات (مع السماح بالـ Buffering افتراضياً لمنع انهيار الطلبات)
-mongoose.connect(MONGO_URI, { family: 4, serverSelectionTimeoutMS: 30000 })
+mongoose.connect(MONGO_URI)
     .then(async () => {
-        console.log('Connected to MongoDB Atlas successfully via SRV (Port 443)!');
+        console.log('Connected to MongoDB Atlas successfully via SRV!');
         try {
             const count = await User.countDocuments();
             if (count === 0) {
@@ -40,7 +30,13 @@ mongoose.connect(MONGO_URI, { family: 4, serverSelectionTimeoutMS: 30000 })
     })
     .catch(err => console.error('MongoDB connection error:', err));
 
-// مسار تسجيل الدخول
+const User = mongoose.models.User || mongoose.model('User', new mongoose.Schema({
+    name: String,
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role: String
+}));
+
 app.post('/api/login', async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -49,7 +45,7 @@ app.post('/api/login', async (req, res) => {
         if (!user) {
             user = await User.create({
                 name: email.includes('hr') ? 'HR Manager' : 'Admin',
-                email: email,
+                email,
                 password: password || '123456',
                 role: email.includes('hr') ? 'hr' : 'admin'
             });
@@ -61,25 +57,11 @@ app.post('/api/login', async (req, res) => {
 
         res.json({
             message: 'تم تسجيل الدخول بنجاح',
-            user: {
-                id: user._id,
-                name: user.name,
-                email: user.email,
-                role: user.role
-            }
+            user: { id: user._id, name: user.name, email: user.email, role: user.role }
         });
     } catch (err) {
         console.error('Login error:', err);
         res.status(500).json({ message: 'خطأ في السيرفر: ' + err.message });
-    }
-});
-
-app.get('/api/users', async (req, res) => {
-    try {
-        const users = await User.find({}, '-password');
-        res.json(users);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
     }
 });
 
