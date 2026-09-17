@@ -8,10 +8,10 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// رابط نظيف وصحيح 100% بدون كلمة cluster0
-const MONGO_URI = "mongodb+srv://medoomran201035_db_user:1234aCluster0@ykvq26a.mongodb.net/kayan_erp?retryWrites=true&w=majority";
+// رابط قاعدة البيانات المباشر والنظيف 100%
+const MONGO_URI = "mongodb://medoomran201035_db_user:1234aCluster0@ac-9srqykv-shard-00-00.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-01.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-02.ykvq26a.mongodb.net:27017/kayan_erp?ssl=true&authSource=admin";
 
-mongoose.connect(MONGO_URI)
+mongoose.connect(MONGO_URI, { serverSelectionTimeoutMS: 15000 })
     .then(() => console.log('Connected to MongoDB Atlas successfully!'))
     .catch(err => console.error('MongoDB connection error:', err));
 
