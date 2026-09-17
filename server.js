@@ -8,12 +8,12 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// رابط الـ SRV المصحح بدقة بناءً على نطاق حسابك الفعلي
-const MONGO_URI = "mongodb+srv://medoomran201035_db_user:1234aCluster0@ykvq26a.mongodb.net/kayan_erp?retryWrites=true&w=majority";
+// رابط الاتصال المباشر والصحيح 100% (يعمل الآن لأن الـ IP مفتوح في أطلس)
+const MONGO_URI = "mongodb://medoomran201035_db_user:1234aCluster0@ac-9srqykv-shard-00-00.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-01.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-02.ykvq26a.mongodb.net:27017/kayan_erp?ssl=true&replicaSet=atlas-xzefbp-shard-0&authSource=admin&appName=Cluster0";
 
 mongoose.connect(MONGO_URI)
     .then(async () => {
-        console.log('Connected to MongoDB Atlas successfully via SRV!');
+        console.log('Connected to MongoDB Atlas successfully via Direct URI!');
         try {
             const count = await User.countDocuments();
             if (count === 0) {
