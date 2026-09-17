@@ -1,813 +1,406 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="htmlRoot">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kayan ERP - النظام الشامل المتكامل</title>
-    <!-- Google Fonts: Cairo -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Bootstrap 5 RTL CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" id="bootstrapCss">
-    <!-- Font Awesome 6 Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Kayan ERP - Google Enterprise Dashboard</title>
+    <!-- Bootstrap 5 CSS RTL -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --sidebar-bg: #0d1117;
-            --sidebar-color: #c9d1d9;
-            --sidebar-hover: #1f6feb;
-            --sidebar-active-bg: rgba(31, 111, 235, 0.15);
-            --main-bg: #161b22;
-            --card-bg: #21262d;
-            --border-color: #30363d;
-            --accent-color: #58a6ff;
+            --google-bg: #202124;
+            --google-surface: #2d2f31;
+            --google-surface-hover: #3c4043;
+            --google-blue: #8ab4f8;
+            --google-blue-bg: rgba(138, 180, 248, 0.12);
+            --google-text: #e8eaed;
+            --google-text-secondary: #9aa0a6;
+            --google-border: #3c4043;
         }
-
         body {
-            background-color: var(--main-bg);
-            color: var(--sidebar-color);
-            font-family: 'Cairo', sans-serif;
+            background-color: var(--google-bg);
+            color: var(--google-text);
+            font-family: 'Roboto', 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
             overflow-x: hidden;
         }
-
-        .wrapper {
+        #wrapper {
             display: flex;
             width: 100%;
-            min-height: 100vh;
+            align-items: stretch;
         }
-
-        /* القائمة الجانبية */
-        .sidebar {
-            width: 280px;
-            background-color: var(--sidebar-bg);
-            border-left: 1px solid var(--border-color);
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            z-index: 1000;
-            overflow-y: auto;
+        /* Google Cloud Console Style Sidebar */
+        #sidebar {
+            min-width: 280px;
+            max-width: 280px;
+            background: var(--google-surface);
+            border-left: 1px solid var(--google-border);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             transition: all 0.3s ease;
         }
-
-        html[dir="ltr"] .sidebar {
-            right: auto;
-            left: 0;
-            border-left: none;
-            border-right: 1px solid var(--border-color);
-        }
-
-        .sidebar::-webkit-scrollbar { width: 5px; }
-        .sidebar::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
-
-        .sidebar-link {
+        .sidebar-header {
+            padding: 16px 20px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 9px 14px;
-            color: var(--sidebar-color);
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
-            cursor: pointer;
-            margin-bottom: 2px;
+            border-bottom: 1px solid var(--google-border);
         }
-
-        .sidebar-link div { display: flex; align-items: center; gap: 12px; }
-        .sidebar-link i { font-size: 1.1rem; width: 20px; text-align: center; color: #8b949e; }
-        .sidebar-link:hover { color: #ffffff; background-color: rgba(255, 255, 255, 0.05); }
-        .sidebar-link:hover i { color: var(--accent-color); }
-        .sidebar-link.active { color: var(--accent-color); background-color: var(--sidebar-active-bg); font-weight: 600; }
-
-        .menu-item { list-style: none; }
-        .submenu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.35s ease;
-            list-style: none;
-            padding-right: 25px;
-            padding-left: 0;
+        .sidebar-header h3 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--google-text);
             margin: 0;
-        }
-        html[dir="ltr"] .submenu { padding-right: 0; padding-left: 25px; }
-        .menu-item.open > .submenu { max-height: 1200px; }
-
-        .submenu-link {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 7px 10px;
-            color: #8b949e;
+            gap: 10px;
+        }
+        #sidebar ul.components {
+            padding: 12px 8px;
+            overflow-y: auto;
+            max-height: calc(100vh - 150px);
+        }
+        #sidebar ul.components::-webkit-scrollbar {
+            width: 4px;
+        }
+        #sidebar ul.components::-webkit-scrollbar-thumb {
+            background: var(--google-border);
+            border-radius: 4px;
+        }
+        #sidebar ul li a {
+            padding: 10px 16px;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: center;
+            color: var(--google-text-secondary);
             text-decoration: none;
-            font-size: 0.83rem;
-            border-radius: 6px;
+            border-radius: 24px;
+            margin-bottom: 4px;
             transition: 0.2s;
-            margin: 2px 0;
             cursor: pointer;
+            font-weight: 400;
         }
-        .submenu-link:hover { color: var(--accent-color); background-color: rgba(88, 166, 255, 0.08); }
-        .submenu-arrow { font-size: 0.75rem; transition: transform 0.3s ease; color: #8b949e; }
-        .menu-item.open > .sidebar-link .submenu-arrow { transform: rotate(180deg); color: var(--accent-color); }
-
-        .main-content {
-            margin-right: 280px;
-            flex-grow: 1;
-            padding: 25px;
+        #sidebar ul li a:hover, #sidebar ul li.active > a {
+            color: var(--google-blue);
+            background: var(--google-blue-bg);
         }
-        html[dir="ltr"] .main-content {
-            margin-right: 0;
-            margin-left: 280px;
+        #sidebar ul li a i {
+            margin-left: 14px;
+            width: 20px;
+            text-align: center;
+            font-size: 0.95rem;
         }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--sidebar-color);
-            border-radius: 12px;
-        }
-
-        /* تنسيق شجرة الفروع الهرمية */
-        .tree-branch {
-            border-right: 2px dashed var(--border-color);
-            padding-right: 20px;
-            margin-right: 15px;
-            margin-top: 10px;
-        }
-        html[dir="ltr"] .tree-branch {
-            border-right: none;
-            border-left: 2px dashed var(--border-color);
-            padding-right: 0;
-            padding-left: 20px;
-            margin-right: 0;
-            margin-left: 15px;
-        }
-
-        .tree-node {
-            background: rgba(33, 38, 45, 0.8);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+        /* User Profile Footer (Google Style) */
+        .sidebar-footer {
             padding: 12px 16px;
-            margin-bottom: 10px;
-            transition: 0.2s;
+            background: rgba(0,0,0,0.2);
+            border-top: 1px solid var(--google-border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .tree-node:hover { border-color: var(--accent-color); }
-
-        .kanban-col {
-            background: rgba(22, 27, 34, 0.6);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            min-height: 350px;
-            padding: 12px;
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--google-blue);
+            color: var(--google-bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
         }
-        .kanban-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
+        .user-info h6 {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--google-text);
+            font-weight: 500;
+        }
+        .user-info span {
+            font-size: 0.72rem;
+            color: var(--google-text-secondary);
+        }
+        /* Top Navigation Bar */
+        .google-navbar {
+            background: var(--google-surface);
+            border-bottom: 1px solid var(--google-border);
+            padding: 12px 24px;
             border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 10px;
-            cursor: pointer;
+            margin-bottom: 24px;
         }
-
-        /* تنسيق وضع الطباعة الاحترافية */
-        @media print {
-            .sidebar, header, .d-flex.justify-content-end, .btn, button { display: none !important; }
-            .main-content { margin: 0 !important; padding: 0 !important; width: 100% !important; color: #000 !important; background: #fff !important; }
-            .card { background: #fff !important; color: #000 !important; border: 1px solid #ddd !important; box-shadow: none !important; }
-            body { background: #fff !important; color: #000 !important; }
+        /* Main Content */
+        #content {
+            width: 100%;
+            padding: 24px;
+            min-height: 100vh;
+        }
+        .card-custom {
+            background: var(--google-surface);
+            border: 1px solid var(--google-border);
+            border-radius: 12px;
+            color: var(--google-text);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .stat-card {
+            border-right: 4px solid var(--google-blue);
+        }
+        .table-custom {
+            color: var(--google-text);
+            border-color: var(--google-border);
+        }
+        .table-custom th, .table-custom td {
+            border-color: var(--google-border);
+            padding: 14px;
+            font-size: 0.9rem;
+        }
+        .table-custom th {
+            background-color: rgba(255,255,255,0.02);
+            color: var(--google-text-secondary);
+            font-weight: 500;
+        }
+        .section-view {
+            display: none;
+        }
+        .section-view.active {
+            display: block;
         }
     </style>
 </head>
 <body>
 
-    <div class="wrapper">
-        
-        <!-- القائمة الجانبية (Sidebar) -->
-        <div class="sidebar d-flex flex-column justify-content-between p-3">
+    <div id="wrapper">
+        <!-- Sidebar (Google Cloud Style) -->
+        <nav id="sidebar">
             <div>
-                <div class="d-flex align-items-center gap-3 mb-4 px-2 pt-2">
-                    <i class="fa-solid fa-microchip fs-3 text-info"></i>
-                    <div>
-                        <span class="fw-bold fs-6 text-light d-block">binrabie / Kayan</span>
-                        <span class="text-secondary" style="font-size: 11px;">نظام إدارة المؤسسة الذكي</span>
-                    </div>
+                <div class="sidebar-header">
+                    <h3><i class="fab fa-google text-primary"></i> Kayan <span style="font-size: 0.8rem; color: var(--google-blue); background: var(--google-blue-bg); padding: 2px 8px; border-radius: 4px;">ERP</span></h3>
                 </div>
 
-                <ul class="nav flex-column gap-1">
-                    <li>
-                        <a class="sidebar-link active" onclick="switchSection('dashboard', 'لوحة التحكم والمؤشرات', this)">
-                            <div><i class="fa-solid fa-house"></i><span>لوحة التحكم</span></div>
-                        </a>
+                <ul class="list-unstyled components">
+                    <li class="active" onclick="switchSection('dashboard', this)">
+                        <a><i class="fas fa-chart-pie"></i> لوحة التحكم</a>
                     </li>
-                    <li>
-                        <a class="sidebar-link" onclick="switchSection('org-tree', 'الهيكل التنظيمي وشجرة الفروع', this)">
-                            <div><i class="fa-solid fa-sitemap"></i><span>الهيكل التنظيمي والفروع</span></div>
-                        </a>
+                    <li onclick="switchSection('structure', this)">
+                        <a><i class="fas fa-sitemap"></i> الهيكل التنظيمي والفروع</a>
                     </li>
-                    <li class="menu-item">
-                        <div class="sidebar-link menu-toggle" onclick="toggleSubmenu(this)">
-                            <div><i class="fa-solid fa-users-gear"></i><span>الموارد البشرية</span></div>
-                            <i class="fa-solid fa-chevron-down submenu-arrow"></i>
-                        </div>
-                        <ul class="submenu">
-                            <li><a class="submenu-link" onclick="switchSection('hr', 'لوحة تحكم الموارد البشرية', this)"><i class="fa-solid fa-gauge me-2"></i> لوحة تحكم HR</a></li>
-                            <li><a class="submenu-link" onclick="switchSection('biometric', 'البصمة والحضور الحية', this)"><i class="fa-solid fa-fingerprint me-2"></i> البصمة والحضور</a></li>
-                            <li><a class="submenu-link" onclick="switchSection('ess', 'بوابة الخدمة الذاتية للموظفين', this)"><i class="fa-solid fa-id-badge me-2"></i> الخدمة الذاتية (ESS)</a></li>
-                            <li><a class="submenu-link" onclick="switchSection('documents', 'مستكشف الملفات السحابية', this)"><i class="fa-solid fa-cloud-arrow-up me-2"></i> السحابة والمستندات</a></li>
-                        </ul>
+                    <li onclick="switchSection('hr', this)">
+                        <a><i class="fas fa-users"></i> الموارد البشرية</a>
                     </li>
-                    <li>
-                        <a class="sidebar-link" onclick="switchSection('zatca', 'الفوترة الإلكترونية والزكاة (ZATCA)', this)">
-                            <div><i class="fa-solid fa-receipt"></i><span>الفوترة الإلكترونية (ZATCA)</span></div>
-                        </a>
+                    <li onclick="switchSection('zatca', this)">
+                        <a><i class="fas fa-file-invoice-dollar"></i> الفوترة الإلكترونية (ZATCA)</a>
                     </li>
-                    <li>
-                        <a class="sidebar-link" onclick="switchSection('warehouse', 'إدارة المستودعات والمخازن', this)">
-                            <div><i class="fa-solid fa-boxes-stacked"></i><span>إدارة المستودعات والمخازن</span></div>
-                        </a>
+                    <li onclick="switchSection('warehouse', this)">
+                        <a><i class="fas fa-warehouse"></i> إدارة المستودعات والمخازن</a>
                     </li>
-                    <li>
-                        <a class="sidebar-link" onclick="switchSection('ipam', 'مراقبة عناوين الشبكة و DHCP (IPAM)', this)">
-                            <div><i class="fa-solid fa-network-wired"></i><span>مراقبة الشبكة و DHCP (IPAM)</span></div>
-                        </a>
+                    <li onclick="switchSection('ipam', this)">
+                        <a><i class="fas fa-network-wired"></i> مراقبة الشبكة و DHCP (IPAM)</a>
                     </li>
-                    <li>
-                        <a class="sidebar-link" onclick="switchSection('fleet', 'إدارة أسطول السيارات وتأجير المركبات', this)">
-                            <div><i class="fa-solid fa-car"></i><span>إدارة أسطول السيارات</span></div>
-                        </a>
+                    <li onclick="switchSection('fleet', this)">
+                        <a><i class="fas fa-car"></i> إدارة أسطول السيارات</a>
                     </li>
-                    <li>
-                        <a class="sidebar-link" onclick="switchSection('infrastructure', 'مراقبة البنية التحتية والسيرفرات', this)">
-                            <div><i class="fa-solid fa-server"></i><span>مراقبة السيرفرات والشبكات</span></div>
-                        </a>
+                    <li onclick="switchSection('servers', this)">
+                        <a><i class="fas fa-server"></i> مراقبة السيرفرات والشبكات</a>
                     </li>
-                    <li>
-                        <a class="sidebar-link" onclick="switchSection('assets', 'إدارة الأصول والعهد التقنية', this)">
-                            <div><i class="fa-solid fa-laptop-code"></i><span>الأصول والعهد التقنية</span></div>
-                        </a>
+                    <li onclick="switchSection('assets', this)">
+                        <a><i class="fas fa-laptop-code"></i> الأصول والعهد التقنية</a>
                     </li>
-                    <li>
-                        <a class="sidebar-link" onclick="switchSection('projects', 'إدارة المشاريع والمهام (Kanban)', this)">
-                            <div><i class="fa-solid fa-kanban"></i><span>المشاريع والمهام</span></div>
-                        </a>
+                    <li onclick="switchSection('projects', this)">
+                        <a><i class="fas fa-project-diagram"></i> المشاريع والمهام</a>
                     </li>
-                    <li>
-                        <a class="sidebar-link" onclick="switchSection('crm', 'إدارة علاقات العملاء CRM', this)">
-                            <div><i class="fa-solid fa-handshake"></i><span>العملاء والمبيعات</span></div>
-                        </a>
+                    <li onclick="switchSection('sales', this)">
+                        <a><i class="fas fa-handshake"></i> العملاء والمبيعات</a>
                     </li>
-                    <li>
-                        <a class="sidebar-link" onclick="switchSection('helpdesk', 'نظام التذاكر والدعم الفني', this)">
-                            <div><i class="fa-solid fa-headset"></i><span>التذاكر والدعم الفني</span></div>
-                        </a>
+                    <li onclick="switchSection('tickets', this)">
+                        <a><i class="fas fa-headset"></i> التذاكر والدعم الفني</a>
                     </li>
-                    <li>
-                        <a class="sidebar-link" onclick="switchSection('ai-cctv', 'نظام تحليل الفيديو والذكاء الاصطناعي', this)">
-                            <div><i class="fa-solid fa-video"></i><span>الذكاء الاصطناعي وCCTV</span></div>
-                        </a>
+                    <li onclick="switchSection('cctv', this)">
+                        <a><i class="fas fa-video"></i> الذكاء الاصطناعي و CCTV</a>
                     </li>
-                    <li>
-                        <a class="sidebar-link" onclick="switchSection('chat', 'مركز التواصل والرسائل الداخلية', this)">
-                            <div><i class="fa-solid fa-comments"></i><span>الرسائل والتعاميم</span></div>
-                        </a>
+                    <li onclick="switchSection('messages', this)">
+                        <a><i class="fas fa-bullhorn"></i> الرسائل والتعاميم</a>
                     </li>
-                    <li class="menu-item">
-                        <div class="sidebar-link menu-toggle" onclick="toggleSubmenu(this)">
-                            <div><i class="fa-solid fa-shield-halved"></i><span>الصلاحيات والأمان</span></div>
-                            <i class="fa-solid fa-chevron-down submenu-arrow"></i>
-                        </div>
-                        <ul class="submenu">
-                            <li><a class="submenu-link" onclick="switchSection('security', 'مصفوفة الصلاحيات والأدوار', this)"><i class="fa-solid fa-table-cells me-2"></i> مصفوفة الصلاحيات (RBAC)</a></li>
-                            <li><a class="submenu-link" onclick="switchSection('audit', 'سجل التدقيق المباشر', this)"><i class="fa-solid fa-clock-rotate-left me-2"></i> سجل التدقيق</a></li>
-                            <li><a class="submenu-link" onclick="switchSection('backup', 'مركز النسخ الاحتياطي', this)"><i class="fa-solid fa-database me-2"></i> النسخ الاحتياطي</a></li>
-                        </ul>
+                    <li onclick="switchSection('security', this)">
+                        <a><i class="fas fa-shield-alt"></i> الصلاحيات والأمان</a>
                     </li>
-                    <li>
-                        <a class="sidebar-link" onclick="switchSection('settings', 'إعدادات المؤسسة والنظام', this)">
-                            <div><i class="fa-solid fa-gears"></i><span>الإعدادات العامة</span></div>
-                        </a>
+                    <li onclick="switchSection('settings', this)">
+                        <a><i class="fas fa-cog"></i> الإعدادات العامة</a>
                     </li>
                 </ul>
             </div>
-            
-            <div class="user-info p-3 border-top border-secondary text-secondary small mt-3">
-                <div class="user-info-text text-light fw-semibold">محمد فيصل صلاح عمران</div>
-                <div style="font-size: 11px;" class="text-info">مدير النظام (Admin)</div>
-            </div>
-        </div>
 
-        <!-- محتوى الصفحة الرئيسي -->
-        <div class="main-content">
-            <div class="container-fluid">
-                
-                <!-- الشريط العلوي (Header) -->
-                <header class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
-                    <div>
-                        <h4 class="fw-bold mb-1" id="page-title">لوحة التحكم والمؤشرات</h4>
-                        <p class="text-secondary small mb-0">مرحباً بك مجدداً يا بشمهندس محمد في نظام Kayan ERP المتكامل</p>
-                    </div>
+            <!-- User Profile Footer -->
+            <div class="sidebar-footer">
+                <div class="user-avatar">م</div>
+                <div class="user-info">
+                    <h6>محمد فيصل صلاح عمران</h6>
+                    <span>مدير النظام [Admin]</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <main id="content">
+            <nav class="google-navbar navbar navbar-expand-lg navbar-dark px-4 py-3">
+                <div class="container-fluid">
+                    <span class="navbar-brand mb-0 h6 text-light" id="page-title">
+                        <i class="fas fa-chart-pie text-info me-2"></i> لوحة التحكم الرئيسية
+                    </span>
                     <div class="d-flex align-items-center gap-3">
-                        <!-- تبديل اللغة -->
-                        <button class="btn btn-sm btn-outline-secondary text-light" onclick="toggleLanguage()" id="langBtn">EN</button>
-
-                        <!-- تبديل الثيمات -->
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-outline-secondary text-light dropdown-toggle" data-bs-toggle="dropdown"><i class="fa-solid fa-palette me-1"></i> الثيم</button>
-                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end border-secondary shadow">
-                                <li><a class="dropdown-item small" href="#" onclick="setTheme('#58a6ff', 'أزرق كلاسيكي')">أزرق كلاسيكي</a></li>
-                                <li><a class="dropdown-item small" href="#" onclick="setTheme('#2ea043', 'زمردي أخضر')">زمردي أخضر</a></li>
-                                <li><a class="dropdown-item small" href="#" onclick="setTheme('#f0883e', 'برتقالي إداري')">برتقالي إداري</a></li>
-                            </ul>
-                        </div>
-
-                        <!-- البحث السريع Command Palette -->
-                        <button class="btn btn-sm btn-outline-secondary text-light d-flex align-items-center gap-2 px-3 py-2 rounded-3" onclick="openCommandPalette()">
-                            <i class="fa-solid fa-magnifying-glass text-info"></i>
-                            <span>بحث سريع...</span>
-                            <kbd class="bg-dark text-secondary border border-secondary px-1 rounded" style="font-size: 10px;">Ctrl+K</kbd>
-                        </button>
-                        
-                        <!-- مركز التنبيهات -->
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-outline-secondary position-relative text-light p-2 rounded-3" data-bs-toggle="dropdown">
-                                <i class="fa-solid fa-bell fs-6"></i>
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 10px;">3</span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow border-secondary p-2" style="width: 320px;">
-                                <li class="dropdown-header text-info fw-bold border-bottom border-secondary pb-2 mb-2">التنبيهات الفورية</li>
-                                <li><a class="dropdown-item rounded py-2 small text-wrap" href="#"><i class="fa-solid fa-triangle-exclamation text-warning me-2"></i> انتهاء إقامة موظف خلال 5 أيام</a></li>
-                                <li><a class="dropdown-item rounded py-2 small text-wrap" href="#"><i class="fa-solid fa-server text-danger me-2"></i> ارتفاع ضغط المعالج في السيرفر</a></li>
-                                <li><a class="dropdown-item rounded py-2 small text-wrap" href="#"><i class="fa-solid fa-circle-check text-success me-2"></i> تم أخذ نسخة احتياطية بنجاح</a></li>
-                            </ul>
-                        </div>
-
-                        <span class="badge bg-success p-2 px-3"><i class="fa-solid fa-circle-check me-1"></i> النظام متصل</span>
+                        <span class="badge bg-secondary text-light px-3 py-2"><i class="fas fa-circle text-success me-1 small"></i> متصل بالسيرفر</span>
                     </div>
-                </header>
-
-                <!-- أزرار الإجراءات العلوية -->
-                <div class="d-flex justify-content-end gap-2 mb-3">
-                    <button class="btn btn-sm btn-outline-secondary text-light" onclick="window.print()"><i class="fa-solid fa-print me-1"></i> طباعة التقرير</button>
-                    <button class="btn btn-sm btn-outline-secondary text-light" onclick="showToast('تم تصدير التقارير بصيغة Excel بنجاح!')"><i class="fa-solid fa-file-excel text-success me-1"></i> تصدير Excel</button>
-                    <button class="btn btn-sm btn-outline-secondary text-light" onclick="showToast('تم تصدير التقارير بصيغة PDF بنجاح!')"><i class="fa-solid fa-file-pdf text-danger me-1"></i> تصدير PDF</button>
                 </div>
+            </nav>
 
-                <!-- الأقسام الرئيسية للنظام -->
-                <div id="section-dashboard" class="content-section">
-                    <div class="row g-4 mb-4">
-                        <div class="col-md-3">
-                            <div class="card p-3 shadow-sm">
-                                <h6 class="text-secondary mb-2">إجمالي الموظفين</h6>
-                                <h3 class="fw-bold text-light">128</h3>
-                                <span class="text-success small"><i class="fa-solid fa-arrow-up"></i> +4 هذا الشهر</span>
+            <!-- 1. لوحة التحكم -->
+            <div id="section-dashboard" class="section-view active">
+                <div class="row g-4 mb-4">
+                    <div class="col-md-3">
+                        <div class="card card-custom stat-card p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div><h6 class="text-secondary small mb-1">السيرفرات والشبكة</h6></div>
+                                <i class="fas fa-server text-info"></i>
                             </div>
+                            <h4 class="mt-2 mb-0 fw-bold">100% نشط</h4>
                         </div>
-                        <div class="col-md-3">
-                            <div class="card p-3 shadow-sm">
-                                <h6 class="text-secondary mb-2">المشاريع النشطة</h6>
-                                <h3 class="fw-bold text-light">14</h3>
-                                <span class="text-info small">قيد التنفيذ الفني</span>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-custom stat-card p-3" style="border-right-color: #34a853;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div><h6 class="text-secondary small mb-1">العهد والأصول</h6></div>
+                                <i class="fas fa-laptop-code text-success"></i>
                             </div>
+                            <h4 class="mt-2 mb-0 fw-bold" id="stat-assets-count">جاري التحميل...</h4>
                         </div>
-                        <div class="col-md-3">
-                            <div class="card p-3 shadow-sm">
-                                <h6 class="text-secondary mb-2">كفاءة السيرفر</h6>
-                                <h3 class="fw-bold text-success">99.9%</h3>
-                                <span class="text-secondary small">استقرار تام</span>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-custom stat-card p-3" style="border-right-color: #fbbc04;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div><h6 class="text-secondary small mb-1">التذاكر المفتوحة</h6></div>
+                                <i class="fas fa-headset text-warning"></i>
                             </div>
+                            <h4 class="mt-2 mb-0 fw-bold">3 نشطة</h4>
                         </div>
-                        <div class="col-md-3">
-                            <div class="card p-3 shadow-sm">
-                                <h6 class="text-secondary mb-2">المهام المنجزة</h6>
-                                <h3 class="fw-bold text-warning">86%</h3>
-                                <span class="text-success small">معدل الإنجاز اليومي</span>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card card-custom stat-card p-3" style="border-right-color: #ea4335;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div><h6 class="text-secondary small mb-1">كاميرات CCTV</h6></div>
+                                <i class="fas fa-video text-danger"></i>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="row g-4 mb-4">
-                        <div class="col-md-8">
-                            <div class="card p-4">
-                                <h5 class="text-light mb-3"><i class="fa-solid fa-chart-line me-2 text-info"></i> مؤشر الأداء المالي والمصروفات الشهرية</h5>
-                                <canvas id="financialChart" height="120"></canvas>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card p-4 h-100">
-                                <h5 class="text-light mb-3"><i class="fa-solid fa-note-sticky me-2 text-warning"></i> المفكرة السريعة</h5>
-                                <textarea id="quickNotes" class="form-control bg-dark text-light border-secondary mb-3" rows="4" placeholder="اكتب ملاحظاتك السريعة هنا..."></textarea>
-                                <button class="btn btn-sm btn-primary w-100" onclick="saveNotes()">حفظ الملاحظات</button>
-                            </div>
+                            <h4 class="mt-2 mb-0 fw-bold">16 متصلة</h4>
                         </div>
                     </div>
                 </div>
 
-                <!-- الهيكل التنظيمي وشجرة الفروع (مع إضافة إدارة تكنولوجيا المعلومات وفروعها) -->
-                <div id="section-org-tree" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div>
-                                <h4 class="text-info mb-1"><i class="fa-solid fa-sitemap me-2"></i> الهيكل التنظيمي وشجرة الفروع المتشعبة</h4>
-                                <p class="text-secondary small mb-0">إدارة الإدارات الرئيسية، الفروع التشغيلية التابعة، وأقسام تكنولوجيا المعلومات والشبكات.</p>
-                            </div>
-                            <button class="btn btn-sm btn-success" onclick="showToast('تمت إضافة الفرع أو القسم الجديد بنجاح')"><i class="fa-solid fa-plus me-1"></i> إضافة فرع / قسم</button>
-                        </div>
-
-                        <div class="tree-container">
-                            <div class="tree-node border-primary">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <i class="fa-solid fa-landmark text-primary me-2 fs-5"></i>
-                                        <span class="fw-bold text-light fs-6">الإدارة العامة والتشغيل (المركز الرئيسي - الرياض)</span>
-                                    </div>
-                                    <span class="badge bg-primary">الرئيس التنفيذي / الإدارة</span>
-                                </div>
-                            </div>
-                            <div class="tree-branch">
-                                <div class="tree-node">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <i class="fa-solid fa-building text-info me-2"></i>
-                                            <span class="fw-semibold text-light">فرع حي العارض (الفرع التشغيلي الرئيسي)</span>
-                                        </div>
-                                        <span class="badge bg-success">نشط</span>
-                                    </div>
-                                </div>
-                                <div class="tree-branch">
-                                    <div class="tree-node border-info" style="background: rgba(88, 166, 255, 0.05);">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <i class="fa-solid fa-network-wired text-info me-2 fs-5"></i>
-                                                <span class="fw-bold text-info">إدارة تكنولوجيا المعلومات والشبكات (IT & Network Dept)</span>
-                                            </div>
-                                            <span class="badge bg-info text-dark">مسؤول النظام: محمد فيصل</span>
-                                        </div>
-                                    </div>
-                                    <div class="tree-branch">
-                                        <div class="tree-node py-2"><i class="fa-solid fa-server text-warning me-2"></i> قسم إدارة البنية التحتية والسيرفرات (Active Directory & Hyper-V)</div>
-                                        <div class="tree-node py-2"><i class="fa-solid fa-router text-success me-2"></i> قسم الشبكات وتكوين الراوترات (MikroTik / VLANs / Firewalls)</div>
-                                        <div class="tree-node py-2"><i class="fa-solid fa-headset text-primary me-2"></i> قسم الدعم الفني والمكتب التقني (Helpdesk Level 1 & 2)</div>
-                                        <div class="tree-node py-2"><i class="fa-solid fa-video text-danger me-2"></i> قسم أنظمة المراقبة (CCTV) والبصمات (ZKTeco)</div>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card card-custom p-4">
+                            <h5 class="text-light mb-3"><i class="fab fa-google text-primary me-2"></i> منصة Kayan ERP المؤسسية</h5>
+                            <p class="text-secondary mb-0">تمت مواءمة واجهة المستخدم لتتوافق مع معايير Google Cloud & Workspace لتجربة مستخدم فائقة السرعة والاحترافية.</p>
                         </div>
                     </div>
-                </div>
-
-                <!-- الموارد البشرية -->
-                <div id="section-hr" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-info mb-3"><i class="fa-solid fa-users-gear me-2"></i> إدارة الموارد البشرية وشؤون الموظفين</h4>
-                        <p class="text-secondary">إدارة عقود الموظفين، مسيرات الرواتب، والإجازات مرتبطة بالفروع.</p>
-                        <button class="btn btn-sm btn-success w-25 mb-3" onclick="showToast('تم فتح نافذة إضافة موظف جديد')"><i class="fa-solid fa-user-plus me-1"></i> إضافة موظف جديد</button>
-                    </div>
-                </div>
-
-                <!-- البصمة والحضور -->
-                <div id="section-biometric" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-info mb-3"><i class="fa-solid fa-fingerprint me-2"></i> محطة ربط البصمة والحضور الحية</h4>
-                        <p class="text-secondary">مزامنة تلقائية مع أجهزة ZKTeco لجلسات الحضور اليومية.</p>
-                    </div>
-                </div>
-
-                <!-- بوابة الخدمة الذاتية (ESS) -->
-                <div id="section-ess" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-info mb-3"><i class="fa-solid fa-id-badge me-2"></i> بوابة الخدمة الذاتية للموظفين (ESS)</h4>
-                        <p class="text-secondary">يتيح لكل موظف تقديم طلبات الإجازات، السلف، واستعراض مسيرات الرواتب الشخصية.</p>
-                    </div>
-                </div>
-
-                <!-- الفوترة الإلكترونية (ZATCA) -->
-                <div id="section-zatca" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-info mb-0"><i class="fa-solid fa-receipt me-2"></i> الفوترة الإلكترونية والمتوافقة مع ZATCA</h4>
-                            <span class="badge bg-success p-2">متوافق مع المرحلة الثانية</span>
-                        </div>
-                        <p class="text-secondary">إصدار فواتير المبيعات الضريبية مع توليد QR Code مشفر وحساب ضريبة القيمة المضافة (15%).</p>
-                    </div>
-                </div>
-
-                <!-- إدارة المستودعات والمخازن الذكية -->
-                <div id="section-warehouse" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-info mb-3"><i class="fa-solid fa-boxes-stacked me-2"></i> إدارة المستودعات والمخازن الذكية</h4>
-                        <p class="text-secondary">تتبع أرصدة الأصناف، وحد الطلب الأدنى للتنبيه التلقائي، وحركة المخزون.</p>
-                    </div>
-                </div>
-
-                <!-- مراقبة عناوين الشبكة و DHCP (IPAM) -->
-                <div id="section-ipam" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-info mb-0"><i class="fa-solid fa-network-wired me-2"></i> مراقبة عناوين الشبكة وتوزيع DHCP (IPAM)</h4>
-                            <button class="btn btn-sm btn-outline-info" onclick="showToast('جاري تحديث جدول الـ IP Addresses...')"><i class="fa-solid fa-rotate me-1"></i> تحديث الحالة</button>
-                        </div>
-                        <p class="text-secondary">متابعة عناوين الأجهزة المتصلة بالشبكة المحلية، عناوين MAC، وعقود الـ DHCP الممنوحة عبر راوتر MikroTik.</p>
-                        <div class="table-responsive">
-                            <table class="table table-dark table-striped align-middle">
-                                <thead>
-                                    <tr>
-                                        <th>عنوان IP</th>
-                                        <th>عنوان MAC</th>
-                                        <th>اسم الجهاز / المستخدم</th>
-                                        <th>القسم</th>
-                                        <th>الحالة</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>192.168.100.15</td>
-                                        <td>B4:2E:99:12:4A:88</td>
-                                        <td>PC-Mohammed-Admin</td>
-                                        <td>إدارة التقنية (IT)</td>
-                                        <td><span class="badge bg-success">متصل (Active)</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- إدارة أسطول السيارات وتأجير المركبات -->
-                <div id="section-fleet" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-info mb-0"><i class="fa-solid fa-car me-2"></i> إدارة أسطول السيارات وتأجير المركبات</h4>
-                            <button class="btn btn-sm btn-success" onclick="showToast('فتح نافذة تسجيل سيارة جديدة')"><i class="fa-solid fa-plus me-1"></i> إضافة سيارة جديدة</button>
-                        </div>
-                        <p class="text-secondary">متابعة حالة السيارات، عقود التأجير النشطة، الصيانة الدورية، ومواعيد تجديد الاستمارة والتأمين.</p>
-                    </div>
-                </div>
-
-                <!-- مراقبة البنية التحتية -->
-                <div id="section-infrastructure" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-info mb-3"><i class="fa-solid fa-server me-2"></i> مراقبة البنية التحتية وحالة الأجهزة</h4>
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <div class="card p-3 border-success">
-                                    <h6 class="text-light">راوتر MikroTik - فرع العارض</h6>
-                                    <span class="badge bg-success mt-2">Online (Ping: 4ms)</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- الملفات والسحابة -->
-                <div id="section-documents" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-info mb-3"><i class="fa-solid fa-cloud-arrow-up me-2"></i> مستكشف الملفات والسحابة الداخلية</h4>
-                    </div>
-                </div>
-
-                <!-- الأصول والعهد التقنية -->
-                <div id="section-assets" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-info mb-3"><i class="fa-solid fa-laptop-code me-2"></i> إدارة الأصول والعهد التقنية</h4>
-                    </div>
-                </div>
-
-                <!-- المشاريع والمهام (Kanban) -->
-                <div id="section-projects" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-info mb-3"><i class="fa-solid fa-kanban me-2"></i> لوحة إدارة المشاريع والمهام (Kanban)</h4>
-                    </div>
-                </div>
-
-                <!-- العملاء CRM -->
-                <div id="section-crm" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-info mb-3"><i class="fa-solid fa-handshake me-2"></i> إدارة علاقات العملاء وعروض الأسعار</h4>
-                    </div>
-                </div>
-
-                <!-- نظام التذاكر والدعم الفني -->
-                <div id="section-helpdesk" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-info mb-3"><i class="fa-solid fa-headset me-2"></i> نظام التذاكر والدعم الفني (IT Helpdesk)</h4>
-                    </div>
-                </div>
-
-                <!-- الذكاء الاصطناعي وتحليل الفيديو -->
-                <div id="section-ai-cctv" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-info mb-3"><i class="fa-solid fa-video me-2"></i> نظام تحليل الفيديو والذكاء الاصطناعي (YOLO & CCTV)</h4>
-                    </div>
-                </div>
-
-                <!-- مركز التواصل -->
-                <div id="section-chat" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-info mb-3"><i class="fa-solid fa-comments me-2"></i> مركز التواصل والتعاميم الإدارية</h4>
-                    </div>
-                </div>
-
-                <!-- مصفوفة الصلاحيات -->
-                <div id="section-security" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-warning mb-3"><i class="fa-solid fa-table-cells me-2"></i> مصفوفة الصلاحيات والأدوار (RBAC Matrix)</h4>
-                    </div>
-                </div>
-
-                <!-- سجل التدقيق -->
-                <div id="section-audit" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-warning mb-3"><i class="fa-solid fa-clock-rotate-left me-2"></i> سجل التدقيق والأنشطة الأمنية</h4>
-                    </div>
-                </div>
-
-                <!-- النسخ الاحتياطي -->
-                <div id="section-backup" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-danger mb-3"><i class="fa-solid fa-database me-2"></i> مركز النسخ الاحتياطي واستعادة البيانات</h4>
-                    </div>
-                </div>
-
-                <!-- الإعدادات -->
-                <div id="section-settings" class="content-section" style="display: none;">
-                    <div class="card p-4 shadow-sm">
-                        <h4 class="text-secondary mb-3"><i class="fa-solid fa-gears me-2"></i> إعدادات المؤسسة والنظام العامة</h4>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-    <!-- نافذة البحث السريع (Command Palette) -->
-    <div id="commandPalette" class="position-fixed top-0 start-0 w-100 h-100 d-none" style="background: rgba(0,0,0,0.7); z-index: 2000; backdrop-filter: blur(4px);">
-        <div class="container d-flex justify-content-center pt-5 mt-5">
-            <div class="card p-3 border-secondary shadow-lg w-100 rounded-4" style="max-width: 600px;">
-                <div class="input-group mb-3">
-                    <span class="input-group-text bg-transparent border-secondary text-secondary"><i class="fa-solid fa-magnifying-glass"></i></span>
-                    <input type="text" id="commandInput" class="form-control bg-transparent text-light border-secondary shadow-none" placeholder="ابحث عن قسم أو خدمة سريعة..." oninput="filterCommands(this.value)">
-                    <button class="btn btn-outline-secondary border-secondary text-secondary" type="button" onclick="closeCommandPalette()"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-                <div class="list-group list-group-flush" id="commandList" style="max-height: 300px; overflow-y: auto;">
-                    <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('dashboard', 'لوحة التحكم والمؤشرات', this)"><i class="fa-solid fa-house me-2 text-info"></i> لوحة التحكم</a>
-                    <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('ipam', 'مراقبة عناوين الشبكة و DHCP (IPAM)', this)"><i class="fa-solid fa-network-wired me-2 text-warning"></i> مراقبة الشبكة و DHCP (IPAM)</a>
-                    <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('fleet', 'إدارة أسطول السيارات وتأجير المركبات', this)"><i class="fa-solid fa-car me-2 text-success"></i> إدارة أسطول السيارات</a>
-                    <a class="list-group-item list-group-item-action bg-transparent text-light border-secondary rounded py-2 mb-1" onclick="selectCommand('zatca', 'الفوترة الإلكترونية والزكاة (ZATCA)', this)"><i class="fa-solid fa-receipt me-2 text-info"></i> الفوترة الإلكترونية (ZATCA)</a>
                 </div>
             </div>
-        </div>
+
+            <!-- 2. الأصول والعهد التقنية -->
+            <div id="section-assets" class="section-view">
+                <div class="card card-custom p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="text-light m-0"><i class="fas fa-laptop-code text-primary me-2"></i> إدارة الأصول والعهد التقنية</h5>
+                        <button class="btn btn-outline-light btn-sm" onclick="fetchAssets()"><i class="fas fa-sync-alt me-1"></i> تحديث</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-custom align-middle">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>اسم الأصل / الجهاز</th>
+                                    <th>الرقم التسلسلي (Serial)</th>
+                                    <th>الحالة</th>
+                                    <th>الموظف المسؤول</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="assets-table-body">
+                                <tr><td colspan="6" class="text-center text-secondary">جاري جلب البيانات...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- بقية الأقسام الافتراضية -->
+            <div id="section-generic" class="section-view">
+                <div class="card card-custom p-4">
+                    <h5 id="generic-title" class="text-light mb-3">قسم الإدارة</h5>
+                    <p class="text-secondary mb-0">هذا القسم متصل وجاهز لإدارتك التقنية والتشغيلية عبر نظام Kayan ERP.</p>
+                </div>
+            </div>
+
+        </main>
     </div>
 
-    <!-- عنصر الإشعارات العائمة (Toast Notifications Container) -->
-    <div id="toastContainer" class="position-fixed bottom-0 start-0 p-3" style="z-index: 3000;"></div>
-
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- دوال الجافاسكريبت المتقدمة -->
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const ctx = document.getElementById('financialChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر'],
-                    datasets: [{
-                        label: 'المصروفات الشهرية (ر.س)',
-                        data: [12000, 19000, 15000, 22000, 28000, 24000, 31000, 29000, 34000],
-                        borderColor: '#58a6ff',
-                        backgroundColor: 'rgba(88, 166, 255, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { labels: { color: '#c9d1d9', font: { family: 'Cairo' } } } },
-                    scales: {
-                        x: { ticks: { color: '#8b949e', font: { family: 'Cairo' } }, grid: { color: '#30363d' } },
-                        y: { ticks: { color: '#8b949e', font: { family: 'Cairo' } }, grid: { color: '#30363d' } }
-                    }
-                }
-            });
+        function switchSection(sectionId, element) {
+            document.querySelectorAll('#sidebar ul.components li').forEach(li => li.classList.remove('active'));
+            if(element) element.classList.add('active');
 
-            if(localStorage.getItem('kayan_notes')) {
-                document.getElementById('quickNotes').value = localStorage.getItem('kayan_notes');
-            }
-            if(localStorage.getItem('kayan_theme')) {
-                document.documentElement.style.setProperty('--accent-color', localStorage.getItem('kayan_theme'));
-            }
-        });
+            document.querySelectorAll('.section-view').forEach(view => view.classList.remove('active'));
 
-        function saveNotes() {
-            const notes = document.getElementById('quickNotes').value;
-            localStorage.setItem('kayan_notes', notes);
-            showToast('تم حفظ الملاحظات بنجاح!');
-        }
-
-        function setTheme(color, name) {
-            document.documentElement.style.setProperty('--accent-color', color);
-            localStorage.setItem('kayan_theme', color);
-            showToast('تم تغيير الثيم إلى: ' + name);
-        }
-
-        function toggleLanguage() {
-            const root = document.getElementById('htmlRoot');
-            const btn = document.getElementById('langBtn');
-            const bootstrapCss = document.getElementById('bootstrapCss');
-            if (root.getAttribute('dir') === 'rtl') {
-                root.setAttribute('dir', 'ltr');
-                root.setAttribute('lang', 'en');
-                bootstrapCss.setAttribute('href', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css');
-                btn.textContent = 'AR';
-                showToast('Switched to English interface');
+            const targetView = document.getElementById('section-' + sectionId);
+            if (targetView) {
+                targetView.classList.add('active');
             } else {
-                root.setAttribute('dir', 'rtl');
-                root.setAttribute('lang', 'ar');
-                bootstrapCss.setAttribute('href', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css');
-                btn.textContent = 'EN';
-                showToast('تم التبديل إلى الواجهة العربية');
+                document.getElementById('section-generic').classList.add('active');
+                document.getElementById('generic-title').innerText = element.innerText.trim();
+            }
+
+            document.getElementById('page-title').innerHTML = `<i class="fas fa-cube text-info me-2"></i> ${element.innerText.trim()}`;
+            
+            if(sectionId === 'assets') fetchAssets();
+        }
+
+        async function fetchAssets() {
+            try {
+                const response = await fetch('/api/assets');
+                const assets = await response.json();
+                
+                const tbody = document.getElementById('assets-table-body');
+                document.getElementById('stat-assets-count').innerText = assets.length + ' أصل';
+                
+                if(assets.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center text-secondary">لا توجد أصول مسجلة حالياً.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                assets.forEach((asset, index) => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${asset.name || 'غير محدد'}</td>
+                            <td><code>${asset.serialNumber || 'N/A'}</code></td>
+                            <td><span class="badge bg-primary text-light">${asset.status || 'Active'}</span></td>
+                            <td>${asset.assignedTo || 'المستودع'}</td>
+                            <td><button class="btn btn-sm btn-dark text-info border-secondary"><i class="fas fa-edit"></i></button></td>
+                        </tr>
+                    `;
+                });
+            } catch (error) {
+                console.error('خطأ في الاتصال:', error);
+                document.getElementById('assets-table-body').innerHTML = `<tr><td colspan="6" class="text-center text-danger">خطأ في الاتصال بقاعدة البيانات.</td></tr>`;
             }
         }
 
-        function showToast(message) {
-            const container = document.getElementById('toastContainer');
-            const toastId = 'toast-' + Date.now();
-            const toastHtml = `
-                <div id="${toastId}" class="toast align-items-center text-white bg-dark border-secondary shadow mb-2" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="d-flex">
-                        <div class="toast-body"><i class="fa-solid fa-circle-info text-info me-2"></i> ${message}</div>
-                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', toastHtml);
-            const toastElement = document.getElementById(toastId);
-            const bsToast = new bootstrap.Toast(toastElement, { delay: 3500 });
-            bsToast.show();
-            toastElement.addEventListener('hidden.bs.toast', () => toastElement.remove());
-        }
-
-        function toggleSubmenu(element) {
-            const parentLi = element.parentElement;
-            document.querySelectorAll('.sidebar > div > ul > .menu-item').forEach(item => {
-                if (item !== parentLi) item.classList.remove('open');
-            });
-            parentLi.classList.toggle('open');
-        }
-
-        function switchSection(sectionId, titleText, element) {
-            document.querySelectorAll('.content-section').forEach(sec => {
-                sec.style.display = 'none';
-            });
-            const target = document.getElementById('section-' + sectionId);
-            if (target) target.style.display = 'block';
-
-            const titleEl = document.getElementById('page-title');
-            if (titleEl && titleText) titleEl.textContent = titleText;
-
-            document.querySelectorAll('.sidebar-link, .submenu-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            if (element) element.classList.add('active');
-            closeCommandPalette();
-        }
-
-        function openCommandPalette() {
-            document.getElementById('commandPalette').classList.remove('d-none');
-            document.getElementById('commandInput').focus();
-        }
-
-        function closeCommandPalette() {
-            document.getElementById('commandPalette').classList.add('d-none');
-        }
-
-        function selectCommand(sectionId, titleText, element) {
-            switchSection(sectionId, titleText, element);
-        }
-
-        function filterCommands(query) {
-            const list = document.getElementById('commandList');
-            const items = list.getElementsByTagName('a');
-            const filter = query.toLowerCase();
-            for (let i = 0; i < items.length; i++) {
-                let text = items[i].textContent || items[i].innerText;
-                items[i].style.display = text.toLowerCase().indexOf(filter) > -1 ? "" : "none";
-            }
-        }
-
-        document.addEventListener('keydown', function(e) {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                e.preventDefault();
-                const palette = document.getElementById('commandPalette');
-                palette.classList.contains('d-none') ? openCommandPalette() : closeCommandPalette();
-            }
-            if (e.key === 'Escape') closeCommandPalette();
-        });
+        window.onload = function() {
+            fetchAssets();
+        };
     </script>
 </body>
 </html>
