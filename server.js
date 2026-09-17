@@ -8,20 +8,19 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// رابط الاتصال المباشر الموثوق
 const MONGO_URI = "mongodb://medoomran201035_db_user:1234aCluster0@ac-9srqykv-shard-00-00.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-01.ykvq26a.mongodb.net:27017,ac-9srqykv-shard-02.ykvq26a.mongodb.net:27017/kayan_erp?ssl=true&replicaSet=atlas-xzefbp-shard-0&authSource=admin&appName=Cluster0";
 
+// إلغاء الانتظار الطويل لكي يظهر الخطأ فوراً لو الاتصال مقطوع
 const userSchema = new mongoose.Schema({
     name: String,
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: String
-});
+}, { bufferCommands: false });
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 
-// الاتصال بقاعدة البيانات وإنشاء المستخدمين تلقائياً إذا كانت فارغة
-mongoose.connect(MONGO_URI, { family: 4, serverSelectionTimeoutMS: 15000 })
+mongoose.connect(MONGO_URI, { family: 4, serverSelectionTimeoutMS: 5000 })
     .then(async () => {
         console.log('Connected to MongoDB Atlas successfully!');
         try {
@@ -40,15 +39,17 @@ mongoose.connect(MONGO_URI, { family: 4, serverSelectionTimeoutMS: 15000 })
     })
     .catch(err => console.error('MongoDB connection error:', err));
 
-// مسار تسجيل الدخول المباشر والسريع
 app.post('/api/login', async (req, res) => {
     try {
+        if (mongoose.connection.readyState !== 1) {
+            return res.status(503).json({ 
+                message: 'قاعدة البيانات غير متصلة. تأكد من إضافة 0.0.0.0/0 في Network Access بمنصة MongoDB Atlas' 
+            });
+        }
+
         const { email, password } = req.body;
-        
-        // البحث عن المستخدم بالبريد الإلكتروني
         let user = await User.findOne({ email });
         
-        // لو المستخدم مش موجود، ننشئه تلقائياً عشان يسهل الدخول فوراً
         if (!user) {
             user = await User.create({
                 name: email.includes('hr') ? 'HR Manager' : 'Admin',
@@ -58,7 +59,6 @@ app.post('/api/login', async (req, res) => {
             });
         }
 
-        // التحقق من كلمة المرور
         if (password !== user.password && password !== '123456') {
             return res.status(401).json({ message: 'كلمة المرور غير صحيحة' });
         }
@@ -74,7 +74,7 @@ app.post('/api/login', async (req, res) => {
         });
     } catch (err) {
         console.error('Login error:', err);
-        res.status(500).json({ message: 'خطأ في السيرفر: ' + err.message });
+        res.status(500).json({ message: 'فشل الاتصال بقاعدة البيانات. تأكد من تفعيل Allow Access from Anywhere (0.0.0.0/0) في أطلس.' });
     }
 });
 
