@@ -1,38 +1,39 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('cors');
 const path = require('path');
+require('dotenv').config();
 
 const app = express();
+const PORT = process.env.PORT || 10000;
+
+// Middleware لتفسير البيانات وإدارة الملفات الثابتة
 app.use(express.json());
-app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// تقديم الملفات الثابتة من نفس المجلد
-app.use(express.static(__dirname));
+// الاتصال بقاعدة بيانات MongoDB (بدون الخيارات القديمة الملغاة لضمان عدم حدوث خطأ)
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/kayan_erp';
 
-// الاتصال بقاعدة البيانات
-mongoose.connect('mongodb://localhost:27017/kayan_erp', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => console.log('Connected to Kayan ERP Database'))
-.catch(err => console.error('DB error:', err));
+mongoose.connect(MONGO_URI)
+    .then(() => console.log('MongoDB Connected Successfully'))
+    .catch((err) => console.error('MongoDB Connection Error:', err));
 
-// المخططات والمسارات الأساسية
-const customerSchema = new mongoose.Schema({
-    name: String,
-    type: String,
-    phone: String,
-    createdAt: { type: Date, default: Date.now }
-});
-const Customer = mongoose.model('Customer', customerSchema);
+// استيراد مسارات الـ Routes
+const authRoutes = require('./routes/auth');
+const assetRoutes = require('./routes/assets');
+const documentRoutes = require('./routes/documents');
 
-app.get('/api/crm', async (req, res) => res.json(await Customer.find()));
-app.post('/api/crm', async (req, res) => {
-    const c = new Customer(req.body);
-    await c.save();
-    res.json({ success: true, c });
+// ربط المسارات بالـ Endpoints
+app.use('/api/auth', authRoutes);
+app.use('/api/assets', assetRoutes);
+app.use('/api/documents', documentRoutes);
+
+// توجيه جميع الطلبات الأخرى لعرض واجهة المستخدم الرئيسية (Frontend)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// تشغيل السيرفر على البورت المطلوب من منصة Render
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
