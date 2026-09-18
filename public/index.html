@@ -3,34 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام كيان الإداري - Kayan ERP</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-slate-900 text-slate-100 flex h-screen">
+    <title>Kayan Enterprise - لوحة التحكم الشاملة</title>
+    <style>
+        :root {
+            --bg-main: #12141c;
+            --bg-sidebar: #1a1d28;
+            --bg-card: #1e2230;
+            --border-color: #2a2e3d;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --success-color: #10b981;
+        }
 
-    <aside class="w-64 bg-slate-800 border-l border-slate-700 p-6 flex flex-col justify-between">
-        <div>
-            <h1 class="text-2xl font-bold text-blue-400 mb-6">⚡ كيان ERP</h1>
-            <nav class="space-y-2">
-                <a href="#" class="block px-4 py-2 rounded bg-blue-600 text-white">لوحة التحكم</a>
-            </nav>
-        </div>
-        <div class="text-xs text-slate-400 text-center">النظام المستقر v2.0</div>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        aside {
+            width: 280px;
+            background-color: var(--bg-sidebar);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .logo-area {
+            padding: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--accent-color);
+            text-align: center;
+        }
+
+        .nav-links {
+            list-style: none;
+            overflow-y: auto;
+            flex: 1;
+            padding: 10px;
+        }
+
+        .nav-links li {
+            padding: 12px 15px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .nav-links li:hover, .nav-links li.active {
+            background-color: var(--accent-color);
+            color: var(--text-main);
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Top Header */
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-badge {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--success-color);
+            border-radius: 50%;
+        }
+
+        .branch-info {
+            background-color: var(--bg-main);
+            padding: 6px 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+
+        /* Content Area */
+        .content-body {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .module-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .module-card.active {
+            display: block;
+        }
+
+        .module-card h2 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .module-card p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Responsive */
+        @media(max-width: 768px) {
+            aside { width: 70px; }
+            .logo-area, .nav-links li span { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <aside>
+        <div class="logo-area">Kayan Enterprise</div>
+        <ul class="nav-links" id="navLinks">
+            <li class="active" data-target="tasks">توزيع المهام اليومية</li>
+            <li data-target="contracts">العقود والتراخيص الرسمية</li>
+            <li data-target="circulars">التعاميم والقرارات الإدارية</li>
+            <li data-target="settings">صلاحيات النظام وإعداداته</li>
+            <li data-target="accounts">الحسابات العامة (رصين)</li>
+            <li data-target="purchases">المشتريات وعروض الأسعار</li>
+            <li data-target="sales">المبيعات وعلاقات العملاء (CRM)</li>
+            <li data-target="assets">عهد الأجهزة للموظفين</li>
+            <li data-target="inventory">المخزون وقطع الغيار</li>
+            <li data-target="fleet">حركة السيارات ورحلات الأسطول</li>
+            <li data-target="maintenance">الصيانة الدورية والفحص</li>
+            <li data-target="fuel">متابعة الوقود والمصروفات</li>
+            <li data-target="licenses-fleet">التراخيص والتأمين والمخالفات</li>
+            <li data-target="projects">متابعة المشاريع الكبرى</li>
+        </ul>
     </aside>
 
-    <main class="flex-1 p-8 overflow-y-auto">
-        <header class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
-            <h2 class="text-xl font-bold">لوحة المؤشرات الرئيسية</h2>
-            <span class="text-sm bg-green-900/50 text-green-400 px-3 py-1 rounded border border-green-800">● النظام يعمل بنجاح</span>
+    <!-- Main Section -->
+    <main>
+        <!-- Top Bar -->
+        <header>
+            <div class="branch-info">الفرع النشط: <strong>فرع الرياض - الإدارة العامة</strong></div>
+            <div class="status-badge">
+                <div class="status-dot"></div>
+                متصل بالسيرفر
+            </div>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-slate-800 p-6 rounded-xl border border-slate-700">
-                <h3 class="text-slate-400 text-sm">حالة السيرفر</h3>
-                <p class="text-2xl font-bold text-green-400 mt-2">متصل (Online)</p>
+        <!-- Dynamic Module Content -->
+        <div class="content-body" id="contentBody">
+            
+            <div class="module-card active" id="tasks">
+                <h2>توزيع المهام اليومية</h2>
+                <p>جدول مهام الفرق والأقسام وحالة التنفيذ ومتابعة الإنجاز[span_0](start_span)[span_0](end_span).</p>
             </div>
+
+            <div class="module-card" id="contracts">
+                <h2>العقود والتراخيص الرسمية</h2>
+                <p>متابعة تواريخ انتهاء التراخيص البرمجية والعقود الرسمية للشركة[span_1](start_span)[span_1](end_span).</p>
+            </div>
+
+            <div class="module-card" id="circulars">
+                <h2>التعاميم والقرارات الإدارية</h2>
+                <p>نشر التعاميم والقرارات التنظيمية الداخلية للموظفين[span_2](start_span)[span_2](end_span).</p>
+            </div>
+
+            <div class="module-card" id="settings">
+                <h2>صلاحيات النظام وإعداداته</h2>
+                <p>التحكم في إعدادات المنصة ومستويات وصول المديرين والأمان العام[span_3](start_span)[span_3](end_span).</p>
+            </div>
+
+            <div class="module-card" id="accounts">
+                <h2>الحسابات العامة (رصين)</h2>
+                <p>إدارة دفتر القيود اليومية والمراكز المالية[span_4](start_span)[span_4](end_span).</p>
+            </div>
+
+            <div class="module-card" id="purchases">
+                <h2>المشتريات وعروض الأسعار</h2>
+                <p>إدارة طلبات الشراء وعروض الأسعار المقدمة من الموردين الخارجيين[span_5](start_span)[span_5](end_span).</p>
+            </div>
+
+            <div class="module-card" id="sales">
+                <h2>المبيعات وعلاقات العملاء (CRM)</h2>
+                <p>متابعة صفقات العملاء ومسار عمليات المبيعات[span_6](start_span)[span_6](end_span).</p>
+            </div>
+
+            <div class="module-card" id="assets">
+                <h2>عهد الأجهزة للموظفين</h2>
+                <p>عرض وتتبع عهد الأجهزة التقنية والأرقام التسلسلية وحالة الأصول[span_7](start_span)[span_7](end_span).</p>
+            </div>
+
+            <div class="module-card" id="inventory">
+                <h2>المخزون وقطع الغيار</h2>
+                <p>إدارة وتتبع مخزون قطع الغيار التقنية وأحبار الطابعات[span_8](start_span)[span_8](end_span).</p>
+            </div>
+
+            <div class="module-card" id="fleet">
+                <h2>حركة السيارات ورحلات الأسطول</h2>
+                <p>متابعة خطوط سير أسطول السيارات وتتبع الرحلات الميدانية[span_9](start_span)[span_9](end_span).</p>
+            </div>
+
+            <div class="module-card" id="maintenance">
+                <h2>الصيانة الدورية والفحص</h2>
+                <p>إدارة سجلات الصيانة ومتابعة الورش والفحص الدوري لمركبات الأسطول[span_10](start_span)[span_10](end_span).</p>
+            </div>
+
+            <div class="module-card" id="fuel">
+                <h2>متابعة الوقود والمصروفات</h2>
+                <p>رصد استهلاك الوقود والفواتير ومصروفات التشغيل الخاصة بالأسطول[span_11](start_span)[span_11](end_span).</p>
+            </div>
+
+            <div class="module-card" id="licenses-fleet">
+                <h2>التراخيص والتأمين والمخالفات</h2>
+                <p>إدارة تجديد الاستمارات ووثائق التأمين ومتابعة المخالفات المرورية[span_12](start_span)[span_12](end_span).</p>
+            </div>
+
+            <div class="module-card" id="projects">
+                <h2>متابعة المشاريع الكبرى</h2>
+                <p>إدارة وتتبع نسب إنجاز المشاريع التشغيلية والإستراتيجية الخاصة بالشركة[span_13](start_span)[span_13](end_span).</p>
+            </div>
+
         </div>
     </main>
 
+    <script>
+        // Interactive Navigation Script
+        const navItems = document.querySelectorAll('#navLinks li');
+        const modules = document.querySelectorAll('.module-card');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove active class from all links and modules
+                navItems.forEach(nav => nav.classList.remove('active'));
+                modules.forEach(mod => mod.classList.remove('active'));
+
+                // Add active class to clicked item
+                item.classList.add('active');
+
+                // Show target module
+                const targetId = item.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+    </script>
 </body>
 </html>
