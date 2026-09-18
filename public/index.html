@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم نظام كيان - Kayan ERP v6.0 (الشجرة التنظيمية الشاملة)</title>
+    <title>لوحة تحكم نظام كيان - Kayan ERP v6.5 (الشجرة التنظيمية الشاملة)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -27,26 +25,31 @@
     </script>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        /* تخصيص شريط التمرير */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
     </style>
 </head>
 <body class="bg-darkBg text-slate-100 min-h-screen flex flex-col">
 
     <!-- شريط التنقل العلوي -->
-    <header class="bg-cardBg border-b border-slate-800 px-6 py-4 flex justify-between items-center sticky top-0 z-50">
+    <header class="bg-cardBg border-b border-slate-800 px-6 py-4 flex justify-between items-center sticky top-0 z-50 shadow-md">
         <div class="flex items-center space-x-4 space-x-reverse">
-            <div class="bg-accentBlue text-white p-2 rounded-xl shadow-lg">
+            <div class="bg-accentBlue text-white p-2.5 rounded-xl shadow-lg">
                 <i class="fa-solid fa-cube text-xl"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-wide">منصة كيان <span class="text-accentBlue text-xs px-2 py-0.5 bg-blue-900/50 rounded-full border border-blue-700">ERP v6.0 (الشجرة التنظيمية)</span></h1>
-                <p class="text-xs text-slate-400">نظام الإدارة المؤسسية مع الشجرة التفاعلية المتكاملة</p>
+                <h1 class="text-xl font-bold tracking-wide">منصة كيان <span class="text-accentBlue text-xs px-2 py-0.5 bg-blue-900/50 rounded-full border border-blue-700">ERP v6.5</span></h1>
+                <p class="text-xs text-slate-400">نظام الإدارة المؤسسية الشامل لكافة قطاعات الأعمال</p>
             </div>
         </div>
 
         <div class="flex items-center space-x-4 space-x-reverse">
             <div class="flex items-center space-x-3 space-x-reverse border-r border-slate-700 pr-4">
                 <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-emerald-500 flex items-center justify-center font-bold text-white shadow">
-                    محمد
+                    م
                 </div>
                 <div class="hidden md:block text-right">
                     <p class="text-sm font-semibold">محمد فيصل</p>
@@ -57,95 +60,161 @@
     </header>
 
     <div class="flex flex-1">
-        <!-- القائمة الجانبية والشجرة التنظيمية التفاعلية -->
+        <!-- القائمة الجانبية والشجرة التنظيمية الشاملة -->
         <aside class="w-80 bg-cardBg border-l border-slate-800 p-4 hidden md:flex flex-col justify-between overflow-y-auto max-h-[calc(100vh-73px)]">
             <nav class="space-y-2">
                 <!-- الرئيسية -->
-                <a href="#" onclick="showContent('dashboard', 'لوحة القيادة الرئيسية', 'متابعة المؤشرات العامة لأقسام الشركة')" class="flex items-center space-x-3 space-x-reverse px-4 py-3 rounded-xl bg-blue-600 text-white transition shadow-md mb-3">
+                <a href="#" onclick="showContent('dashboard', 'لوحة القيادة الرئيسية', 'متابعة المؤشرات العامة لكافة إدارات وأقسام الشركة')" class="flex items-center space-x-3 space-x-reverse px-4 py-3 rounded-xl bg-blue-600 text-white transition shadow-md mb-4">
                     <i class="fa-solid fa-chart-pie w-5"></i>
                     <span class="font-medium text-sm">لوحة القيادة الرئيسية</span>
                 </a>
 
-                <div class="text-[11px] font-bold text-slate-400 px-3 pt-2 uppercase tracking-wider">الشجرة التنظيمية للإدارات</div>
+                <div class="text-[11px] font-bold text-slate-400 px-3 pt-2 uppercase tracking-wider">القطاعات التشغيلية والشجرة</div>
 
-                <!-- 1. تقنية المعلومات والشبكات (مشفرة كشجرة فرعية مفصلة) -->
-                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
-                    <button onclick="toggleSubMenu('menu-it')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
-                        <span class="flex items-center"><i class="fa-solid fa-network-wired ml-2 text-blue-400"></i> تقنية المعلومات والشبكات (IT)</span>
-                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-it"></i>
-                    </button>
-                    <div id="menu-it" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
-                        <a href="#" onclick="showContent('it-mikrotik', 'إدارة MikroTik والشبكات', 'إعدادات WinBox، VLANs، وDHCP Servers')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-blue-600/20 hover:text-blue-300">🔹 إعدادات MikroTik و WinBox</a>
-                        <a href="#" onclick="showContent('it-ad', 'Active Directory', 'إدارة المستخدمين، المجموعات، و Group Policy')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-blue-600/20 hover:text-blue-300">🔹 Active Directory & GPO</a>
-                        <a href="#" onclick="showContent('it-virt', 'المحاكاة الافتراضية', 'إدارة Hyper-V Manager و VirtualBox')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-blue-600/20 hover:text-blue-300">🔹 Hyper-V & VirtualBox</a>
-                    </div>
-                </div>
-
-                <!-- 2. كاميرات المراقبة والصيانة (CCTV & Maintenance) -->
-                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
-                    <button onclick="toggleSubMenu('menu-cctv')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
-                        <span class="flex items-center"><i class="fa-solid fa-video ml-2 text-red-400"></i> كاميرات المراقبة والأمن</span>
-                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-cctv"></i>
-                    </button>
-                    <div id="menu-cctv" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
-                        <a href="#" onclick="showContent('cctv-dahua', 'أنظمة Dahua', 'إدارة SmartPSS وتطبيقات DMSS')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-red-600/20 hover:text-red-300">🔹 Dahua (SmartPSS / DMSS)</a>
-                        <a href="#" onclick="showContent('cctv-hik', 'أنظمة Hikvision', 'إدارة iVMS-4200 وأنظمة NVR')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-red-600/20 hover:text-red-300">🔹 Hikvision (iVMS-4200)</a>
-                    </div>
-                </div>
-
-                <!-- 3. الموارد البشرية والحضور (HR & Attendance) -->
-                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
-                    <button onclick="toggleSubMenu('menu-hr')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
-                        <span class="flex items-center"><i class="fa-solid fa-users-gear ml-2 text-purple-400"></i> الموارد البشرية والبصمة</span>
-                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-hr"></i>
-                    </button>
-                    <div id="menu-hr" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
-                        <a href="#" onclick="showContent('hr-staff', 'ملفات الموظفين والرواتب', 'إدارة العقود، المسيرات، والتقييمات')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-purple-600/20 hover:text-purple-300">🔹 شؤون الموظفين والرواتب</a>
-                        <a href="#" onclick="showContent('hr-zk', 'جهاز البصمة ZKTeco', 'إدارة MB2000 وسجلات الحضور عبر ZKTime')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-purple-600/20 hover:text-purple-300">🔹 أجهزة البصمة (ZKTeco MB2000)</a>
-                    </div>
-                </div>
-
-                <!-- 4. المالية والمشتريات (Finance & Procurement) -->
-                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
-                    <button onclick="toggleSubMenu('menu-fin')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
-                        <span class="flex items-center"><i class="fa-solid fa-wallet ml-2 text-emerald-400"></i> المالية والمشتريات</span>
-                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-fin"></i>
-                    </button>
-                    <div id="menu-fin" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
-                        <a href="#" onclick="showContent('fin-accounts', 'الحسابات العامة', 'الأرباح، المصروفات، وسندات الصرف')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-emerald-600/20 hover:text-emerald-300">🔹 الحسابات والميزانية التشغيلية</a>
-                        <a href="#" onclick="showContent('fin-procurement', 'المشتريات والموردين', 'أوامر الشراء واعتماد الفواتير')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-emerald-600/20 hover:text-emerald-300">🔹 طلبات الشراء والموردين</a>
-                    </div>
-                </div>
-
-                <!-- 5. خدمة العملاء والمبيعات (CRM & Sales) -->
+                <!-- 1. المبيعات وعقود العملاء -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-sales')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
-                        <span class="flex items-center"><i class="fa-solid fa-headset ml-2 text-cyan-400"></i> المبيعات وخدمة العملاء</span>
+                        <span class="flex items-center"><i class="fa-solid fa-handshake ml-2 text-blue-400"></i> المبيعات وعقود العملاء</span>
                         <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-sales"></i>
                     </button>
                     <div id="menu-sales" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
-                        <a href="#" onclick="showContent('sales-contracts', 'عقود المبيعات والعملاء', 'إصدار الفواتير وعقود الدعم الفني')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-cyan-600/20 hover:text-cyan-300">🔹 المبيعات وعقود العملاء</a>
-                        <a href="#" onclick="showContent('sales-helpdesk', 'الدعم الفني (Helpdesk)', 'تذاكر العملاء وسرعة الاستجابة SLAs')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-cyan-600/20 hover:text-cyan-300">🔹 تذاكر الدعم الفني (Helpdesk)</a>
+                        <a href="#" onclick="showContent('sales-contracts', 'عقود العملاء', 'إدارة الاتفاقيات وعقود التوريد والخدمات')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-blue-600/20 hover:text-blue-300">🔹 العقود واتفاقيات الشراكة</a>
+                        <a href="#" onclick="showContent('sales-invoices', 'فواتير ومستحقات المبيعات', 'متابعة الفواتير المصدرة وحالة التحصيل')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-blue-600/20 hover:text-blue-300">🔹 الفواتير وحالة السداد</a>
                     </div>
                 </div>
 
-                <!-- 6. الشؤون الإدارية والعلاقات الحكومية (PRO & Fleet) -->
+                <!-- 2. إدارة المخزون والأصول -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-inventory')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-boxes-stacked ml-2 text-emerald-400"></i> إدارة المخزون والأصول</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-inventory"></i>
+                    </button>
+                    <div id="menu-inventory" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('inv-stock', 'حركة المخزن والأصناف', 'متابعة الكميات، الأصناف، وتنبيهات النفاذ')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-emerald-600/20 hover:text-emerald-300">🔹 المستودعات والأصناف</a>
+                        <a href="#" onclick="showContent('inv-assets', 'الأصول والمكتسبات', 'سجل أصول الشركة والأجهزة والعهد')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-emerald-600/20 hover:text-emerald-300">🔹 سجل الأصول والعهد</a>
+                    </div>
+                </div>
+
+                <!-- 3. المشتريات والموردين -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-procurement')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-cart-shopping ml-2 text-cyan-400"></i> المشتريات والموردين</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-procurement"></i>
+                    </button>
+                    <div id="menu-procurement" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('proc-orders', 'طلبات الشراء المحلية والخارجية', 'إصدار واعتماد أوامر الشراء للموردين')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-cyan-600/20 hover:text-cyan-300">🔹 أوامر الشراء</a>
+                        <a href="#" onclick="showContent('proc-suppliers', 'دليل الموردين', 'بيانات التواصل وتقييمات الموردين المعتمدين')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-cyan-600/20 hover:text-cyan-300">🔹 دليل وحسابات الموردين</a>
+                    </div>
+                </div>
+
+                <!-- 4. المالية والحسابات -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-finance')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-wallet ml-2 text-yellow-400"></i> المالية والحسابات</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-finance"></i>
+                    </button>
+                    <div id="menu-finance" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('fin-ledger', 'الحسابات العامة والدليل المحاسبي', 'مراجعة قيود اليومية، الأستاذ العام، والميزانية')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-yellow-600/20 hover:text-yellow-300">🔹 القيود والأستاذ العام</a>
+                        <a href="#" onclick="showContent('fin-expenses', 'المصروفات وسندات الصرف', 'تسجيل وتصنيف المصروفات النقدية والبنكية')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-yellow-600/20 hover:text-yellow-300">🔹 المصروفات وسندات الصرف</a>
+                    </div>
+                </div>
+
+                <!-- 5. الموارد البشرية (HR) -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-hr')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-users-gear ml-2 text-purple-400"></i> الموارد البشرية (HR)</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-hr"></i>
+                    </button>
+                    <div id="menu-hr" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('hr-staff', 'ملفات وشؤون الموظفين', 'بيانات الموظفين، العقود، والرواتب')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-purple-600/20 hover:text-purple-300">🔹 شؤون الموظفين والرواتب</a>
+                        <a href="#" onclick="showContent('hr-attendance', 'إدارة الحضور والإنصراف', 'ربط أجهزة البصمة ZKTeco وتقارير الانضباط')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-purple-600/20 hover:text-purple-300">🔹 الحضور والإنصراف (البصمة)</a>
+                    </div>
+                </div>
+
+                <!-- 6. تقنية المعلومات والشبكات -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-it')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-network-wired ml-2 text-indigo-400"></i> تقنية المعلومات والشبكات</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-it"></i>
+                    </button>
+                    <div id="menu-it" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('it-mikrotik', 'إعدادات MikroTik و WinBox', 'إدارة الراوترات، VLANs، وDHCP Servers')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-indigo-600/20 hover:text-indigo-300">🔹 شبكات MikroTik & WinBox</a>
+                        <a href="#" onclick="showContent('it-ad', 'Active Directory & GPO', 'إدارة المستخدمين والصلاحيات والسياسات')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-indigo-600/20 hover:text-indigo-300">🔹 Active Directory والسيرفرات</a>
+                    </div>
+                </div>
+
+                <!-- 7. خدمة العملاء (Helpdesk) -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-helpdesk')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-headset ml-2 text-pink-400"></i> خدمة العملاء (Helpdesk)</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-helpdesk"></i>
+                    </button>
+                    <div id="menu-helpdesk" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('hd-tickets', 'تذاكر الدعم الفني', 'متابعة شكاوى واستفسارات العملاء والحلول SLAs')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-pink-600/20 hover:text-pink-300">🔹 تذاكر الدعم والشكاوى</a>
+                    </div>
+                </div>
+
+                <!-- 8. الصيانة والأصول الثابتة -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-maintenance')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-screwdriver-wrench ml-2 text-red-400"></i> الصيانة والأصول الثابتة</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-maintenance"></i>
+                    </button>
+                    <div id="menu-maintenance" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('maint-cctv', 'كاميرات المراقبة والأمن', 'إدارة Dahua (SmartPSS) و Hikvision (iVMS-4200)')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-red-600/20 hover:text-red-300">🔹 صيانة كاميرات المراقبة (CCTV)</a>
+                        <a href="#" onclick="showContent('maint-equipment', 'صيانة المعدات والطابعات', 'جدولة الصيانة الوقائية لأجهزة الطابعات والمعدات')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-red-600/20 hover:text-red-300">🔹 صيانة الطابعات والأجهزة</a>
+                    </div>
+                </div>
+
+                <!-- 9. العلاقات الحكومية (PRO) -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-pro')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
-                        <span class="flex items-center"><i class="fa-solid fa-scale-balanced ml-2 text-yellow-500"></i> العلاقات الحكومية والأسطول</span>
+                        <span class="flex items-center"><i class="fa-solid fa-scale-balanced ml-2 text-teal-400"></i> العلاقات الحكومية (PRO)</span>
                         <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-pro"></i>
                     </button>
                     <div id="menu-pro" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
-                        <a href="#" onclick="showContent('pro-gov', 'العلاقات الحكومية (PRO)', 'التراخيص، GOSI، وعقود العمل')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-yellow-600/20 hover:text-yellow-300">🔹 التراخيص وتأمينات GOSI</a>
-                        <a href="#" onclick="showContent('pro-fleet', 'إدارة الأسطول والمركبات', 'متابعة حركة السيارات والصيانة الدورية')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-yellow-600/20 hover:text-yellow-300">🔹 أسطول المركبات واللوجستيات</a>
+                        <a href="#" onclick="showContent('pro-gov', 'التراخيص والخدمات الحكومية', 'متابعة رخص العمل، التأمينات GOSI، والبلدية')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-teal-600/20 hover:text-teal-300">🔹 الرخص والتأمينات الحكومية</a>
+                    </div>
+                </div>
+
+                <!-- 10. إدارة المشاريع والمهام -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-projects')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-diagram-project ml-2 text-orange-400"></i> إدارة المشاريع والمهام</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-projects"></i>
+                    </button>
+                    <div id="menu-projects" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('proj-tracking', 'متابعة المشاريع الجارية', 'خطط العمل، المهام، ومعدلات الإنجاز')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-orange-600/20 hover:text-orange-300">🔹 خطط المشاريع والمهام</a>
+                    </div>
+                </div>
+
+                <!-- 11. الأسطول والمركبات -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-fleet')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-car-side ml-2 text-emerald-300"></i> الأسطول والمركبات</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-fleet"></i>
+                    </button>
+                    <div id="menu-fleet" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('fleet-management', 'إدارة حركة السيارات واللوجستيات', 'متابعة الصيانة الدورية، الوقود، وتراخيص المركبات')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-emerald-600/20 hover:text-emerald-300">🔹 حركة الأسطول والمركبات</a>
+                    </div>
+                </div>
+
+                <!-- 12. التسويق والحملات -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-marketing')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-bullhorn ml-2 text-rose-400"></i> التسويق والحملات</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-marketing"></i>
+                    </button>
+                    <div id="menu-marketing" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('mkt-campaigns', 'الحملات الإعلانية والعروض', 'إدارة الحملات التسويقية وتحليل العملاء المستهدفين Leads')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-rose-600/20 hover:text-rose-300">🔹 الحملات الرقمية والعروض</a>
                     </div>
                 </div>
 
             </nav>
 
             <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 text-xs text-slate-400 text-center mt-6">
-                <p class="font-semibold text-slate-300">كيان ERP v6.0</p>
-                <p class="mt-1">نظام تفاعلي متكامل © 2026</p>
+                <p class="font-semibold text-slate-300">كيان ERP v6.5</p>
+                <p class="mt-1">جميع القطاعات مفصولة بالكامل © 2026</p>
             </div>
         </aside>
 
@@ -155,46 +224,46 @@
                 <!-- الافتراضي: لوحة القيادة -->
                 <div class="flex justify-between items-center bg-cardBg p-4 rounded-2xl border border-slate-800 shadow-sm">
                     <div>
-                        <h2 id="view-title" class="text-lg font-bold">لوحة القيادة الرئيسية الشاملة</h2>
-                        <p id="view-desc" class="text-xs text-slate-400">اختر أي قسم فرعي من الشجرة الجانبية لاستعراض بنوده وتفاصيله الفنية.</p>
+                        <h2 class="text-lg font-bold">لوحة القيادة الرئيسية الشاملة</h2>
+                        <p class="text-xs text-slate-400 mt-1">تمت إضافة وتهيئة كافة الإدارات الـ 12 بالكامل ضمن الشجرة التنظيمية التفاعلية.</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow">
-                        <p class="text-xs text-slate-400 font-medium">إجمالي المبيعات والتعاقدات</p>
-                        <h3 class="text-2xl font-bold mt-1 text-emerald-400">142,500 ر.س</h3>
-                        <p class="text-xs text-emerald-400 mt-4"><i class="fa-solid fa-arrow-up ml-1"></i> نمو مستقر</p>
+                        <p class="text-xs text-slate-400 font-medium">إجمالي الإدارات النشطة</p>
+                        <h3 class="text-2xl font-bold mt-1 text-emerald-400">12 إدارة رئيسية</h3>
+                        <p class="text-xs text-emerald-400 mt-4"><i class="fa-solid fa-circle-check ml-1"></i> تعمل بكفاءة كاملة</p>
                     </div>
                     <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow">
-                        <p class="text-xs text-slate-400 font-medium">حالة الأجهزة والشبكات</p>
-                        <h3 class="text-2xl font-bold mt-1 text-blue-400">100% مستقرة</h3>
-                        <p class="text-xs text-blue-400 mt-4"><i class="fa-solid fa-circle-check ml-1"></i> MikroTik متصل</p>
+                        <p class="text-xs text-slate-400 font-medium">الربط التقني (IT & Network)</p>
+                        <h3 class="text-2xl font-bold mt-1 text-indigo-400">100% مستقر</h3>
+                        <p class="text-xs text-indigo-400 mt-4"><i class="fa-solid fa-network-wired ml-1"></i> MikroTik & AD متصلين</p>
                     </div>
                     <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow">
-                        <p class="text-xs text-slate-400 font-medium">بصمة الموظفين (ZKTeco)</p>
-                        <h3 class="text-2xl font-bold mt-1 text-purple-400">96.4% حضور</h3>
+                        <p class="text-xs text-slate-400 font-medium">حضور الموظفين (ZKTeco)</p>
+                        <h3 class="text-2xl font-bold mt-1 text-purple-400">96.4%</h3>
                         <p class="text-xs text-purple-400 mt-4"><i class="fa-solid fa-fingerprint ml-1"></i> متزامن تلقائياً</p>
                     </div>
                     <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow">
-                        <p class="text-xs text-slate-400 font-medium">كاميرات المراقبة النشطة</p>
+                        <p class="text-xs text-slate-400 font-medium">كاميرات المراقبة (CCTV)</p>
                         <h3 class="text-2xl font-bold mt-1 text-red-400">16 كاميرا</h3>
-                        <p class="text-xs text-red-400 mt-4"><i class="fa-solid fa-video ml-1"></i> تسيير iVMS & SmartPSS</p>
+                        <p class="text-xs text-red-400 mt-4"><i class="fa-solid fa-video ml-1"></i> iVMS & SmartPSS</p>
                     </div>
                 </div>
 
                 <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow">
-                    <h3 class="font-bold text-sm mb-3">دليل الاستخدام السريع للشجرة التنظيمية:</h3>
+                    <h3 class="font-bold text-sm mb-3 text-blue-400">دليل الاستخدام السريع:</h3>
                     <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
-                        <li>انقر على أي سهم أو عنوان في القائمة الجانبية (مثل <strong>تقنية المعلومات والشبكات</strong>) لفتح الفروع المنسدلة منها.</li>
-                        <li>اختر القسم الفرعي المطلوب (مثل <strong>MikroTik</strong> أو <strong>Active Directory</strong> أو <strong>ZKTeco</strong>) لعرض بياناته التفصيلية هنا مباشرة.</li>
+                        <li>تم فصل جميع الإدارات الـ 12 تماماً في القائمة الجانبية مع إمكانية فتح فروع كل إدارة على حدة.</li>
+                        <li>انقر على أي بند فرعي لعرض لوحة التحكم الخاصة به مباشرة وتحديث سجلاته.</li>
                     </ul>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- كود الجافاسكريبت للتحكم بالشجرة المنسدلة والعرض الديناميكي -->
+    <!-- كود الجافاسكريبت للتحكم بالشجرة -->
     <script>
         function toggleSubMenu(menuId) {
             const menu = document.getElementById(menuId);
@@ -222,17 +291,17 @@
                 </div>
 
                 <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow space-y-4">
-                    <h3 class="font-bold text-sm text-emerald-400 border-b border-slate-700 pb-2">بنود وعمليات الإدارة النشطة (${title})</h3>
+                    <h3 class="font-bold text-sm text-emerald-400 border-b border-slate-700 pb-2">سجلات وبيانات قطاع: (${title})</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                         <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-                            <p class="font-bold text-white mb-2"><i class="fa-solid fa-list-check ml-1 text-blue-400"></i> الحالة التشغيلية والتقارير</p>
-                            <p class="text-slate-400 leading-relaxed">النظام يعمل بكفاءة تامة ضمن هذا القسم مع تفعيل الصلاحيات الأمنية والربط السحابي المباشر.</p>
+                            <p class="font-bold text-white mb-2"><i class="fa-solid fa-list-check ml-1 text-blue-400"></i> حالة التشغيل والصلاحيات</p>
+                            <p class="text-slate-400 leading-relaxed">القسم يعمل بكفاءة تامة، وتم ربط كافة الصلاحيات والأكواد البرمجية الخاصة به بنجاح داخل النظام.</p>
                         </div>
                         <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-                            <p class="font-bold text-white mb-2"><i class="fa-solid fa-gears ml-1 text-purple-400"></i> الإجراءات السريعة المتاحة</p>
+                            <p class="font-bold text-white mb-2"><i class="fa-solid fa-gears ml-1 text-purple-400"></i> الإجراءات والعمليات</p>
                             <div class="mt-2 space-y-2">
-                                <button onclick="alert('تم تنفيذ العملية بنجاح داخل هذا القسم')" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-1.5 rounded transition">تحديث السجلات والبيانات</button>
-                                <button onclick="alert('تم تصدير التقرير التفصيلي بنجاح')" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 rounded transition">تصدير تقرير البنود (CSV)</button>
+                                <button onclick="alert('تم تحديث بيانات القسم بنجاح')" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-1.5 rounded transition font-medium">تحديث السجلات</button>
+                                <button onclick="alert('تم تصدير التقرير بنجاح')" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-1.5 rounded transition font-medium">تصدير تقرير البنود (CSV)</button>
                             </div>
                         </div>
                     </div>
