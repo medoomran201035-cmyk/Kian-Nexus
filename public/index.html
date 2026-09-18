@@ -15,6 +15,7 @@
             --accent-color: #3b82f6;
             --accent-hover: #2563eb;
             --success-color: #10b981;
+            --it-color: #8b5cf6;
         }
 
         * {
@@ -34,7 +35,7 @@
 
         /* Sidebar */
         aside {
-            width: 280px;
+            width: 290px;
             background-color: var(--bg-sidebar);
             border-left: 1px solid var(--border-color);
             display: flex;
@@ -58,19 +59,32 @@
             padding: 10px;
         }
 
+        .nav-category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 10px 15px 5px 15px;
+            letter-spacing: 0.5px;
+            font-weight: bold;
+        }
+
         .nav-links li {
-            padding: 12px 15px;
-            margin-bottom: 5px;
+            padding: 10px 15px;
+            margin-bottom: 4px;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
             color: var(--text-muted);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .nav-links li:hover, .nav-links li.active {
             background-color: var(--accent-color);
             color: var(--text-main);
+        }
+
+        .nav-links li.it-link:hover, .nav-links li.it-link.active {
+            background-color: var(--it-color);
         }
 
         /* Main Content */
@@ -149,12 +163,13 @@
         .module-card p {
             color: var(--text-muted);
             font-size: 1rem;
+            line-height: 1.6;
         }
 
         /* Responsive */
         @media(max-width: 768px) {
             aside { width: 70px; }
-            .logo-area, .nav-links li span { display: none; }
+            .logo-area, .nav-links li span, .nav-category { display: none; }
         }
     </style>
 </head>
@@ -164,20 +179,40 @@
     <aside>
         <div class="logo-area">Kayan Enterprise</div>
         <ul class="nav-links" id="navLinks">
+            
+            <!-- General Administration -->
+            <div class="nav-category">الإدارة والتنظيم</div>
             <li class="active" data-target="tasks">توزيع المهام اليومية</li>
             <li data-target="contracts">العقود والتراخيص الرسمية</li>
             <li data-target="circulars">التعاميم والقرارات الإدارية</li>
             <li data-target="settings">صلاحيات النظام وإعداداته</li>
+
+            <!-- IT Department (Dedicated Section) -->
+            <div class="nav-category" style="color: #a78bfa;">تكنولوجيا المعلومات (IT)</div>
+            <li class="it-link" data-target="it-helpdesk">الدعم الفني وتذاكر الأعطال</li>
+            <li class="it-link" data-target="it-assets">عهد الأجهزة والأصول التقنية</li>
+            <li class="it-link" data-target="it-network">الشبكات والبنية التحتية (MikroTik/AD)</li>
+            <li class="it-link" data-target="it-cctv">أنظمة المراقبة والأمان (CCTV/ZKTeco)</li>
+            <li class="it-link" data-target="it-printers">إدارة الطابعات وأذونات الشبكة</li>
+            <li class="it-link" data-target="it-inventory">المخزون التقني وقطع الغيار</li>
+
+            <!-- Financials & Procurement -->
+            <div class="nav-category">المالية والمشتريات</div>
             <li data-target="accounts">الحسابات العامة (رصين)</li>
             <li data-target="purchases">المشتريات وعروض الأسعار</li>
+            <li data-target="fuel">متابعة الوقود والمصروفات</li>
+
+            <!-- Sales & Projects -->
+            <div class="nav-category">المبيعات والمشاريع</div>
             <li data-target="sales">المبيعات وعلاقات العملاء (CRM)</li>
-            <li data-target="assets">عهد الأجهزة للموظفين</li>
-            <li data-target="inventory">المخزون وقطع الغيار</li>
+            <li data-target="projects">متابعة المشاريع الكبرى</li>
+
+            <!-- Fleet Management -->
+            <div class="nav-category">إدارة الأسطول</div>
             <li data-target="fleet">حركة السيارات ورحلات الأسطول</li>
             <li data-target="maintenance">الصيانة الدورية والفحص</li>
-            <li data-target="fuel">متابعة الوقود والمصروفات</li>
             <li data-target="licenses-fleet">التراخيص والتأمين والمخالفات</li>
-            <li data-target="projects">متابعة المشاريع الكبرى</li>
+
         </ul>
     </aside>
 
@@ -195,6 +230,7 @@
         <!-- Dynamic Module Content -->
         <div class="content-body" id="contentBody">
             
+            <!-- General Administration Modules -->
             <div class="module-card active" id="tasks">
                 <h2>توزيع المهام اليومية</h2>
                 <p>جدول مهام الفرق والأقسام وحالة التنفيذ ومتابعة الإنجاز[span_0](start_span)[span_0](end_span).</p>
@@ -215,54 +251,78 @@
                 <p>التحكم في إعدادات المنصة ومستويات وصول المديرين والأمان العام[span_3](start_span)[span_3](end_span).</p>
             </div>
 
+            <!-- IT Department Modules -->
+            <div class="module-card" id="it-helpdesk">
+                <h2>الدعم الفني وتذاكر الأعطال (IT Helpdesk)</h2>
+                <p>إدارة بلاغات الأعطال التقنية الداخلية، متابعة حالة صيانة أجهزة الحاسب، وحل مشكلات الشبكات والأنظمة للموظفين.</p>
+            </div>
+
+            <div class="module-card" id="it-assets">
+                <h2>عهد الأجهزة والأصول التقنية</h2>
+                <p>عرض وتتبع عهد الأجهزة التقنية، الأرقام التسلسلية، وحالة الأصول المسندة للموظفين[span_4](start_span)[span_4](end_span).</p>
+            </div>
+
+            <div class="module-card" id="it-network">
+                <h2>الشبكات والبنية التحتية (MikroTik & Active Directory)</h2>
+                <p>مراقبة وتكوين راوترات MikroTik، إدارات الـ VLANs، صلاحيات مستخدمي Active Directory، وسياسات الأمان وقواعد جدار الحماية (Firewall).</p>
+            </div>
+
+            <div class="module-card" id="it-cctv">
+                <h2>أنظمة المراقبة والأمان (CCTV & ZKTeco)</h2>
+                <p>متابعة أنظمة كاميرات المراقبة (Dahua/Hikvision) وأجهزة الحضور والانصراف البصمية (ZKTeco) وسجلات الدوام.</p>
+            </div>
+
+            <div class="module-card" id="it-printers">
+                <h2>إدارة الطابعات وأذونات الشبكة</h2>
+                <p>التحكم في صلاحيات الطباعة عبر الشبكة، وتحديد الأجهزة المصرح لها بالطباعة للأقسام المختلفة (مثل قسم المالية والإدارة).</p>
+            </div>
+
+            <div class="module-card" id="it-inventory">
+                <h2>المخزون التقني وقطع الغيار</h2>
+                <p>إدارة وتتبع مخزون قطع الغيار التقنية، أحبار الطابعات، الكابلات، ومستلزمات صيانة الحاسب والشبكات[span_5](start_span)[span_5](end_span).</p>
+            </div>
+
+            <!-- Financials & Procurement Modules -->
             <div class="module-card" id="accounts">
                 <h2>الحسابات العامة (رصين)</h2>
-                <p>إدارة دفتر القيود اليومية والمراكز المالية[span_4](start_span)[span_4](end_span).</p>
+                <p>إدارة دفتر القيود اليومية والمراكز المالية[span_6](start_span)[span_6](end_span).</p>
             </div>
 
             <div class="module-card" id="purchases">
                 <h2>المشتريات وعروض الأسعار</h2>
-                <p>إدارة طلبات الشراء وعروض الأسعار المقدمة من الموردين الخارجيين[span_5](start_span)[span_5](end_span).</p>
-            </div>
-
-            <div class="module-card" id="sales">
-                <h2>المبيعات وعلاقات العملاء (CRM)</h2>
-                <p>متابعة صفقات العملاء ومسار عمليات المبيعات[span_6](start_span)[span_6](end_span).</p>
-            </div>
-
-            <div class="module-card" id="assets">
-                <h2>عهد الأجهزة للموظفين</h2>
-                <p>عرض وتتبع عهد الأجهزة التقنية والأرقام التسلسلية وحالة الأصول[span_7](start_span)[span_7](end_span).</p>
-            </div>
-
-            <div class="module-card" id="inventory">
-                <h2>المخزون وقطع الغيار</h2>
-                <p>إدارة وتتبع مخزون قطع الغيار التقنية وأحبار الطابعات[span_8](start_span)[span_8](end_span).</p>
-            </div>
-
-            <div class="module-card" id="fleet">
-                <h2>حركة السيارات ورحلات الأسطول</h2>
-                <p>متابعة خطوط سير أسطول السيارات وتتبع الرحلات الميدانية[span_9](start_span)[span_9](end_span).</p>
-            </div>
-
-            <div class="module-card" id="maintenance">
-                <h2>الصيانة الدورية والفحص</h2>
-                <p>إدارة سجلات الصيانة ومتابعة الورش والفحص الدوري لمركبات الأسطول[span_10](start_span)[span_10](end_span).</p>
+                <p>إدارة طلبات الشراء وعروض الأسعار المقدمة من الموردين الخارجيين[span_7](start_span)[span_7](end_span).</p>
             </div>
 
             <div class="module-card" id="fuel">
                 <h2>متابعة الوقود والمصروفات</h2>
-                <p>رصد استهلاك الوقود والفواتير ومصروفات التشغيل الخاصة بالأسطول[span_11](start_span)[span_11](end_span).</p>
+                <p>رصد استهلاك الوقود والفواتير ومصروفات التشغيل الخاصة بالأسطول[span_8](start_span)[span_8](end_span).</p>
             </div>
 
-            <div class="module-card" id="licenses-fleet">
-                <h2>التراخيص والتأمين والمخالفات</h2>
-                <p>إدارة تجديد الاستمارات ووثائق التأمين ومتابعة المخالفات المرورية[span_12](start_span)[span_12](end_span).</p>
+            <!-- Sales & Projects Modules -->
+            <div class="module-card" id="sales">
+                <h2>المبيعات وعلاقات العملاء (CRM)</h2>
+                <p>متابعة صفقات العملاء ومسار عمليات المبيعات[span_9](start_span)[span_9](end_span).</p>
             </div>
 
             <div class="module-card" id="projects">
                 <h2>متابعة المشاريع الكبرى</h2>
-                <p>إدارة وتتبع نسب إنجاز المشاريع التشغيلية والإستراتيجية الخاصة بالشركة[span_13](start_span)[span_13](end_span).</p>
+                <p>إدارة وتتبع نسب إنجاز المشاريع التشغيلية والإستراتيجية الخاصة بالشركة[span_10](start_span)[span_10](end_span).</p>
+            </div>
+
+            <!-- Fleet Management Modules -->
+            <div class="module-card" id="fleet">
+                <h2>حركة السيارات ورحلات الأسطول</h2>
+                <p>متابعة خطوط سير أسطول السيارات وتتبع الرحلات الميدانية[span_11](start_span)[span_11](end_span).</p>
+            </div>
+
+            <div class="module-card" id="maintenance">
+                <h2>الصيانة الدورية والفحص</h2>
+                <p>إدارة سجلات الصيانة ومتابعة الورش والفحص الدوري لمركبات الأسطول[span_12](start_span)[span_12](end_span).</p>
+            </div>
+
+            <div class="module-card" id="licenses-fleet">
+                <h2>التراخيص والتأمين والمخالفات</h2>
+                <p>إدارة تجديد الاستمارات ووثائق التأمين ومتابعة المخالفات المرورية[span_13](start_span)[span_13](end_span).</p>
             </div>
 
         </div>
