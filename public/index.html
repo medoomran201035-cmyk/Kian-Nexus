@@ -112,11 +112,16 @@
             border-radius: 8px;
             transition: all var(--transition-speed) ease;
             font-size: 0.88rem;
+            cursor: pointer;
         }
 
-        .sidebar-menu a:hover {
+        .sidebar-menu a:hover, .sidebar-menu li.active > a {
             background-color: var(--bg-hover);
             color: var(--text-primary);
+        }
+
+        .sidebar-menu li.active > a {
+            border-right: 3px solid var(--accent-color);
         }
 
         .sidebar-menu a i {
@@ -163,9 +168,9 @@
             color: var(--accent-color);
         }
 
-        .submenu li a:hover {
+        .submenu li.active a {
             color: var(--text-primary);
-            background-color: rgba(255, 255, 255, 0.03);
+            background-color: rgba(59, 130, 246, 0.1);
         }
 
         /* User Footer Profile in Sidebar */
@@ -236,7 +241,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            width: 250px;
+            width: 280px;
         }
 
         .global-search input {
@@ -290,46 +295,6 @@
             justify-content: center;
         }
 
-        /* Dropdown Menu for Notifications */
-        .notification-dropdown {
-            position: absolute;
-            top: 45px;
-            left: 0;
-            width: 300px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            display: none;
-            z-index: 1000;
-        }
-
-        .notification-dropdown.active {
-            display: block;
-        }
-
-        .notif-header {
-            padding: 10px 15px;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.85rem;
-            font-weight: 700;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .notif-item {
-            padding: 10px 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            cursor: pointer;
-        }
-
-        .notif-item:hover {
-            background: var(--bg-hover);
-            color: var(--text-primary);
-        }
-
         /* Dashboard Content */
         .dashboard-content {
             padding: 30px;
@@ -344,6 +309,16 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .welcome-card h1 {
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+        }
+
+        .welcome-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
         }
 
         .btn-primary {
@@ -365,7 +340,62 @@
             background-color: var(--accent-hover);
         }
 
-        /* Modal Overlay */
+        /* Dynamic Section Data View */
+        .data-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .data-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-card-header h3 {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        table.enterprise-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+            font-size: 0.88rem;
+        }
+
+        table.enterprise-table th, table.enterprise-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table.enterprise-table th {
+            color: var(--text-secondary);
+            background: rgba(15, 23, 42, 0.4);
+            font-weight: 600;
+        }
+
+        table.enterprise-table tr:hover td {
+            background: var(--bg-hover);
+        }
+
+        .status-pill {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-pill.active { background: rgba(34, 197, 94, 0.15); color: var(--success-color); }
+        .status-pill.warning { background: rgba(245, 158, 11, 0.15); color: var(--warning-color); }
+
+        /* Modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -422,7 +452,7 @@
 </head>
 <body>
 
-    <!-- القائمة الجانبية مع الأيقونات الشاملة للإدارات والعناصر الفرعية -->
+    <!-- القائمة الجانبية المصححة والمحدثة بالكامل -->
     <aside class="sidebar-container">
         <div class="sidebar-brand">
             <span class="badge-enterprise">Enterprise</span>
@@ -430,23 +460,23 @@
             <i class="fas fa-cubes" style="color: var(--accent-color);"></i>
         </div>
         
-        <ul class="sidebar-menu">
+        <ul class="sidebar-menu" id="sidebarMenu">
             <!-- 1. لوحة التحكم والتحليلات -->
-            <li class="menu-dropdown open">
+            <li class="menu-dropdown open active">
                 <a href="#"><i class="fas fa-chart-pie"></i> <span>لوحة التحكم والتحليلات</span></a>
                 <ul class="submenu">
-                    <li><a href="#"><i class="fas fa-tachometer-alt"></i> لوحة التحكم الرئيسية</a></li>
-                    <li><a href="#"><i class="fas fa-chart-line"></i> مؤشرات الأداء الحيوية (KPI)</a></li>
+                    <li class="active" data-title="لوحة التحكم الرئيسية" data-desc="نظرة عامة على مؤشرات الأداء وحالة النظام المؤسسي."><a href="#"><i class="fas fa-tachometer-alt"></i> لوحة التحكم الرئيسية</a></li>
+                    <li data-title="مؤشرات الأداء الحيوية (KPI)" data-desc="تحليل الأداء التشغيلي والإنتاجية العامة."><a href="#"><i class="fas fa-chart-line"></i> مؤشرات الأداء الحيوية (KPI)</a></li>
                 </ul>
             </li>
 
-            <!-- 2. البنية ومراكز البيانات -->
+            <!-- 2. البنية التحتية ومراكز البيانات -->
             <li class="menu-dropdown">
-                <a href="#"><i class="fas fa-server"></i> <span>البنية ومراكز البيانات</span></a>
+                <a href="#"><i class="fas fa-server"></i> <span>البنية التحتية ومراكز البيانات</span></a>
                 <ul class="submenu">
-                    <li><a href="#"><i class="fas fa-network-wired"></i> السيرفرات الافتراضية (Hyper-V)</a></li>
-                    <li><a href="#"><i class="fas fa-wifi"></i> شبكات MikroTik و DHCP</a></li>
-                    <li><a href="#"><i class="fas fa-heartbeat"></i> مراقبة السيرفرات (Uptime)</a></li>
+                    <li data-title="السيرفرات الافتراضية (Hyper-V)" data-desc="إدارة الأجهزة الافتراضية، الموارد، وإعدادات الدمين كونترولر."><a href="#"><i class="fas fa-network-wired"></i> السيرفرات الافتراضية (Hyper-V)</a></li>
+                    <li data-title="شبكات MikroTik و DHCP" data-desc="إدارة الراوترات، قواعد الأمان (Firewall)، وتوزيع العناوين."><a href="#"><i class="fas fa-wifi"></i> شبكات MikroTik و DHCP</a></li>
+                    <li data-title="مراقبة السيرفرات (Uptime)" data-desc="متابعة حالة استجابة السيرفرات والخدمات السحابية لحظياً."><a href="#"><i class="fas fa-heartbeat"></i> مراقبة السيرفرات (Uptime)</a></li>
                 </ul>
             </li>
 
@@ -454,9 +484,9 @@
             <li class="menu-dropdown">
                 <a href="#"><i class="fas fa-headset"></i> <span>الدعم الفني والصيانة التقنية</span></a>
                 <ul class="submenu">
-                    <li><a href="#"><i class="fas fa-ticket-alt"></i> تذاكر الأعطال النشطة</a></li>
-                    <li><a href="#"><i class="fas fa-print"></i> إدارة طابعات الشبكة والأذونات</a></li>
-                    <li><a href="#"><i class="fas fa-tools"></i> الصيانة الوقائية والدورية</a></li>
+                    <li data-title="تذاكر الأعطال النشطة" data-desc="متابعة بلاغات المستخدمين وحالة حل المشاكل التقنية."><a href="#"><i class="fas fa-ticket-alt"></i> تذاكر الأعطال النشطة</a></li>
+                    <li data-title="إدارة طابعات الشبكة والأذونات" data-desc="التحكم بصلاحيات الطباعة وتأمين الطابعات للأقسام المصرحة."><a href="#"><i class="fas fa-print"></i> إدارة طابعات الشبكة والأذونات</a></li>
+                    <li data-title="الصيانة الوقائية والدورية" data-desc="جدولة وصيانة الأجهزة والطابعات وأنظمة الحماية بشكل دوري."><a href="#"><i class="fas fa-tools"></i> الصيانة الوقائية والدورية</a></li>
                 </ul>
             </li>
 
@@ -464,67 +494,67 @@
             <li class="menu-dropdown">
                 <a href="#"><i class="fas fa-shield-alt"></i> <span>الأمن السيبراني والامتثال</span></a>
                 <ul class="submenu">
-                    <li><a href="#"><i class="fas fa-users-cog"></i> إدارة Active Directory والصلاحيات</a></li>
-                    <li><a href="#"><i class="fas fa-shield-virus"></i> جدران الحماية وقواعد الأمان</a></li>
-                    <li><a href="#"><i class="fas fa-clipboard-list"></i> سجل التدقيق ومراقبة النشاط</a></li>
+                    <li data-title="إدارة Active Directory والصلاحيات" data-desc="إدارة حسابات المستخدمين، مجموعات العمل، وسياسات الأمان GPO."><a href="#"><i class="fas fa-users-cog"></i> إدارة Active Directory والصلاحيات</a></li>
+                    <li data-title="جدران الحماية وقواعد الأمان" data-desc="مراقبة المنافذ، منع التهديدات، وتأمين نقاط الاتصال بالشبكة."><a href="#"><i class="fas fa-shield-virus"></i> جدران الحماية وقواعد الأمان</a></li>
+                    <li data-title="سجل التدقيق ومراقبة النشاط" data-desc="مراجعة سجلات الدخول وتتبع الأنشطة غير المصرح بها."><a href="#"><i class="fas fa-clipboard-list"></i> سجل التدقيق ومراقبة النشاط</a></li>
                 </ul>
             </li>
 
-            <!-- 5. الموارد البشرية والبصمة -->
+            <!-- 5. الموارد البشرية والحضور (البصمة) -->
             <li class="menu-dropdown">
-                <a href="#"><i class="fas fa-users-cog"></i> <span>الموارد البشرية والبصمة</span></a>
+                <a href="#"><i class="fas fa-users"></i> <span>الموارد البشرية والحضور (البصمة)</span></a>
                 <ul class="submenu">
-                    <li><a href="#"><i class="fas fa-sitemap"></i> الهيكل التنظيمي للموظفين</a></li>
-                    <li><a href="#"><i class="fas fa-fingerprint"></i> سجلات البصمة (ZKTeco)</a></li>
-                    <li><a href="#"><i class="fas fa-id-badge"></i> بوابة الخدمة الذاتية (ESS)</a></li>
+                    <li data-title="الهيكل التنظيمي للموظفين" data-desc="إدارة بيانات العاملين، الإدارات، والمسميات الوظيفية."><a href="#"><i class="fas fa-sitemap"></i> الهيكل التنظيمي للموظفين</a></li>
+                    <li data-title="سجلات البصمة (ZKTeco)" data-desc="متابعة الحضور والانصراف، الورديات، وسجلات أجهزة ZKTime."><a href="#"><i class="fas fa-fingerprint"></i> سجلات البصمة (ZKTeco)</a></li>
+                    <li data-title="بوابة الخدمة الذاتية (ESS)" data-desc="طلبات الإجازات والمستندات الخاصة بالموظفين."><a href="#"><i class="fas fa-id-badge"></i> بوابة الخدمة الذاتية (ESS)</a></li>
                 </ul>
             </li>
 
-            <!-- 6. الذكاء الاصطناعي والرؤية -->
+            <!-- 6. الذكاء الاصطناعي والرؤية الحاسوبية -->
             <li class="menu-dropdown">
-                <a href="#"><i class="fas fa-brain"></i> <span>الذكاء الاصطناعي والرؤية</span></a>
+                <a href="#"><i class="fas fa-brain"></i> <span>الذكاء الاصطناعي والرؤية الحاسوبية</span></a>
                 <ul class="submenu">
-                    <li><a href="#"><i class="fas fa-video"></i> تحليلات الكاميرات (YOLO Vision)</a></li>
-                    <li><a href="#"><i class="fas fa-exclamation-triangle"></i> تنبيهات المخالفات الذكية</a></li>
+                    <li data-title="تحليلات الكاميرات (YOLO Vision)" data-desc="متابعة كاميرات المراقبة وتحليل لقطات الفيديو بالذكاء الاصطناعي."><a href="#"><i class="fas fa-video"></i> تحليلات الكاميرات (YOLO Vision)</a></li>
+                    <li data-title="تنبيهات المخالفات الذكية" data-desc="رصد وتنبيهات فورية لسلامة بيئة العمل والمخالفات التشغيلية."><a href="#"><i class="fas fa-exclamation-triangle"></i> تنبيهات المخالفات الذكية</a></li>
                 </ul>
             </li>
 
-            <!-- 7. المالية والمشتريات -->
+            <!-- 7. الشؤون المالية والمشتريات -->
             <li class="menu-dropdown">
-                <a href="#"><i class="fas fa-file-invoice-dollar"></i> <span>المالية والمشتريات</span></a>
+                <a href="#"><i class="fas fa-file-invoice-dollar"></i> <span>الشؤون المالية والمشتريات</span></a>
                 <ul class="submenu">
-                    <li><a href="#"><i class="fas fa-file-invoice"></i> الفوترة الإلكترونية (ZATCA)</a></li>
-                    <li><a href="#"><i class="fas fa-calculator"></i> الحسابات العامة (رصين)</a></li>
-                    <li><a href="#"><i class="fas fa-shopping-cart"></i> المشتريات وعروض الأسعار</a></li>
+                    <li data-title="الفوترة الإلكترونية (ZATCA)" data-desc="إدارة الفواتير المتوافقة مع متطلبات هيئة الزكاة والضريبة والجمارك."><a href="#"><i class="fas fa-file-invoice"></i> الفوترة الإلكترونية (ZATCA)</a></li>
+                    <li data-title="الحسابات العامة (رصين)" data-desc="إدارة الحسابات، الإيرادات، والمصروفات لمنظومة رصين."><a href="#"><i class="fas fa-calculator"></i> الحسابات العامة (رصين)</a></li>
+                    <li data-title="المشتريات وعروض الأسعار" data-desc="متابعة طلبات الشراء، الموردين، وعروض الأسعار للشركات."><a href="#"><i class="fas fa-shopping-cart"></i> المشتريات وعروض الأسعار</a></li>
                 </ul>
             </li>
 
             <!-- 8. المبيعات وعلاقات العملاء -->
             <li class="menu-item">
-                <a href="#"><i class="fas fa-handshake"></i> <span>المبيعات وعلاقات العملاء</span></a>
+                <a href="#" data-title="المبيعات وعلاقات العملاء" data-desc="إدارة العملاء، فرص البيع، ومتابعة العقود التجارية."><i class="fas fa-handshake"></i> <span>المبيعات وعلاقات العملاء</span></a>
             </li>
 
             <!-- 9. الأصول والمخزون التقني -->
             <li class="menu-dropdown">
                 <a href="#"><i class="fas fa-boxes"></i> <span>الأصول والمخزون التقني</span></a>
                 <ul class="submenu">
-                    <li><a href="#"><i class="fas fa-laptop"></i> عهد الأجهزة للموظفين</a></li>
-                    <li><a href="#"><i class="fas fa-cogs"></i> المخزون وقطع الغيار (Spare Parts)</a></li>
+                    <li data-title="عهد الأجهزة للموظفين" data-desc="تسجيل وتتبع الأجهزة والأصول المسلمة للموظفين."><a href="#"><i class="fas fa-laptop"></i> عهد الأجهزة للموظفين</a></li>
+                    <li data-title="المخزون وقطع الغيار (Spare Parts)" data-desc="متابعة مستودع قطع الغيار، الخراطيش، والأجهزة المتاحة."><a href="#"><i class="fas fa-cogs"></i> المخزون وقطع الغيار (Spare Parts)</a></li>
                 </ul>
             </li>
 
             <!-- 10. إدارة أسطول السيارات -->
             <li class="menu-item">
-                <a href="#"><i class="fas fa-car-side"></i> <span>إدارة أسطول السيارات</span></a>
+                <a href="#" data-title="إدارة أسطول السيارات" data-desc="تتبع المركبات، الصيانة الدورية، وتراخيص الشاحنات والسيارات."><i class="fas fa-car-side"></i> <span>إدارة أسطول السيارات والخدمات اللوجستية</span></a>
             </li>
 
             <!-- 11. الحوكمة والإعدادات العامة -->
             <li class="menu-dropdown">
-                <a href="#"><i class="fas fa-cogs"></i> <span>الحوكمة والإعدادات العامة</span></a>
+                <a href="#"><i class="fas fa-sliders-h"></i> <span>الحوكمة والإعدادات العامة</span></a>
                 <ul class="submenu">
-                    <li><a href="#"><i class="fas fa-file-contract"></i> العقود والتراخيص والاشتراكات</a></li>
-                    <li><a href="#"><i class="fas fa-bullhorn"></i> الرسائل والتعاميم المؤسسية</a></li>
-                    <li><a href="#"><i class="fas fa-sliders-h"></i> إعدادات النظام والصلاحيات</a></li>
+                    <li data-title="العقود والتراخيص والاشتراكات" data-desc="متابعة تواريخ انتهاء التراخيص، النطاقات، واشتراكات الأنظمة."><a href="#"><i class="fas fa-file-contract"></i> العقود والتراخيص والاشتراكات</a></li>
+                    <li data-title="الرسائل والتعاميم المؤسسية" data-desc="نشر التعاميم الإدارية والقرارات الرسمية لجميع الأقسام."><a href="#"><i class="fas fa-bullhorn"></i> الرسائل والتعاميم المؤسسية</a></li>
+                    <li data-title="إعدادات النظام والصلاحيات" data-desc="التحكم في إعدادات المنظومة وصلاحيات المستخدمين والمديرين."><a href="#"><i class="fas fa-cogs"></i> إعدادات النظام والصلاحيات</a></li>
                 </ul>
             </li>
         </ul>
@@ -541,34 +571,25 @@
         </div>
     </aside>
 
-    <!-- المحتوى الرئيسي -->
+    <!-- المحتوى الرئيسي الديناميكي -->
     <div class="main-wrapper">
         <header class="top-header">
             <div class="header-left">
                 <div class="global-search">
                     <i class="fas fa-search" style="color: var(--text-secondary); font-size: 0.8rem;"></i>
-                    <input type="text" placeholder="بحث عام في النظام...">
+                    <input type="text" id="searchInput" placeholder="بحث داخل الإدارات...">
                 </div>
             </div>
             
             <div class="header-actions">
-                <div class="icon-btn" id="notifBtn">
+                <div class="icon-btn" id="notifBtn" title="التنبيهات">
                     <i class="fas fa-bell"></i>
                     <span class="notification-badge">3</span>
-                    <div class="notification-dropdown" id="notifDropdown">
-                        <div class="notif-header">
-                            <span>التنبيهات التقنية</span>
-                            <span style="color: var(--accent-color); cursor:pointer;">قراءة الكل</span>
-                        </div>
-                        <div class="notif-item">تنبيه صيانة دورية لسيرفر Hyper-V</div>
-                        <div class="notif-item">انتهاء ترخيص برنامج ZATCA قريباً</div>
-                        <div class="notif-item">محاولة دخول غير مصرحة مرفوضة</div>
-                    </div>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-secondary);">
                     <span style="width: 8px; height: 8px; background: var(--success-color); border-radius: 50%;"></span>
-                    متصل
+                    متصل (الرياض)
                 </div>
             </div>
         </header>
@@ -576,12 +597,58 @@
         <main class="dashboard-content">
             <div class="welcome-card">
                 <div>
-                    <h1>مرحباً بك، محمد فيصل</h1>
-                    <p>تم تفعيل جميع الأيقونات لكل الأقسام والعناصر الفرعية بنجاح.</p>
+                    <h1 id="pageTitle">لوحة التحكم الرئيسية</h1>
+                    <p id="pageDesc">نظرة عامة على مؤشرات الأداء وحالة النظام المؤسسي.</p>
                 </div>
                 <button class="btn-primary" id="openModalBtn">
                     <i class="fas fa-plus"></i> إضافة سجل جديد
                 </button>
+            </div>
+
+            <!-- بطاقة البيانات التفاعلية -->
+            <div class="data-card">
+                <div class="data-card-header">
+                    <h3 id="tableHeaderTitle"><i class="fas fa-list" style="color: var(--accent-color);"></i> السجلات النشطة للقسم</h3>
+                    <button class="btn-primary" style="padding: 5px 12px; font-size: 0.8rem;" onclick="refreshData()">
+                        <i class="fas fa-sync-alt"></i> تحديث البيانات
+                    </button>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="enterprise-table">
+                        <thead>
+                            <tr>
+                                <th>معرف السجل</th>
+                                <th>اسم العنصر / الوصف</th>
+                                <th>القسم المسؤول</th>
+                                <th>الحالة</th>
+                                <th>الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr>
+                                <td>#KYN-9021</td>
+                                <td>سيرفر النظام الأساسي (Hyper-V Primary)</td>
+                                <td>البنية التحتية</td>
+                                <td><span class="status-pill active">يعمل بكفاءة</span></td>
+                                <td><i class="fas fa-edit" style="cursor: pointer; color: var(--accent-color); margin-left: 10px;"></i><i class="fas fa-eye" style="cursor: pointer; color: var(--text-secondary);"></i></td>
+                            </tr>
+                            <tr>
+                                <td>#KYN-9022</td>
+                                <td>نظافة وصيانة شبكة MikroTik الرئيسية</td>
+                                <td>الشبكات</td>
+                                <td><span class="status-pill active">مستقر</span></td>
+                                <td><i class="fas fa-edit" style="cursor: pointer; color: var(--accent-color); margin-left: 10px;"></i><i class="fas fa-eye" style="cursor: pointer; color: var(--text-secondary);"></i></td>
+                            </tr>
+                            <tr>
+                                <td>#KYN-9023</td>
+                                <td>ربط جهاز البصمة ZKTeco MB2000</td>
+                                <td>الموارد البشرية</td>
+                                <td><span class="status-pill warning">تحتاج مراجعة</span></td>
+                                <td><i class="fas fa-edit" style="cursor: pointer; color: var(--accent-color); margin-left: 10px;"></i><i class="fas fa-eye" style="cursor: pointer; color: var(--text-secondary);"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </main>
     </div>
@@ -595,18 +662,20 @@
             </div>
             <div class="form-group">
                 <label>اختر القسم</label>
-                <select>
-                    <option>البنية ومراكز البيانات</option>
-                    <option>الدعم الفني والصيانة</option>
-                    <option>الأمن السيبراني</option>
-                    <option>إدارة أسطول السيارات</option>
+                <select id="modalSelectSection">
+                    <option>البنية التحتية ومراكز البيانات</option>
+                    <option>الدعم الفني والصيانة التقنية</option>
+                    <option>الأمن السيبراني والامتثال</option>
+                    <option>الموارد البشرية والحضور (البصمة)</option>
+                    <option>الذكاء الاصطناعي والرؤية الحاسوبية</option>
+                    <option>الشؤون المالية والمشتريات</option>
                 </select>
             </div>
             <div class="form-group">
                 <label>عنوان السجل / الأصل</label>
-                <input type="text" placeholder="أدخل البيانات هنا...">
+                <input type="text" id="recordInput" placeholder="أدخل اسم السجل أو الوصف هنا...">
             </div>
-            <button class="btn-primary" style="width: 100%; justify-content: center; margin-top: 15px;">حفظ البيانات</button>
+            <button class="btn-primary" style="width: 100%; justify-content: center; margin-top: 15px;" onclick="addNewRecord()">حفظ البيانات في النظام</button>
         </div>
     </div>
 
@@ -621,16 +690,31 @@
             });
         });
 
-        // تفاعل قائمة الإشعارات
-        const notifBtn = document.getElementById('notifBtn');
-        const notifDropdown = document.getElementById('notifDropdown');
-        notifBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            notifDropdown.classList.toggle('active');
-        });
+        // ربط عناصر القائمة الجانبية بتغيير المحتوى الديناميكي عند الضغط
+        const menuItems = document.querySelectorAll('.sidebar-menu .submenu li, .sidebar-menu >.menu-item > a');
+        const pageTitle = document.getElementById('pageTitle');
+        const pageDesc = document.getElementById('pageDesc');
+        const tableHeaderTitle = document.getElementById('tableHeaderTitle');
 
-        document.addEventListener('click', () => {
-            notifDropdown.classList.remove('active');
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                // إزالة التحديد السابق
+                document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
+                
+                // تحديد العنصر الحالي
+                const parentLi = item.closest('li');
+                if(parentLi) parentLi.classList.add('active');
+
+                // جلب العنوان والوصف المخزن في العنصر
+                const title = item.getAttribute('data-title') || item.textContent.trim();
+                const desc = item.getAttribute('data-desc') || "إدارة وتتبع سجلات وخصائص هذا القسم داخل النظام المؤسسي.";
+
+                pageTitle.textContent = title;
+                pageDesc.textContent = desc;
+                tableHeaderTitle.innerHTML = `<i class="fas fa-folder-open" style="color: var(--accent-color);"></i> سجلات قسم: ${title}`;
+            });
         });
 
         // تفاعل النافذة المنبثقة (Modal)
@@ -651,6 +735,38 @@
                 modalOverlay.classList.remove('active');
             }
         });
+
+        // إضافة سجل جديد للجدول
+        function addNewRecord() {
+            const section = document.getElementById('modalSelectSection').value;
+            const recordName = document.getElementById('recordInput').value;
+            
+            if(!recordName.trim()) {
+                alert('الرجاء إدخال عنوان السجل أولاً');
+                return;
+            }
+
+            const tbody = document.getElementById('tableBody');
+            const randomId = '#KYN-' + Math.floor(1000 + Math.random() * 9000);
+            
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${randomId}</td>
+                <td>${recordName}</td>
+                <td>${section}</td>
+                <td><span class="status-pill active">نشط جديد</span></td>
+                <td><i class="fas fa-edit" style="cursor: pointer; color: var(--accent-color); margin-left: 10px;"></i><i class="fas fa-eye" style="cursor: pointer; color: var(--text-secondary);"></i></td>
+            `;
+            
+            tbody.prepend(newRow);
+            modalOverlay.classList.remove('active');
+            document.getElementById('recordInput').value = '';
+            alert('تمت إضافة السجل بنجاح إلى النظام!');
+        }
+
+        function refreshData() {
+            alert('تم تحديث البيانات بنجاح وعرض أحدث السجلات.');
+        }
     </script>
 </body>
 </html>
