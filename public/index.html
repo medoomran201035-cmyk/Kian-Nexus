@@ -35,7 +35,7 @@
 
         /* Sidebar Tree View */
         aside {
-            width: 320px;
+            width: 330px;
             background-color: var(--bg-sidebar);
             border-left: 1px solid var(--border-color);
             display: flex;
@@ -62,7 +62,7 @@
         /* Tree Styles */
         .tree-node {
             list-style: none;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
         .department-toggle {
@@ -75,7 +75,7 @@
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 0.95rem;
+            font-size: 0.93rem;
             color: var(--text-main);
             transition: all 0.3s ease;
         }
@@ -107,7 +107,7 @@
         }
 
         .sub-tree.open {
-            max-height: 800px; /* Adjust based on content */
+            max-height: 1000px;
         }
 
         .sub-item {
@@ -116,7 +116,7 @@
             border-radius: 6px;
             cursor: pointer;
             color: var(--text-muted);
-            font-size: 0.88rem;
+            font-size: 0.86rem;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
@@ -131,7 +131,6 @@
         .sub-item:hover, .sub-item.active {
             background-color: var(--accent-color);
             color: var(--text-main);
-            color-scheme: dark;
         }
 
         .sub-item:hover::before, .sub-item.active::before {
@@ -215,7 +214,6 @@
             line-height: 1.6;
         }
 
-        /* Responsive */
         @media(max-width: 768px) {
             aside { width: 70px; }
             .logo-area, .department-toggle span, .sub-tree { display: none; }
@@ -246,7 +244,7 @@
             </li>
 
             <!-- 2. الإدارة المالية والمشتريات -->
-            <li class="tree-node" style="margin-top: 10px;">
+            <li class="tree-node">
                 <div class="department-toggle" onclick="toggleSubTree(this)">
                     <span>المالية والمشتريات</span>
                     <span class="arrow">▼</span>
@@ -258,8 +256,34 @@
                 </ul>
             </li>
 
-            <!-- 3. إدارة الأسطول والسيارات -->
-            <li class="tree-node" style="margin-top: 10px;">
+            <!-- 3. إدارة المخزون والمستودعات -->
+            <li class="tree-node">
+                <div class="department-toggle" onclick="toggleSubTree(this)">
+                    <span>المخزون والمستودعات</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <ul class="sub-tree">
+                    <li class="sub-item" data-target="inv-general">المخزون العام وحركة الأصناف</li>
+                    <li class="sub-item" data-target="inv-inout">الوارد والصادر وأذونات الإضافة</li>
+                    <li class="sub-item" data-target="inv-audit">الجرد الدوري والمطابقة</li>
+                </ul>
+            </li>
+
+            <!-- 4. شؤون الموظفين والرواتب -->
+            <li class="tree-node">
+                <div class="department-toggle" onclick="toggleSubTree(this)">
+                    <span>شؤون الموظفين والرواتب (HR)</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <ul class="sub-tree">
+                    <li class="sub-item" data-target="hr-payroll">مسيرات الرواتب والسلف والعلاوات</li>
+                    <li class="sub-item" data-target="hr-leaves">الإجازات والغياب والأذونات</li>
+                    <li class="sub-item" data-target="hr-attendance">ربط بصمة الحضور والانصراف (ZKTeco)</li>
+                </ul>
+            </li>
+
+            <!-- 5. إدارة الأسطول والسيارات -->
+            <li class="tree-node">
                 <div class="department-toggle" onclick="toggleSubTree(this)">
                     <span>إدارة الأسطول والسيارات</span>
                     <span class="arrow">▼</span>
@@ -271,8 +295,8 @@
                 </ul>
             </li>
 
-            <!-- 4. المبيعات والمشاريع -->
-            <li class="tree-node" style="margin-top: 10px;">
+            <!-- 6. المبيعات والمشاريع -->
+            <li class="tree-node">
                 <div class="department-toggle" onclick="toggleSubTree(this)">
                     <span>المبيعات والمشاريع</span>
                     <span class="arrow">▼</span>
@@ -284,16 +308,41 @@
                 </ul>
             </li>
 
-            <!-- 5. الإدارة العامة وشؤون الموظفين -->
-            <li class="tree-node" style="margin-top: 10px;">
+            <!-- 7. الجودة والسلامة المهنية (QHSE) -->
+            <li class="tree-node">
                 <div class="department-toggle" onclick="toggleSubTree(this)">
-                    <span>الإدارة وشؤون الموظفين</span>
+                    <span>الجودة والسلامة المهنية (QHSE)</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <ul class="sub-tree">
+                    <li class="sub-item" data-target="qhse-safety">إجراءات السلامة المهنية ومعدات الوقاية</li>
+                    <li class="sub-item" data-target="qhse-incidents">تقارير الحوادث ومتابعة الإصابات</li>
+                    <li class="sub-item" data-target="qhse-audits">معايير واختبارات الجودة الداخلية</li>
+                </ul>
+            </li>
+
+            <!-- 8. الإدارة العامة وشؤون الموظفين -->
+            <li class="tree-node">
+                <div class="department-toggle" onclick="toggleSubTree(this)">
+                    <span>الإدارة وشؤون الإدارة</span>
                     <span class="arrow">▼</span>
                 </div>
                 <ul class="sub-tree">
                     <li class="sub-item" data-target="contracts">العقود والتراخيص الرسمية</li>
                     <li class="sub-item" data-target="circulars">التعاميم والقرارات الإدارية</li>
                     <li class="sub-item" data-target="settings">صلاحيات النظام وإعداداته</li>
+                </ul>
+            </li>
+
+            <!-- 9. التقارير والتحليلات الشاملة -->
+            <li class="tree-node">
+                <div class="department-toggle" onclick="toggleSubTree(this)">
+                    <span>التقارير والتحليلات</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <ul class="sub-tree">
+                    <li class="sub-item" data-target="reports-kpis">المؤشرات الرئيسية للأداء (KPIs)</li>
+                    <li class="sub-item" data-target="reports-financial">التقارير المالية والتشغيلية المجمعة</li>
                 </ul>
             </li>
 
@@ -314,32 +363,27 @@
         <!-- Dynamic Module Content -->
         <div class="content-body" id="contentBody">
             
-            <!-- IT Department Modules -->
+            <!-- IT Modules -->
             <div class="module-card active" id="it-helpdesk">
                 <h2>الدعم الفني وتذاكر الأعطال</h2>
                 <p>إدارة بلاغات الأعطال التقنية الداخلية، متابعة حالة صيانة أجهزة الحاسب، وحل مشكلات الشبكات والأنظمة للموظفين.</p>
             </div>
-
             <div class="module-card" id="it-network">
                 <h2>الشبكات (MikroTik / VLANs)</h2>
                 <p>مراقبة وتكوين راوترات MikroTik، إدارات الـ VLANs، وضوابط حماية المنافذ (Port Security).</p>
             </div>
-
             <div class="module-card" id="it-ad">
                 <h2>Active Directory وصلاحيات المستخدمين</h2>
                 <p>إدارة حسابات المستخدمين، مجموعات الأمان، ووحدات التنظيم (OUs) وسياسات المجموعة (GPOs).</p>
             </div>
-
             <div class="module-card" id="it-assets">
                 <h2>عهد الأجهزة والأصول التقنية</h2>
                 <p>عرض وتتبع عهد الأجهزة التقنية، والأرقام التسلسلية، وحالة الأصول المسندة للموظفين.</p>
             </div>
-
             <div class="module-card" id="it-cctv">
                 <h2>أنظمة المراقبة (CCTV / ZKTeco)</h2>
                 <p>متابعة أنظمة كاميرات المراقبة (Dahua/Hikvision) وأجهزة الحضور والانصراف البصمية (ZKTeco).</p>
             </div>
-
             <div class="module-card" id="it-printers">
                 <h2>إدارة الطابعات وأذونات الشبكة</h2>
                 <p>التحكم في صلاحيات الطباعة عبر الشبكة، وتحديد الأجهزة المصرح لها بالطباعة للأقسام المختلفة.</p>
@@ -350,15 +394,41 @@
                 <h2>الحسابات العامة (رصين)</h2>
                 <p>إدارة دفتر القيود اليومية والمراكز المالية.</p>
             </div>
-
             <div class="module-card" id="purchases">
                 <h2>المشتريات وعروض الأسعار</h2>
                 <p>إدارة طلبات الشراء وعروض الأسعار المقدمة من الموردين الخارجيين.</p>
             </div>
-
             <div class="module-card" id="expenses">
                 <h2>متابعة الوقود والمصروفات</h2>
                 <p>رصد استهلاك الوقود والفواتير ومصروفات التشغيل الخاصة بالأسطول.</p>
+            </div>
+
+            <!-- Inventory Modules -->
+            <div class="module-card" id="inv-general">
+                <h2>المخزون العام وحركة الأصناف</h2>
+                <p>متابعة رصيد المستودعات، الأرصدة الحالية، وتصنيفات الأصناف المختلفة داخل الشركة.</p>
+            </div>
+            <div class="module-card" id="inv-inout">
+                <h2>الوارد والصادر وأذونات الإضافة</h2>
+                <p>تسجيل أذونات الإضافة والصرف، ومتابعة حركات دخول وخروج البضائع والمستلزمات من وإلى المستودع.</p>
+            </div>
+            <div class="module-card" id="inv-audit">
+                <h2>الجرد الدوري والمطابقة</h2>
+                <p>إجراء عمليات الجرد المفاجئ والدوري ومطابقة الأرصدة الفعلية مع الدفترية.</p>
+            </div>
+
+            <!-- HR Modules -->
+            <div class="module-card" id="hr-payroll">
+                <h2>مسيرات الرواتب والسلف والعلاوات</h2>
+                <p>إعداد مسيرات الرواتب الشهرية، احتساب البدلات، السلف، والخصومات والمكافآت.</p>
+            </div>
+            <div class="module-card" id="hr-leaves">
+                <h2>الإجازات والغياب والأذونات</h2>
+                <p>تقديم ومتابعة طلبات الإجازات بأنواعها، رصيد الإجازات السنوي، وتسجيل حالات الغياب والاستئذان.</p>
+            </div>
+            <div class="module-card" id="hr-attendance">
+                <h2>ربط بصمة الحضور والانصراف (ZKTeco)</h2>
+                <p>مزامنة سجلات الحضور والانصراف من أجهزة البصمة (ZKTeco) ومتابعة ورديات وساعات العمل للموظفين.</p>
             </div>
 
             <!-- Fleet Modules -->
@@ -366,12 +436,10 @@
                 <h2>حركة السيارات ورحلات الأسطول</h2>
                 <p>متابعة خطوط سير أسطول السيارات وتتبع الرحلات الميدانية.</p>
             </div>
-
             <div class="module-card" id="maintenance">
                 <h2>الصيانة الدورية والفحص</h2>
                 <p>إدارة سجلات الصيانة ومتابعة الورش والفحص الدوري لمركبات الأسطول.</p>
             </div>
-
             <div class="module-card" id="licenses-fleet">
                 <h2>التراخيص، التأمين والمخالفات</h2>
                 <p>إدارة تجديد الاستمارات ووثائق التأمين ومتابعة المخالفات المرورية.</p>
@@ -382,15 +450,27 @@
                 <h2>المبيعات وعلاقات العملاء (CRM)</h2>
                 <p>متابعة صفقات العملاء ومسار عمليات المبيعات.</p>
             </div>
-
             <div class="module-card" id="projects">
                 <h2>متابعة المشاريع الكبرى</h2>
                 <p>إدارة وتتبع نسب إنجاز المشاريع التشغيلية والإستراتيجية الخاصة بالشركة.</p>
             </div>
-
             <div class="module-card" id="tasks">
                 <h2>توزيع المهام اليومية</h2>
                 <p>جدول مهام الفرق والأقسام وحالة التنفيذ ومتابعة الإنجاز.</p>
+            </div>
+
+            <!-- QHSE Modules -->
+            <div class="module-card" id="qhse-safety">
+                <h2>إجراءات السلامة المهنية ومعدات الوقاية</h2>
+                <p>متابعة اشتراطات الصحة والسلامة المهنية وتوزيع وتأمين معدات الوقاية الشخصية (PPE) للعاملين.</p>
+            </div>
+            <div class="module-card" id="qhse-incidents">
+                <h2>تقارير الحوادث ومتابعة الإصابات</h2>
+                <p>توثيق وإبلاغ حوادث العمل، وإجراء التحقيقات اللازمة ووضع خطط تلافي المخاطر المستقبلية.</p>
+            </div>
+            <div class="module-card" id="qhse-audits">
+                <h2>معايير واختبارات الجودة الداخلية</h2>
+                <p>مراجعة التزام الأقسام المختلفة بمعايير ومواصفات الجودة المعتمدة في المنشأة.</p>
             </div>
 
             <!-- Administration Modules -->
@@ -398,15 +478,23 @@
                 <h2>العقود والتراخيص الرسمية</h2>
                 <p>متابعة تواريخ انتهاء التراخيص البرمجية والعقود الرسمية للشركة.</p>
             </div>
-
             <div class="module-card" id="circulars">
                 <h2>التعاميم والقرارات الإدارية</h2>
                 <p>نشر التعاميم والقرارات التنظيمية الداخلية للموظفين.</p>
             </div>
-
             <div class="module-card" id="settings">
                 <h2>صلاحيات النظام وإعداداته</h2>
                 <p>التحكم في إعدادات المنصة ومستويات وصول المديرين والأمان العام.</p>
+            </div>
+
+            <!-- Reports & Analytics Modules -->
+            <div class="module-card" id="reports-kpis">
+                <h2>المؤشرات الرئيسية للأداء (KPIs)</h2>
+                <p>لوحة تحكم مركزية تعرض مؤشرات الأداء الحيوية لجميع إدارات الشركة وأقسامها لحظياً.</p>
+            </div>
+            <div class="module-card" id="reports-financial">
+                <h2>التقارير المالية والتشغيلية المجمعة</h2>
+                <p>استخراج تقارير شاملة ومفصلة تغطي الأداء المالي، المستودعات، الأسطول، والموارد البشرية.</p>
             </div>
 
         </div>
@@ -426,14 +514,11 @@
 
         subItems.forEach(item => {
             item.addEventListener('click', () => {
-                // Remove active class from all items and modules
                 subItems.forEach(sub => sub.classList.remove('active'));
                 modules.forEach(mod => mod.classList.remove('active'));
 
-                // Add active class to clicked sub-item
                 item.classList.add('active');
 
-                // Show target module card
                 const targetId = item.getAttribute('data-target');
                 document.getElementById(targetId).classList.add('active');
             });
