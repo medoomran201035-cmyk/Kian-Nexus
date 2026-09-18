@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة كيان - Kayan ERP v10.0 (الشجرة التفاعلية الشاملة للـ 25 إدارة)</title>
+    <title>منصة كيان - Kayan ERP v10.0 (النظام المؤسسي الشامل)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -33,14 +33,15 @@
 </head>
 <body class="bg-darkBg text-slate-100 min-h-screen flex flex-col">
 
-    <!-- شريط التنقل العلوي -->
+    <!-- شريط التنقل العلوي مع شعار logo.png في المكان المطلوب تماماً -->
     <header class="bg-cardBg border-b border-slate-800 px-6 py-4 flex justify-between items-center sticky top-0 z-50 shadow-md">
         <div class="flex items-center space-x-4 space-x-reverse">
-            <div class="bg-accentBlue text-white p-2.5 rounded-xl shadow-lg">
-                <i class="fa-solid fa-cube text-xl"></i>
+            <!-- شعار المنصة الحقيقي سحب من logo.png مباشرة -->
+            <div class="w-12 h-12 rounded-xl overflow-hidden shadow-lg border border-slate-700 bg-slate-800 flex items-center justify-center">
+                <img src="logo.png" alt="شعار منصة كيان" class="w-full h-full object-cover">
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-wide">منصة كيان <span class="text-accentBlue text-xs px-2 py-0.5 bg-blue-900/50 rounded-full border border-blue-700">ERP v10.0</span></h1>
+                <h1 class="text-xl font-bold tracking-wide">منصة كيان <span class="text-accentBlue text-xs px-2 py-0.5 bg-blue-900/50 rounded-full border border-blue-700">Kayan ERP v10.0</span></h1>
                 <p class="text-xs text-slate-400">النظام المؤسسي التفاعلي الشامل - 25 إدارة رئيسية وفرعية</p>
             </div>
         </div>
@@ -77,8 +78,8 @@
                         <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
                     </button>
                     <div id="m1" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
-                        <a href="#" onclick="loadDept('exec-kpi', 'الأهداف ومؤشرات الأداء KPIs', 'متابعة الأهداف الاستراتيجية ومجالس الإدارة العليا', 'مؤشرات الأداء (KPIs)', '98% التزام استراتيجي', 'جلسات مجلس الإدارة: 4 جلسات')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-amber-600/20 hover:text-amber-300">🔹 الأهداف ومؤشرات الأداء KPIs</a>
-                        <a href="#" onclick="loadDept('exec-gov', 'قرارات وحوكمة الشركة', 'أرشفة وتتبع القرارات الاستراتيجية العليا والتعاميم', 'القرارات المعتمدة', '24 قرار سيادي', 'التعاميم الصادرة: 12 تعميم')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-amber-600/20 hover:text-amber-300">🔹 قرارات وحوكمة الشركة</a>
+                        <a href="#" onclick="loadDept('exec-kpi', 'الأهداف ومؤشرات الأداء KPIs', 'متابعة الأهداف الاستراتيجية ومجالس الإدارة العليا', 'مؤشرات الأداء (KPIs)', '98% التزام استراتيجي', 'جلسات مجلس الإدارة: 4')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-amber-600/20 hover:text-amber-300">🔹 الأهداف ومؤشرات الأداء KPIs</a>
+                        <a href="#" onclick="loadDept('exec-gov', 'قرارات وحوكمة الشركة', 'أرشفة وتتبع القرارات الاستراتيجية العليا والتعاميم', 'القرارات المعتمدة', '24 قرار سيادي', 'التعاميم الصادرة: 12')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-amber-600/20 hover:text-amber-300">🔹 قرارات وحوكمة الشركة</a>
                     </div>
                 </div>
 
@@ -112,7 +113,7 @@
                         <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
                     </button>
                     <div id="m4" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
-                        <a href="#" onclick="loadDept('sales-con', 'العقود واتفاقيات الشراكة', 'إدارة الاتفاقيات وعقود التوريد والخدمات الكبرى', 'العقود النشطة', '42 عقد معتمد', 'الإيرادات التعاقدية: 1.2 مليون')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-blue-600/20 hover:text-blue-300">🔹 العقود واتفاقيات الشراكة</a>
+                        <a href="#" onclick="loadDept('sales-con', 'العقود واتفاقيات الشراكة', 'إدارة الاتفاقيات وعقود التوريد والخدمات الكبرى', 'العقود النشطة', '42 عقد معتمد', 'الإيرادات: 1.2 مليون')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-blue-600/20 hover:text-blue-300">🔹 العقود واتفاقيات الشراكة</a>
                         <a href="#" onclick="loadDept('sales-inv', 'الفواتير وحالة السداد', 'متابعة الفواتير المصدرة وحالة التحصيل النقدي والبنكي', 'الفواتير المدفوعة', '180 فاتورة', 'المستحقات المعلقة: 45 ألف')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-blue-600/20 hover:text-blue-300">🔹 الفواتير وحالة السداد</a>
                     </div>
                 </div>
@@ -125,7 +126,7 @@
                     </button>
                     <div id="m5" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
                         <a href="#" onclick="loadDept('inv-sto', 'المستودعات والأصناف', 'متابعة الكميات، الأصناف، وتنبيهات نفاذ المخزون', 'إجمالي الأصناف', '1,450 صنف', 'تنبيهات النفاذ: 3 أصناف')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-emerald-600/20 hover:text-emerald-300">🔹 المستودعات والأصناف</a>
-                        <a href="#" onclick="loadDept('inv-ass', 'سجل الأصول والعهد', 'سجل أصول الشركة، الأجهزة، والعهد الثابتة للموظفين', 'الأصول المسجلة', '320 أصل ثابت', 'العهد الم سلمة: 285')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-emerald-600/20 hover:text-emerald-300">🔹 سجل الأصول والعهد</a>
+                        <a href="#" onclick="loadDept('inv-ass', 'سجل الأصول والعهد', 'سجل أصول الشركة، الأجهزة، والعهد الثابتة للموظفين', 'الأصول المسجلة', '320 أصل ثابت', 'العهد المسلمة: 285')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-emerald-600/20 hover:text-emerald-300">🔹 سجل الأصول والعهد</a>
                     </div>
                 </div>
 
@@ -137,7 +138,7 @@
                     </button>
                     <div id="m6" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
                         <a href="#" onclick="loadDept('proc-ord', 'أوامر الشراء', 'إصدار واعتماد أوامر الشراء للموردين المحليين والدوليين', 'أوامر الشراء', '18 أمر نشط', 'إجمالي المشتريات: 310 ألف')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-cyan-600/20 hover:text-cyan-300">🔹 أوامر الشراء</a>
-                        <a href="#" onclick="loadDept('proc-sup', 'دليل وحسابات الموردين', 'بيانات التواصل وتقييمات الموردين المعتمدين', 'الموردين المعتمدين', '25 مورد', 'تقييم الأداء العام: 94%')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-cyan-600/20 hover:text-cyan-300">🔹 دليل وحسابات الموردين</a>
+                        <a href="#" onclick="loadDept('proc-sup', 'دليل وحسابات الموردين', 'بيانات التواصل وتقييمات الموردين المعتمدين', 'الموردين المعتمدين', '25 مورد', 'تقييم الأداء: 94%')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-cyan-600/20 hover:text-cyan-300">🔹 دليل وحسابات الموردين</a>
                     </div>
                 </div>
 
@@ -149,7 +150,7 @@
                     </button>
                     <div id="m7" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
                         <a href="#" onclick="loadDept('fin-gen', 'القيود والأستاذ العام', 'مراجعة قيود اليومية، الأستاذ العام، وميزان المراجعة', 'القيود المسجلة', '1,200 قيد', 'حالة الميزانية: متوازنة')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-yellow-600/20 hover:text-yellow-300">🔹 القيود والأستاذ العام</a>
-                        <a href="#" onclick="loadDept('fin-tre', 'الخزينة والتحصيل النقدي', 'متابعة الخزائن النقدية، الحسابات البنكية، والسيولة', 'رصيد الخزينة', '85,000 ر.س', 'الحسابات البنكية: 3 حسابات')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-yellow-600/20 hover:text-yellow-300">🔹 الخزينة والتحصيل النقدي</a>
+                        <a href="#" onclick="loadDept('fin-tre', 'الخزينة والتحصيل النقدي', 'متابعة الخزائن النقدية، الحسابات البنكية، والسيولة', 'رصيد الخزينة', '85,000 ر.س', 'الحسابات البنكية: 3')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-yellow-600/20 hover:text-yellow-300">🔹 الخزينة والتحصيل النقدي</a>
                         <a href="#" onclick="loadDept('fin-exp', 'المصروفات وسندات الصرف', 'تسجيل وتصنيف المصروفات النقدية والبنكية التشغيلية', 'سندات الصرف', '64 سند', 'إجمالي المصروفات: 92 ألف')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-yellow-600/20 hover:text-yellow-300">🔹 المصروفات وسندات الصرف</a>
                     </div>
                 </div>
@@ -198,11 +199,11 @@
                     </button>
                     <div id="m11" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
                         <a href="#" onclick="loadDept('maint-cctv', 'صيانة كاميرات المراقبة (CCTV)', 'إدارة كاميرات Dahua (SmartPSS) و Hikvision (iVMS-4200)', 'الكاميرات المتاحة', '32 كاميرا', 'الأعطال: لا توجد')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-red-600/20 hover:text-red-300">🔹 صيانة كاميرات المراقبة (CCTV)</a>
-                        <a href="#" onclick="loadDept('maint-prn', 'صيانة الطابعات والأجهزة', 'جدولة الصيانة الوقائية للطابعات (Sharp MX) والأجهزة', 'أجهزة تحت الصيانة', 'نظامي (2 أجهزة)', 'حالة الطابعات: جيدة')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-red-600/20 hover:text-red-300">🔹 صيانة الطابعات والأجهزة</a>
+                        <a href="#" onclick="loadDept('maint-prn', 'صيانة الطابعات والأجهزة', 'جدولة الصيانة الوقائية للطابعات (Sharp MX) والأجهزة', 'أجهزة تحت الصيانة', '2 أجهزة', 'حالة الطابعات: جيدة')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-red-600/20 hover:text-red-300">🔹 صيانة الطابعات والأجهزة</a>
                     </div>
                 </div>
 
-                <!-- 12 إلي 25: باقي الإدارات بتصميم موحد وسلس -->
+                <!-- 12 إلى 25: باقي الإدارات -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('m12')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-passport ml-2 text-teal-300"></i> 12. العلاقات الحكومية (PRO)</span>
@@ -346,18 +347,18 @@
             </nav>
 
             <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 text-xs text-slate-400 text-center mt-6">
-                <p class="font-semibold text-slate-300">كيان ERP v10.0</p>
+                <p class="font-semibold text-slate-300">منصة كيان - Kayan ERP v10.0</p>
                 <p class="mt-1">جميع الـ 25 إدارة تفاعلية بالكامل © 2026</p>
             </div>
         </aside>
 
-        <!-- المحتوى الرئيسي الديناميكي (يتغير عند الضغط على أي بند) -->
+        <!-- المحتوى الرئيسي الديناميكي -->
         <main class="flex-1 p-6 overflow-y-auto">
             <div id="dynamic-content-area" class="space-y-6">
                 <!-- الواجهة الافتراضية للوحة القيادة -->
                 <div class="flex justify-between items-center bg-cardBg p-4 rounded-2xl border border-slate-800 shadow-sm">
                     <div>
-                        <h2 class="text-lg font-bold">لوحة القيادة الرئيسية - منصة كيان الشاملة v10.0</h2>
+                        <h2 class="text-lg font-bold">لوحة القيادة الرئيسية - منصة كيان الشاملة</h2>
                         <p class="text-xs text-slate-400 mt-1">مرحباً بك يا مهندس محمد. اضغط على أي إدارة أو بند في القائمة الجانبية (يمين) لعرض تفاصيلها، إحصائياتها، وإدارة ملفاتها فوراً.</p>
                     </div>
                 </div>
@@ -389,7 +390,7 @@
                     <h3 class="font-bold text-sm mb-3 text-blue-400">دليل الاستخدام التفاعلي:</h3>
                     <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
                         <li>قم بفتح أي قائمة إدارية في الشريط الجانبي الأيمن بالضغط عليها.</li>
-                        <li>اضغط على أي بند فرعي (يبدأ بـ 🔹) لتنتقل فوراً إلى لوحة هذا القسم الخاصة.</li>
+                        <li>اضغط على أي بند فرعي لتنتقل فوراً إلى لوحة هذا القسم الخاصة.</li>
                         <li>كل قسم يحتوي على <strong>إحصائيات مخصصة</strong> و<strong>مركز إدارة مستندات</strong> لرفع وتحميل الملفات بصيغ PDF, Excel, Word, والصور.</li>
                     </ul>
                 </div>
