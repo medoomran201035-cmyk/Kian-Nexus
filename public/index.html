@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم نظام كيان - Kayan ERP v8.0 (الشجرة التنظيمية الشاملة والموسعة 22 إدارة)</title>
+    <title>لوحة تحكم نظام كيان - Kayan ERP v9.0 (الشجرة التنظيمية الشاملة والموسعة 25 إدارة)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -25,7 +25,6 @@
     </script>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        /* تخصيص شريط التمرير */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
@@ -41,8 +40,8 @@
                 <i class="fa-solid fa-cube text-xl"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-wide">منصة كيان <span class="text-accentBlue text-xs px-2 py-0.5 bg-blue-900/50 rounded-full border border-blue-700">ERP v8.0</span></h1>
-                <p class="text-xs text-slate-400">نظام الإدارة المؤسسية الشامل لكافة قطاعات الأعمال والرقابة والتصنيع</p>
+                <h1 class="text-xl font-bold tracking-wide">منصة كيان <span class="text-accentBlue text-xs px-2 py-0.5 bg-blue-900/50 rounded-full border border-blue-700">ERP v9.0</span></h1>
+                <p class="text-xs text-slate-400">النظام المؤسسي الشامل لكافة قطاعات الأعمال، الحوكمة، والتوسع الجغرافي</p>
             </div>
         </div>
 
@@ -60,18 +59,53 @@
     </header>
 
     <div class="flex flex-1">
-        <!-- القائمة الجانبية والشجرة التنظيمية الموسعة (22 إدارة) -->
+        <!-- القائمة الجانبية والشجرة التنظيمية الموسعة (25 إدارة) -->
         <aside class="w-80 bg-cardBg border-l border-slate-800 p-4 hidden md:flex flex-col justify-between overflow-y-auto max-h-[calc(100vh-73px)]">
             <nav class="space-y-2">
                 <!-- الرئيسية -->
-                <a href="#" onclick="showContent('dashboard', 'لوحة القيادة الرئيسية', 'متابعة المؤشرات العامة لكافة إدارات وأقسام الشركة الـ 22')" class="flex items-center space-x-3 space-x-reverse px-4 py-3 rounded-xl bg-blue-600 text-white transition shadow-md mb-4">
+                <a href="#" onclick="showContent('dashboard', 'لوحة القيادة الرئيسية', 'متابعة المؤشرات العامة لكافة إدارات وأقسام الشركة الـ 25')" class="flex items-center space-x-3 space-x-reverse px-4 py-3 rounded-xl bg-blue-600 text-white transition shadow-md mb-4">
                     <i class="fa-solid fa-chart-pie w-5"></i>
                     <span class="font-medium text-sm">لوحة القيادة الرئيسية</span>
                 </a>
 
-                <div class="text-[11px] font-bold text-slate-400 px-3 pt-2 uppercase tracking-wider">القطاعات التشغيلية والرقابية (22 إدارة)</div>
+                <div class="text-[11px] font-bold text-slate-400 px-3 pt-2 uppercase tracking-wider">القطاعات الإدارية والتشغيلية (25 إدارة)</div>
 
-                <!-- 1. المبيعات وعقود العملاء -->
+                <!-- 1. الإدارة العليا والتخطيط الاستراتيجي (جديد - v9.0) -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-executive')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-chess-king ml-2 text-amber-400"></i> الإدارة العليا والتخطيط الاستراتيجي</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-executive"></i>
+                    </button>
+                    <div id="menu-executive" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('exec-strategy', 'الأهداف والخطط الاستراتيجية', 'متابعة مؤشرات الأداء العليا KPIs ومجالس الإدارة')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-amber-600/20 hover:text-amber-300">🔹 الأهداف ومؤشرات الأداء KPIs</a>
+                        <a href="#" onclick="showContent('exec-decisions', 'قرارات وحوكمة الإدارة العليا', 'أرشفة وتتبع القرارات الاستراتيجية والتعاميم')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-amber-600/20 hover:text-amber-300">🔹 قرارات وحوكمة الشركة</a>
+                    </div>
+                </div>
+
+                <!-- 2. إدارة الفروع والتوسع الجغرافي (جديد - v9.0) -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-branches')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-code-branch ml-2 text-teal-400"></i> إدارة الفروع والتوسع الجغرافي</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-branches"></i>
+                    </button>
+                    <div id="menu-branches" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('branch-network', 'شبكة الفروع والمستودعات الفرعية', 'متابعة العمليات اليومية وميزانيات الفروع الخارجية')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-teal-600/20 hover:text-teal-300">🔹 شبكة الفروع والربط المركزي</a>
+                        <a href="#" onclick="showContent('branch-expansion', 'دراسات التوسع الفروع الجديدة', 'متابعة مشاريع افتتاح الفروع والمعارض الجديدة')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-teal-600/20 hover:text-teal-300">🔹 مشاريع التوسع والفروع الجديدة</a>
+                    </div>
+                </div>
+
+                <!-- 3. إدارة البحث والتطوير R&D (جديد - v9.0) -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-rd')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-flask ml-2 text-purple-400"></i> إدارة البحث والتطوير (R&D)</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-rd"></i>
+                    </button>
+                    <div id="menu-rd" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('rd-innovations', 'ابتكار المنتجات وتحسين العمليات', 'دراسات السوق وتطوير جودة الخدمات والمنتجات')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-purple-600/20 hover:text-purple-300">🔹 ابتكار المنتجات وتحسين الجودة</a>
+                    </div>
+                </div>
+
+                <!-- 4. المبيعات وعقود العملاء -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-sales')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-handshake ml-2 text-blue-400"></i> المبيعات وعقود العملاء</span>
@@ -83,7 +117,7 @@
                     </div>
                 </div>
 
-                <!-- 2. إدارة المخزون والأصول -->
+                <!-- 5. إدارة المخزون والأصول -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-inventory')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-boxes-stacked ml-2 text-emerald-400"></i> إدارة المخزون والأصول</span>
@@ -95,7 +129,7 @@
                     </div>
                 </div>
 
-                <!-- 3. المشتريات والموردين -->
+                <!-- 6. المشتريات والموردين -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-procurement')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-cart-shopping ml-2 text-cyan-400"></i> المشتريات والموردين</span>
@@ -107,7 +141,7 @@
                     </div>
                 </div>
 
-                <!-- 4. المالية والحسابات -->
+                <!-- 7. المالية والحسابات (مع بند الخزينة المحدث) -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-finance')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-wallet ml-2 text-yellow-400"></i> المالية والحسابات</span>
@@ -115,11 +149,12 @@
                     </button>
                     <div id="menu-finance" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
                         <a href="#" onclick="showContent('fin-ledger', 'الحسابات العامة والدليل المحاسبي', 'مراجعة قيود اليومية، الأستاذ العام، والميزانية')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-yellow-600/20 hover:text-yellow-300">🔹 القيود والأستاذ العام</a>
+                        <a href="#" onclick="showContent('fin-treasury', 'إدارة الخزينة والتحصيل والسيولة', 'متابعة الخزائن النقدية، الحسابات البنكية، والتحصيل')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-yellow-600/20 hover:text-yellow-300">🔹 الخزينة والتحصيل النقدي</a>
                         <a href="#" onclick="showContent('fin-expenses', 'المصروفات وسندات الصرف', 'تسجيل وتصنيف المصروفات النقدية والبنكية')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-yellow-600/20 hover:text-yellow-300">🔹 المصروفات وسندات الصرف</a>
                     </div>
                 </div>
 
-                <!-- 5. الموارد البشرية (HR) -->
+                <!-- 8. الموارد البشرية HR (مع التدريب والتطوير) -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-hr')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-users-gear ml-2 text-purple-400"></i> الموارد البشرية (HR)</span>
@@ -128,10 +163,11 @@
                     <div id="menu-hr" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
                         <a href="#" onclick="showContent('hr-staff', 'ملفات وشؤون الموظفين', 'بيانات الموظفين، العقود، والرواتب')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-purple-600/20 hover:text-purple-300">🔹 شؤون الموظفين والرواتب</a>
                         <a href="#" onclick="showContent('hr-attendance', 'إدارة الحضور والإنصراف', 'ربط أجهزة البصمة ZKTeco وتقارير الانضباط')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-purple-600/20 hover:text-purple-300">🔹 الحضور والإنصراف (البصمة)</a>
+                        <a href="#" onclick="showContent('hr-training', 'التدريب والتطوير وتقييم الأداء', 'متابعة خطط تدريب الموظفين وتقييم الكفاءات')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-purple-600/20 hover:text-purple-300">🔹 التدريب والتطوير الوظيفي</a>
                     </div>
                 </div>
 
-                <!-- 6. تقنية المعلومات والشبكات -->
+                <!-- 9. تقنية المعلومات والشبكات (مع أمن المعلومات) -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-it')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-network-wired ml-2 text-indigo-400"></i> تقنية المعلومات والشبكات</span>
@@ -140,10 +176,11 @@
                     <div id="menu-it" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
                         <a href="#" onclick="showContent('it-mikrotik', 'إعدادات MikroTik و WinBox', 'إدارة الراوترات، VLANs، وDHCP Servers')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-indigo-600/20 hover:text-indigo-300">🔹 شبكات MikroTik & WinBox</a>
                         <a href="#" onclick="showContent('it-ad', 'Active Directory & GPO', 'إدارة المستخدمين والصلاحيات والسياسات')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-indigo-600/20 hover:text-indigo-300">🔹 Active Directory والسيرفرات</a>
+                        <a href="#" onclick="showContent('it-security', 'أمن المعلومات والنسخ الاحتياطي', 'جدران الحماية، سياسات الأمان، والباك أب النسقي')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-indigo-600/20 hover:text-indigo-300">🔹 أمن المعلومات والنسخ الاحتياطي</a>
                     </div>
                 </div>
 
-                <!-- 7. خدمة العملاء (Helpdesk) -->
+                <!-- 10. خدمة العملاء (Helpdesk) -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-helpdesk')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-headset ml-2 text-pink-400"></i> خدمة العملاء (Helpdesk)</span>
@@ -154,7 +191,7 @@
                     </div>
                 </div>
 
-                <!-- 8. الصيانة والأصول الثابتة -->
+                <!-- 11. الصيانة والأصول الثابتة -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-maintenance')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-screwdriver-wrench ml-2 text-red-400"></i> الصيانة والأصول الثابتة</span>
@@ -166,7 +203,7 @@
                     </div>
                 </div>
 
-                <!-- 9. العلاقات الحكومية (PRO) -->
+                <!-- 12. العلاقات الحكومية (PRO) -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-pro')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-scale-balanced ml-2 text-teal-400"></i> العلاقات الحكومية (PRO)</span>
@@ -177,7 +214,7 @@
                     </div>
                 </div>
 
-                <!-- 10. إدارة المشاريع والمهام -->
+                <!-- 13. إدارة المشاريع والمهام -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-projects')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-diagram-project ml-2 text-orange-400"></i> إدارة المشاريع والمهام</span>
@@ -188,7 +225,7 @@
                     </div>
                 </div>
 
-                <!-- 11. الأسطول والمركبات -->
+                <!-- 14. الأسطول والمركبات -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-fleet')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-car-side ml-2 text-emerald-300"></i> الأسطول والمركبات</span>
@@ -199,7 +236,7 @@
                     </div>
                 </div>
 
-                <!-- 12. التسويق والحملات -->
+                <!-- 15. التسويق والحملات -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-marketing')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-bullhorn ml-2 text-rose-400"></i> التسويق والحملات</span>
@@ -210,7 +247,7 @@
                     </div>
                 </div>
 
-                <!-- 13. الشؤون القانونية والامتثال -->
+                <!-- 16. الشؤون القانونية والامتثال -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-legal')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-gavel ml-2 text-amber-400"></i> الشؤون القانونية والامتثال</span>
@@ -222,7 +259,7 @@
                     </div>
                 </div>
 
-                <!-- 14. الأمن والسلامة المهنية (HSE) -->
+                <!-- 17. الأمن والسلامة المهنية (HSE) -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-hse')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-shield-halved ml-2 text-emerald-500"></i> الأمن والسلامة المهنية (HSE)</span>
@@ -234,7 +271,7 @@
                     </div>
                 </div>
 
-                <!-- 15. إدارة الجودة وضمان المطابقة -->
+                <!-- 18. إدارة الجودة وضمان المطابقة -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-quality')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-award ml-2 text-sky-400"></i> الجودة وضمان المطابقة</span>
@@ -246,7 +283,7 @@
                     </div>
                 </div>
 
-                <!-- 16. التدقيق الداخلي وإدارة المخاطر -->
+                <!-- 19. التدقيق الداخلي وإدارة المخاطر -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-audit')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-file-shield ml-2 text-violet-400"></i> التدقيق الداخلي والمخاطر</span>
@@ -258,7 +295,7 @@
                     </div>
                 </div>
 
-                <!-- 17. قطاع التصنيع والإنتاج (جديد - v8.0) -->
+                <!-- 20. قطاع التصنيع والإنتاج -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-manufacturing')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-industry ml-2 text-orange-500"></i> قطاع التصنيع والإنتاج</span>
@@ -271,7 +308,7 @@
                     </div>
                 </div>
 
-                <!-- 18. علاقات العملاء المتقدمة CRM (جديد - v8.0) -->
+                <!-- 21. علاقات العملاء المتقدمة CRM -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-crm')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-user-tie ml-2 text-blue-300"></i> علاقات العملاء المتقدمة (CRM)</span>
@@ -284,7 +321,7 @@
                     </div>
                 </div>
 
-                <!-- 19. نقاط البيع وفروع التجزئة POS (جديد - v8.0) -->
+                <!-- 22. نقاط البيع وفروع التجزئة POS -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-pos')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-cash-register ml-2 text-emerald-300"></i> نقاط البيع وفروع التجزئة (POS)</span>
@@ -296,31 +333,19 @@
                     </div>
                 </div>
 
-                <!-- 20. إدارة التدريب والتطوير (جديد - v8.0) -->
-                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
-                    <button onclick="toggleSubMenu('menu-training')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
-                        <span class="flex items-center"><i class="fa-solid fa-graduation-cap ml-2 text-purple-300"></i> إدارة التدريب والتطوير</span>
-                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-training"></i>
-                    </button>
-                    <div id="menu-training" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
-                        <a href="#" onclick="showContent('tr-plans', 'الخطط التدريبية وتقييم الكفاءات', 'متابعة دورات وتطوير مهارات موظفي الشركة')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-purple-600/20 hover:text-purple-300">🔹 الخطط التدريبية والكفاءات</a>
-                        <a href="#" onclick="showContent('tr-travel', 'المهمات الرسمية وحجوزات السفر', 'إدارة تذاكر السفر، الفنادق، وبدلات المهمات')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-purple-600/20 hover:text-purple-300">🔹 المهمات الرسمية والسفر</a>
-                    </div>
-                </div>
-
-                <!-- 21. العلاقات العامة والإعلام (جديد - v8.0) -->
+                <!-- 23. العلاقات العامة والاتصال المؤسسي -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-pr')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
-                        <span class="flex items-center"><i class="fa-solid fa-bullhorn ml-2 text-pink-300"></i> العلاقات العامة والإعلام</span>
+                        <span class="flex items-center"><i class="fa-solid fa-bullhorn ml-2 text-pink-300"></i> العلاقات العامة والاتصال المؤسسي</span>
                         <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-pr"></i>
                     </button>
                     <div id="menu-pr" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
                         <a href="#" onclick="showContent('pr-events', 'إدارة الفعاليات والمؤتمرات', 'تنظيم الفعاليات والمعارض الداخلية والخارجية')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-pink-600/20 hover:text-pink-300">🔹 الفعاليات والمعارض</a>
-                        <a href="#" onclick="showContent('pr-media', 'العلاقات الإعلامية والإعلانات', 'إدارة العقود الصحفية والإعلامية للشركة')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-pink-600/20 hover:text-pink-300">🔹 العقود الإعلامية والنشر</a>
+                        <a href="#" onclick="showContent('pr-media', 'العلاقات الإعلامية والنشر', 'إدارة العقود الصحفية والإعلامية والظهور للشركة')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-pink-600/20 hover:text-pink-300">🔹 العقود الإعلامية والنشر</a>
                     </div>
                 </div>
 
-                <!-- 22. ذكاء الأعمال والتقارير التنفيذية (جديد - v8.0) -->
+                <!-- 24. ذكاء الأعمال والتقارير التنفيذية -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
                     <button onclick="toggleSubMenu('menu-bi')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
                         <span class="flex items-center"><i class="fa-solid fa-chart-line ml-2 text-cyan-300"></i> ذكاء الأعمال والتقارير التنفيذية</span>
@@ -335,51 +360,51 @@
             </nav>
 
             <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 text-xs text-slate-400 text-center mt-6">
-                <p class="font-semibold text-slate-300">كيان ERP v8.0</p>
-                <p class="mt-1">22 إدارة رئيسية متكاملة © 2026</p>
+                <p class="font-semibold text-slate-300">كيان ERP v9.0</p>
+                <p class="mt-1">25 إدارة رئيسية وشجرية متكاملة © 2026</p>
             </div>
         </aside>
 
         <!-- المحتوى الرئيسي الديناميكي -->
         <main class="flex-1 p-6 overflow-y-auto">
             <div id="dynamic-content-area" class="space-y-6">
-                <!-- الافتراضي: لوحة القيادة -->
                 <div class="flex justify-between items-center bg-cardBg p-4 rounded-2xl border border-slate-800 shadow-sm">
                     <div>
-                        <h2 class="text-lg font-bold">لوحة القيادة الرئيسية الشاملة</h2>
-                        <p class="text-xs text-slate-400 mt-1">تمت إضافة وتهيئة كافة الإدارات الـ 22 بالكامل ضمن الشجرة التنظيمية التفاعلية لنظام كيان v8.0.</p>
+                        <h2 class="text-lg font-bold">لوحة القيادة الرئيسية - النسخة المطورة v9.0</h2>
+                        <p class="text-xs text-slate-400 mt-1">تمت إضافة الإدارات العليا، التخطيط الاستراتيجي، الفروع والتوسع الجغرافي، وأمن المعلومات لتغطية المؤسسة بالكامل.</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow">
                         <p class="text-xs text-slate-400 font-medium">إجمالي الإدارات النشطة</p>
-                        <h3 class="text-2xl font-bold mt-1 text-emerald-400">22 إدارة رئيسية</h3>
-                        <p class="text-xs text-emerald-400 mt-4"><i class="fa-solid fa-circle-check ml-1"></i> تغطية مؤسسية تامة</p>
+                        <h3 class="text-2xl font-bold mt-1 text-emerald-400">25 إدارة رئيسية</h3>
+                        <p class="text-xs text-emerald-400 mt-4"><i class="fa-solid fa-circle-check ml-1"></i> حوكمة وتكامل كامل</p>
                     </div>
                     <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow">
-                        <p class="text-xs text-slate-400 font-medium">قطاع التصنيع والإنتاج</p>
-                        <h3 class="text-2xl font-bold mt-1 text-orange-400">نشط ومحدث</h3>
-                        <p class="text-xs text-orange-400 mt-4"><i class="fa-solid fa-industry ml-1"></i> بوليصات ومراحل BOM</p>
+                        <p class="text-xs text-slate-400 font-medium">التخطيط الاستراتيجي</p>
+                        <h3 class="text-2xl font-bold mt-1 text-amber-400">مفعل بـ KPIs</h3>
+                        <p class="text-xs text-amber-400 mt-4"><i class="fa-solid fa-chess-king ml-1"></i> الإدارة العليا</p>
                     </div>
                     <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow">
-                        <p class="text-xs text-slate-400 font-medium">نقاط البيع (POS)</p>
-                        <h3 class="text-2xl font-bold mt-1 text-purple-400">متزامن لحظياً</h3>
-                        <p class="text-xs text-purple-400 mt-4"><i class="fa-solid fa-cash-register ml-1"></i> إدارة الورديات</p>
+                        <p class="text-xs text-slate-400 font-medium">إدارة الفروع</p>
+                        <h3 class="text-2xl font-bold mt-1 text-teal-400">مربوط مركزياً</h3>
+                        <p class="text-xs text-teal-400 mt-4"><i class="fa-solid fa-code-branch ml-1"></i> التوسع الجغرافي</p>
                     </div>
                     <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow">
-                        <p class="text-xs text-slate-400 font-medium">ذكاء الأعمال (BI KPIs)</p>
-                        <h3 class="text-2xl font-bold mt-1 text-cyan-400">مفعل</h3>
-                        <p class="text-xs text-cyan-400 mt-4"><i class="fa-solid fa-chart-line ml-1"></i> تقارير تنبؤية</p>
+                        <p class="text-xs text-slate-400 font-medium">أمن المعلومات والباك أب</p>
+                        <h3 class="text-2xl font-bold mt-1 text-indigo-400">مؤمن بالكامل</h3>
+                        <p class="text-xs text-indigo-400 mt-4"><i class="fa-solid fa-shield-halved ml-1"></i> جدران الحماية</p>
                     </div>
                 </div>
 
                 <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow">
-                    <h3 class="font-bold text-sm mb-3 text-blue-400">دليل الاستخدام السريع:</h3>
+                    <h3 class="font-bold text-sm mb-3 text-blue-400">دليل التحديث (v9.0):</h3>
                     <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
-                        <li>تمت إضافة 6 قطاعات جديدة بالكامل (التصنيع، CRM المتقدم، نقاط البيع POS، التدريب والتطوير، العلاقات العامة، وذكاء الأعمال).</li>
-                        <li>إجمالي الأقسام والشجرة التنظيمية أصبح 22 إدارة رئيسية متكاملة الأركان.</li>
-                        <li>انقر على أي بند من القائمة الجانبية لعرض لوحة التحكم الخاصة به وإدارتها مباشرة.</li>
+                        <li>إضافة قسم <strong>الإدارة العليا والتخطيط الاستراتيجي</strong> لمتابعة المؤشرات الحيوية وقرارات الحوكمة.</li>
+                        <li>إضافة قسم <strong>إدارة الفروع والتوسع الجغرافي</strong> لإدارة شبكة الفروع والمستودعات الموزعة.</li>
+                        <li>إضافة قسم <strong>إدارة البحث والتطوير (R&D)</strong> لدراسات ابتكار المنتجات وتحسين الجودة.</li>
+                        <li>تحديث الأقسام الفرعية مثل الخزينة والتحصيل تحت المالية، وأمن المعلومات والنسخ الاحتياطي تحت تقنية المعلومات، والتدريب تحت الموارد البشرية.</li>
                     </ul>
                 </div>
             </div>
@@ -418,7 +443,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                         <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
                             <p class="font-bold text-white mb-2"><i class="fa-solid fa-list-check ml-1 text-blue-400"></i> حالة التشغيل والصلاحيات</p>
-                            <p class="text-slate-400 leading-relaxed">القسم يعمل بكفاءة تامة ضمن منصة كيان v8.0، وتم ربط كافة الصلاحيات والبيانات التفاعلية الخاصة به بنجاح.</p>
+                            <p class="text-slate-400 leading-relaxed">القسم يعمل بكفاءة تامة ضمن منصة كيان ERP v9.0، وتم ربط كافة الصلاحيات والبيانات التفاعلية الخاصة به بنجاح.</p>
                         </div>
                         <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
                             <p class="font-bold text-white mb-2"><i class="fa-solid fa-gears ml-1 text-purple-400"></i> الإجراءات والعمليات</p>
