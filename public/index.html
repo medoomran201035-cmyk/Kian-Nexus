@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kayan Enterprise - لوحة التحكم الشاملة</title>
+    <title>Kayan Enterprise - الشجرة الإدارية الشاملة</title>
     <style>
         :root {
             --bg-main: #12141c;
@@ -15,7 +15,7 @@
             --accent-color: #3b82f6;
             --accent-hover: #2563eb;
             --success-color: #10b981;
-            --it-color: #8b5cf6;
+            --tree-line: #33394f;
         }
 
         * {
@@ -33,9 +33,9 @@
             overflow: hidden;
         }
 
-        /* Sidebar */
+        /* Sidebar Tree View */
         aside {
-            width: 290px;
+            width: 320px;
             background-color: var(--bg-sidebar);
             border-left: 1px solid var(--border-color);
             display: flex;
@@ -50,44 +50,95 @@
             border-bottom: 1px solid var(--border-color);
             color: var(--accent-color);
             text-align: center;
+            letter-spacing: 0.5px;
         }
 
-        .nav-links {
-            list-style: none;
+        .tree-container {
             overflow-y: auto;
             flex: 1;
-            padding: 10px;
+            padding: 15px;
         }
 
-        .nav-category {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            padding: 10px 15px 5px 15px;
-            letter-spacing: 0.5px;
-            font-weight: bold;
+        /* Tree Styles */
+        .tree-node {
+            list-style: none;
+            margin-bottom: 5px;
         }
 
-        .nav-links li {
-            padding: 10px 15px;
-            margin-bottom: 4px;
+        .department-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             cursor: pointer;
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: var(--text-main);
             transition: all 0.3s ease;
-            color: var(--text-muted);
-            font-size: 0.9rem;
         }
 
-        .nav-links li:hover, .nav-links li.active {
+        .department-toggle:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-color: var(--accent-color);
+        }
+
+        .department-toggle .arrow {
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .department-toggle.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Sub-tree Items */
+        .sub-tree {
+            list-style: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out;
+            padding-right: 15px;
+            border-right: 2px solid var(--tree-line);
+            margin-right: 15px;
+            margin-top: 5px;
+        }
+
+        .sub-tree.open {
+            max-height: 800px; /* Adjust based on content */
+        }
+
+        .sub-item {
+            padding: 9px 12px;
+            margin-bottom: 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sub-item::before {
+            content: "•";
+            color: var(--accent-color);
+        }
+
+        .sub-item:hover, .sub-item.active {
             background-color: var(--accent-color);
             color: var(--text-main);
+            color-scheme: dark;
         }
 
-        .nav-links li.it-link:hover, .nav-links li.it-link.active {
-            background-color: var(--it-color);
+        .sub-item:hover::before, .sub-item.active::before {
+            color: #fff;
         }
 
-        /* Main Content */
+        /* Main Content Area */
         main {
             flex: 1;
             display: flex;
@@ -96,7 +147,6 @@
             overflow: hidden;
         }
 
-        /* Top Header */
         header {
             background-color: var(--bg-card);
             border-bottom: 1px solid var(--border-color);
@@ -134,7 +184,6 @@
             color: var(--text-muted);
         }
 
-        /* Content Area */
         .content-body {
             flex: 1;
             padding: 30px;
@@ -155,7 +204,7 @@
         }
 
         .module-card h2 {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-size: 1.5rem;
             color: var(--text-main);
         }
@@ -169,51 +218,86 @@
         /* Responsive */
         @media(max-width: 768px) {
             aside { width: 70px; }
-            .logo-area, .nav-links li span, .nav-category { display: none; }
+            .logo-area, .department-toggle span, .sub-tree { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar Navigation -->
+    <!-- Sidebar Tree Navigation -->
     <aside>
-        <div class="logo-area">Kayan Enterprise</div>
-        <ul class="nav-links" id="navLinks">
+        <div class="logo-area">Kayan Enterprise ERP</div>
+        <div class="tree-container">
             
-            <!-- General Administration -->
-            <div class="nav-category">الإدارة والتنظيم</div>
-            <li class="active" data-target="tasks">توزيع المهام اليومية</li>
-            <li data-target="contracts">العقود والتراخيص الرسمية</li>
-            <li data-target="circulars">التعاميم والقرارات الإدارية</li>
-            <li data-target="settings">صلاحيات النظام وإعداداته</li>
+            <!-- 1. إدارة تكنولوجيا المعلومات -->
+            <li class="tree-node">
+                <div class="department-toggle open" onclick="toggleSubTree(this)">
+                    <span>تكنولوجيا المعلومات (IT)</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <ul class="sub-tree open">
+                    <li class="sub-item active" data-target="it-helpdesk">الدعم الفني وتذاكر الأعطال</li>
+                    <li class="sub-item" data-target="it-network">الشبكات (MikroTik / VLANs)</li>
+                    <li class="sub-item" data-target="it-ad">Active Directory وصلاحيات المستخدمين</li>
+                    <li class="sub-item" data-target="it-assets">عهد الأجهزة والأصول التقنية</li>
+                    <li class="sub-item" data-target="it-cctv">أنظمة المراقبة (CCTV / ZKTeco)</li>
+                    <li class="sub-item" data-target="it-printers">إدارة الطابعات وأذونات الشبكة</li>
+                </ul>
+            </li>
 
-            <!-- IT Department (Dedicated Section) -->
-            <div class="nav-category" style="color: #a78bfa;">تكنولوجيا المعلومات (IT)</div>
-            <li class="it-link" data-target="it-helpdesk">الدعم الفني وتذاكر الأعطال</li>
-            <li class="it-link" data-target="it-assets">عهد الأجهزة والأصول التقنية</li>
-            <li class="it-link" data-target="it-network">الشبكات والبنية التحتية (MikroTik/AD)</li>
-            <li class="it-link" data-target="it-cctv">أنظمة المراقبة والأمان (CCTV/ZKTeco)</li>
-            <li class="it-link" data-target="it-printers">إدارة الطابعات وأذونات الشبكة</li>
-            <li class="it-link" data-target="it-inventory">المخزون التقني وقطع الغيار</li>
+            <!-- 2. الإدارة المالية والمشتريات -->
+            <li class="tree-node" style="margin-top: 10px;">
+                <div class="department-toggle" onclick="toggleSubTree(this)">
+                    <span>المالية والمشتريات</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <ul class="sub-tree">
+                    <li class="sub-item" data-target="accounts">الحسابات العامة (رصين)</li>
+                    <li class="sub-item" data-target="purchases">المشتريات وعروض الأسعار</li>
+                    <li class="sub-item" data-target="expenses">متابعة الوقود والمصروفات</li>
+                </ul>
+            </li>
 
-            <!-- Financials & Procurement -->
-            <div class="nav-category">المالية والمشتريات</div>
-            <li data-target="accounts">الحسابات العامة (رصين)</li>
-            <li data-target="purchases">المشتريات وعروض الأسعار</li>
-            <li data-target="fuel">متابعة الوقود والمصروفات</li>
+            <!-- 3. إدارة الأسطول والسيارات -->
+            <li class="tree-node" style="margin-top: 10px;">
+                <div class="department-toggle" onclick="toggleSubTree(this)">
+                    <span>إدارة الأسطول والسيارات</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <ul class="sub-tree">
+                    <li class="sub-item" data-target="fleet">حركة السيارات ورحلات الأسطول</li>
+                    <li class="sub-item" data-target="maintenance">الصيانة الدورية والفحص</li>
+                    <li class="sub-item" data-target="licenses-fleet">التراخيص، التأمين والمخالفات</li>
+                </ul>
+            </li>
 
-            <!-- Sales & Projects -->
-            <div class="nav-category">المبيعات والمشاريع</div>
-            <li data-target="sales">المبيعات وعلاقات العملاء (CRM)</li>
-            <li data-target="projects">متابعة المشاريع الكبرى</li>
+            <!-- 4. المبيعات والمشاريع -->
+            <li class="tree-node" style="margin-top: 10px;">
+                <div class="department-toggle" onclick="toggleSubTree(this)">
+                    <span>المبيعات والمشاريع</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <ul class="sub-tree">
+                    <li class="sub-item" data-target="sales">المبيعات وعلاقات العملاء (CRM)</li>
+                    <li class="sub-item" data-target="projects">متابعة المشاريع الكبرى</li>
+                    <li class="sub-item" data-target="tasks">توزيع المهام اليومية</li>
+                </ul>
+            </li>
 
-            <!-- Fleet Management -->
-            <div class="nav-category">إدارة الأسطول</div>
-            <li data-target="fleet">حركة السيارات ورحلات الأسطول</li>
-            <li data-target="maintenance">الصيانة الدورية والفحص</li>
-            <li data-target="licenses-fleet">التراخيص والتأمين والمخالفات</li>
+            <!-- 5. الإدارة العامة وشؤون الموظفين -->
+            <li class="tree-node" style="margin-top: 10px;">
+                <div class="department-toggle" onclick="toggleSubTree(this)">
+                    <span>الإدارة وشؤون الموظفين</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <ul class="sub-tree">
+                    <li class="sub-item" data-target="contracts">العقود والتراخيص الرسمية</li>
+                    <li class="sub-item" data-target="circulars">التعاميم والقرارات الإدارية</li>
+                    <li class="sub-item" data-target="settings">صلاحيات النظام وإعداداته</li>
+                </ul>
+            </li>
 
-        </ul>
+        </div>
     </aside>
 
     <!-- Main Section -->
@@ -230,119 +314,126 @@
         <!-- Dynamic Module Content -->
         <div class="content-body" id="contentBody">
             
-            <!-- General Administration Modules -->
-            <div class="module-card active" id="tasks">
-                <h2>توزيع المهام اليومية</h2>
-                <p>جدول مهام الفرق والأقسام وحالة التنفيذ ومتابعة الإنجاز[span_0](start_span)[span_0](end_span).</p>
-            </div>
-
-            <div class="module-card" id="contracts">
-                <h2>العقود والتراخيص الرسمية</h2>
-                <p>متابعة تواريخ انتهاء التراخيص البرمجية والعقود الرسمية للشركة[span_1](start_span)[span_1](end_span).</p>
-            </div>
-
-            <div class="module-card" id="circulars">
-                <h2>التعاميم والقرارات الإدارية</h2>
-                <p>نشر التعاميم والقرارات التنظيمية الداخلية للموظفين[span_2](start_span)[span_2](end_span).</p>
-            </div>
-
-            <div class="module-card" id="settings">
-                <h2>صلاحيات النظام وإعداداته</h2>
-                <p>التحكم في إعدادات المنصة ومستويات وصول المديرين والأمان العام[span_3](start_span)[span_3](end_span).</p>
-            </div>
-
             <!-- IT Department Modules -->
-            <div class="module-card" id="it-helpdesk">
-                <h2>الدعم الفني وتذاكر الأعطال (IT Helpdesk)</h2>
+            <div class="module-card active" id="it-helpdesk">
+                <h2>الدعم الفني وتذاكر الأعطال</h2>
                 <p>إدارة بلاغات الأعطال التقنية الداخلية، متابعة حالة صيانة أجهزة الحاسب، وحل مشكلات الشبكات والأنظمة للموظفين.</p>
+            </div>
+
+            <div class="module-card" id="it-network">
+                <h2>الشبكات (MikroTik / VLANs)</h2>
+                <p>مراقبة وتكوين راوترات MikroTik، إدارات الـ VLANs، وضوابط حماية المنافذ (Port Security).</p>
+            </div>
+
+            <div class="module-card" id="it-ad">
+                <h2>Active Directory وصلاحيات المستخدمين</h2>
+                <p>إدارة حسابات المستخدمين، مجموعات الأمان، ووحدات التنظيم (OUs) وسياسات المجموعة (GPOs).</p>
             </div>
 
             <div class="module-card" id="it-assets">
                 <h2>عهد الأجهزة والأصول التقنية</h2>
-                <p>عرض وتتبع عهد الأجهزة التقنية، الأرقام التسلسلية، وحالة الأصول المسندة للموظفين[span_4](start_span)[span_4](end_span).</p>
-            </div>
-
-            <div class="module-card" id="it-network">
-                <h2>الشبكات والبنية التحتية (MikroTik & Active Directory)</h2>
-                <p>مراقبة وتكوين راوترات MikroTik، إدارات الـ VLANs، صلاحيات مستخدمي Active Directory، وسياسات الأمان وقواعد جدار الحماية (Firewall).</p>
+                <p>عرض وتتبع عهد الأجهزة التقنية، والأرقام التسلسلية، وحالة الأصول المسندة للموظفين.</p>
             </div>
 
             <div class="module-card" id="it-cctv">
-                <h2>أنظمة المراقبة والأمان (CCTV & ZKTeco)</h2>
-                <p>متابعة أنظمة كاميرات المراقبة (Dahua/Hikvision) وأجهزة الحضور والانصراف البصمية (ZKTeco) وسجلات الدوام.</p>
+                <h2>أنظمة المراقبة (CCTV / ZKTeco)</h2>
+                <p>متابعة أنظمة كاميرات المراقبة (Dahua/Hikvision) وأجهزة الحضور والانصراف البصمية (ZKTeco).</p>
             </div>
 
             <div class="module-card" id="it-printers">
                 <h2>إدارة الطابعات وأذونات الشبكة</h2>
-                <p>التحكم في صلاحيات الطباعة عبر الشبكة، وتحديد الأجهزة المصرح لها بالطباعة للأقسام المختلفة (مثل قسم المالية والإدارة).</p>
+                <p>التحكم في صلاحيات الطباعة عبر الشبكة، وتحديد الأجهزة المصرح لها بالطباعة للأقسام المختلفة.</p>
             </div>
 
-            <div class="module-card" id="it-inventory">
-                <h2>المخزون التقني وقطع الغيار</h2>
-                <p>إدارة وتتبع مخزون قطع الغيار التقنية، أحبار الطابعات، الكابلات، ومستلزمات صيانة الحاسب والشبكات[span_5](start_span)[span_5](end_span).</p>
-            </div>
-
-            <!-- Financials & Procurement Modules -->
+            <!-- Finance Modules -->
             <div class="module-card" id="accounts">
                 <h2>الحسابات العامة (رصين)</h2>
-                <p>إدارة دفتر القيود اليومية والمراكز المالية[span_6](start_span)[span_6](end_span).</p>
+                <p>إدارة دفتر القيود اليومية والمراكز المالية.</p>
             </div>
 
             <div class="module-card" id="purchases">
                 <h2>المشتريات وعروض الأسعار</h2>
-                <p>إدارة طلبات الشراء وعروض الأسعار المقدمة من الموردين الخارجيين[span_7](start_span)[span_7](end_span).</p>
+                <p>إدارة طلبات الشراء وعروض الأسعار المقدمة من الموردين الخارجيين.</p>
             </div>
 
-            <div class="module-card" id="fuel">
+            <div class="module-card" id="expenses">
                 <h2>متابعة الوقود والمصروفات</h2>
-                <p>رصد استهلاك الوقود والفواتير ومصروفات التشغيل الخاصة بالأسطول[span_8](start_span)[span_8](end_span).</p>
+                <p>رصد استهلاك الوقود والفواتير ومصروفات التشغيل الخاصة بالأسطول.</p>
+            </div>
+
+            <!-- Fleet Modules -->
+            <div class="module-card" id="fleet">
+                <h2>حركة السيارات ورحلات الأسطول</h2>
+                <p>متابعة خطوط سير أسطول السيارات وتتبع الرحلات الميدانية.</p>
+            </div>
+
+            <div class="module-card" id="maintenance">
+                <h2>الصيانة الدورية والفحص</h2>
+                <p>إدارة سجلات الصيانة ومتابعة الورش والفحص الدوري لمركبات الأسطول.</p>
+            </div>
+
+            <div class="module-card" id="licenses-fleet">
+                <h2>التراخيص، التأمين والمخالفات</h2>
+                <p>إدارة تجديد الاستمارات ووثائق التأمين ومتابعة المخالفات المرورية.</p>
             </div>
 
             <!-- Sales & Projects Modules -->
             <div class="module-card" id="sales">
                 <h2>المبيعات وعلاقات العملاء (CRM)</h2>
-                <p>متابعة صفقات العملاء ومسار عمليات المبيعات[span_9](start_span)[span_9](end_span).</p>
+                <p>متابعة صفقات العملاء ومسار عمليات المبيعات.</p>
             </div>
 
             <div class="module-card" id="projects">
                 <h2>متابعة المشاريع الكبرى</h2>
-                <p>إدارة وتتبع نسب إنجاز المشاريع التشغيلية والإستراتيجية الخاصة بالشركة[span_10](start_span)[span_10](end_span).</p>
+                <p>إدارة وتتبع نسب إنجاز المشاريع التشغيلية والإستراتيجية الخاصة بالشركة.</p>
             </div>
 
-            <!-- Fleet Management Modules -->
-            <div class="module-card" id="fleet">
-                <h2>حركة السيارات ورحلات الأسطول</h2>
-                <p>متابعة خطوط سير أسطول السيارات وتتبع الرحلات الميدانية[span_11](start_span)[span_11](end_span).</p>
+            <div class="module-card" id="tasks">
+                <h2>توزيع المهام اليومية</h2>
+                <p>جدول مهام الفرق والأقسام وحالة التنفيذ ومتابعة الإنجاز.</p>
             </div>
 
-            <div class="module-card" id="maintenance">
-                <h2>الصيانة الدورية والفحص</h2>
-                <p>إدارة سجلات الصيانة ومتابعة الورش والفحص الدوري لمركبات الأسطول[span_12](start_span)[span_12](end_span).</p>
+            <!-- Administration Modules -->
+            <div class="module-card" id="contracts">
+                <h2>العقود والتراخيص الرسمية</h2>
+                <p>متابعة تواريخ انتهاء التراخيص البرمجية والعقود الرسمية للشركة.</p>
             </div>
 
-            <div class="module-card" id="licenses-fleet">
-                <h2>التراخيص والتأمين والمخالفات</h2>
-                <p>إدارة تجديد الاستمارات ووثائق التأمين ومتابعة المخالفات المرورية[span_13](start_span)[span_13](end_span).</p>
+            <div class="module-card" id="circulars">
+                <h2>التعاميم والقرارات الإدارية</h2>
+                <p>نشر التعاميم والقرارات التنظيمية الداخلية للموظفين.</p>
+            </div>
+
+            <div class="module-card" id="settings">
+                <h2>صلاحيات النظام وإعداداته</h2>
+                <p>التحكم في إعدادات المنصة ومستويات وصول المديرين والأمان العام.</p>
             </div>
 
         </div>
     </main>
 
     <script>
-        // Interactive Navigation Script
-        const navItems = document.querySelectorAll('#navLinks li');
+        // Toggle Sub-trees (Accordion functionality)
+        function toggleSubTree(element) {
+            element.classList.toggle('open');
+            const subTree = element.nextElementSibling;
+            subTree.classList.toggle('open');
+        }
+
+        // Handle item selection and content switching
+        const subItems = document.querySelectorAll('.sub-item');
         const modules = document.querySelectorAll('.module-card');
 
-        navItems.forEach(item => {
+        subItems.forEach(item => {
             item.addEventListener('click', () => {
-                // Remove active class from all links and modules
-                navItems.forEach(nav => nav.classList.remove('active'));
+                // Remove active class from all items and modules
+                subItems.forEach(sub => sub.classList.remove('active'));
                 modules.forEach(mod => mod.classList.remove('active'));
 
-                // Add active class to clicked item
+                // Add active class to clicked sub-item
                 item.classList.add('active');
 
-                // Show target module
+                // Show target module card
                 const targetId = item.getAttribute('data-target');
                 document.getElementById(targetId).classList.add('active');
             });
