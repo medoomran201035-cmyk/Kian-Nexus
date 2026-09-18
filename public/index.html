@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kayan Enterprise - لوحة التحكم الشاملة والتقارير</title>
+    <title>Kayan Enterprise - لوحة التحكم الشاملة والتقارير المتقدمة</title>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts: Cairo -->
@@ -29,11 +29,23 @@
             --transition-speed: 0.3s;
         }
 
+        /* Light Theme Variables */
+        body.light-theme {
+            --bg-main: #f1f5f9;
+            --bg-sidebar: #ffffff;
+            --bg-card: #ffffff;
+            --bg-hover: #e2e8f0;
+            --border-color: #cbd5e1;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Cairo', sans-serif;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
         }
 
         body {
@@ -184,7 +196,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background-color: rgba(15, 23, 42, 0.3);
+            background-color: rgba(15, 23, 42, 0.05);
         }
 
         .user-avatar-sm {
@@ -268,8 +280,8 @@
             background: var(--bg-main);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -298,6 +310,38 @@
             align-items: center;
             justify-content: center;
         }
+
+        /* Notifications Dropdown */
+        .notification-dropdown-menu {
+            position: absolute;
+            top: 48px;
+            left: 0;
+            width: 320px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 101;
+            overflow: hidden;
+        }
+        .notification-dropdown-menu.active { display: block; }
+        .notif-header {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .notif-item {
+            padding: 10px 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+        .notif-item:hover { background: var(--bg-hover); color: var(--text-primary); }
 
         /* Dashboard Content */
         .dashboard-content {
@@ -330,6 +374,7 @@
         .action-group-btns {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .btn-primary {
@@ -346,10 +391,7 @@
             gap: 8px;
             transition: 0.2s;
         }
-
-        .btn-primary:hover {
-            background-color: var(--accent-hover);
-        }
+        .btn-primary:hover { background-color: var(--accent-hover); }
 
         .btn-success {
             background-color: var(--success-color);
@@ -367,7 +409,88 @@
         }
         .btn-success:hover { opacity: 0.9; }
 
-        /* Dynamic Section Data View */
+        .btn-secondary {
+            background-color: var(--bg-hover);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .btn-secondary:hover { border-color: var(--accent-color); }
+
+        /* KPI Summary Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .kpi-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+        .kpi-icon.blue { background: rgba(59, 130, 246, 0.2); color: var(--accent-color); }
+        .kpi-icon.green { background: rgba(34, 197, 94, 0.2); color: var(--success-color); }
+        .kpi-icon.orange { background: rgba(245, 158, 11, 0.2); color: var(--warning-color); }
+
+        .kpi-info h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+        .kpi-info span {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Quick Filter Pills */
+        .filter-pills {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .filter-pill:hover, .filter-pill.active {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+        }
+
+        /* Data Card & Table */
         .data-card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -383,6 +506,8 @@
             margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .data-card-header h3 {
@@ -406,7 +531,7 @@
 
         table.enterprise-table th {
             color: var(--text-secondary);
-            background: rgba(15, 23, 42, 0.4);
+            background: rgba(15, 23, 42, 0.05);
             font-weight: 600;
         }
 
@@ -441,7 +566,7 @@
         /* Action Icons in Table */
         .action-icons {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
         }
         .action-icons i {
@@ -449,6 +574,7 @@
             font-size: 0.95rem;
             transition: 0.2s;
         }
+        .action-icons i.fa-eye { color: var(--success-color); }
         .action-icons i.fa-download { color: var(--accent-color); }
         .action-icons i.fa-edit { color: var(--warning-color); }
         .action-icons i.fa-trash-alt { color: var(--danger-color); }
@@ -480,6 +606,8 @@
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal-header {
@@ -511,6 +639,9 @@
             border-radius: 6px;
             outline: none;
             font-size: 0.88rem;
+        }
+        body.light-theme .form-group input, body.light-theme .form-group select {
+            color: #0f172a;
         }
         .form-group input:focus, .form-group select:focus {
             border-color: var(--accent-color);
@@ -633,15 +764,33 @@
             <div class="header-left">
                 <div class="global-search">
                     <i class="fas fa-search" style="color: var(--text-secondary); font-size: 0.8rem;"></i>
-                    <input type="text" id="searchInput" placeholder="بحث شامل داخل التقارير والبيانات...">
+                    <input type="text" id="searchInput" placeholder="بحث شامل داخل التقارير...">
                 </div>
             </div>
             
             <div class="header-actions">
-                <div class="icon-btn" id="notifBtn" title="التنبيهات">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
+                <!-- زر تغيير الثيم -->
+                <div class="icon-btn" id="themeToggleBtn" title="تبديل وضع العرض (داكن / نهاري)">
+                    <i class="fas fa-moon" id="themeIcon"></i>
                 </div>
+
+                <!-- زر الإشعارات التفاعلي -->
+                <div style="position: relative;">
+                    <div class="icon-btn" id="notifBtn" title="التنبيهات">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notifCountBadge">3</span>
+                    </div>
+                    <div class="notification-dropdown-menu" id="notifDropdown">
+                        <div class="notif-header">
+                            <span>تنبيهات النظام الحية</span>
+                            <span style="font-size: 0.7rem; color: var(--accent-color); cursor: pointer;" onclick="clearNotifications()">تحديد الكل مقروء</span>
+                        </div>
+                        <div class="notif-item">تنبيه: اقتراب امتلاء مساحة السيرفر الافتراضي (Hyper-V)</div>
+                        <div class="notif-item">تم اعتماد تقرير الأداء المالي بنجاح من الشؤون المالية.</div>
+                        <div class="notif-item">تحذير أمني: محاولة اتصال غير مصرح بها من جدار الحماية.</div>
+                    </div>
+                </div>
+
                 <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-secondary);">
                     <span style="width: 8px; height: 8px; background: var(--success-color); border-radius: 50%;"></span>
                     متصل (الرياض)
@@ -656,12 +805,40 @@
                     <p id="pageDesc">نظرة عامة على مؤشرات الأداء وحالة النظام المؤسسي.</p>
                 </div>
                 <div class="action-group-btns">
+                    <button class="btn-secondary" id="openAuditModalBtn">
+                        <i class="fas fa-clipboard-list"></i> سجل التدقيق (Audit Log)
+                    </button>
                     <button class="btn-success" id="openUploadModalBtn">
-                        <i class="fas fa-file-arrow-up"></i> رفع تقرير (Excel / Word / PDF / PPT)
+                        <i class="fas fa-file-arrow-up"></i> رفع تقرير جديد
                     </button>
                     <button class="btn-primary" id="openModalBtn">
-                        <i class="fas fa-plus-circle"></i> إضافة سجل جديد
+                        <i class="fas fa-plus-circle"></i> إضافة سجل نصي
                     </button>
+                </div>
+            </div>
+
+            <!-- لوحة مؤشرات الأداء المصغرة (KPI Summary Cards) -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-icon blue"><i class="fas fa-file-lines"></i></div>
+                    <div class="kpi-info">
+                        <h4 id="kpiTotalReports">4</h4>
+                        <span>إجمالي التقارير والملفات</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon green"><i class="fas fa-check-circle"></i></div>
+                    <div class="kpi-info">
+                        <h4 id="kpiActiveReports">3</h4>
+                        <span>الملفات المعتمدة والنشطة</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon orange"><i class="fas fa-clock"></i></div>
+                    <div class="kpi-info">
+                        <h4 id="kpiPendingReports">1</h4>
+                        <span>التقارير قيد المراجعة / المسودات</span>
+                    </div>
                 </div>
             </div>
 
@@ -669,12 +846,27 @@
             <div class="data-card">
                 <div class="data-card-header">
                     <h3 id="reportsHeaderTitle"><i class="fas fa-folder-open" style="color: var(--accent-color);"></i> التقارير والملفات المرفوعة للقسم</h3>
-                    <button class="btn-primary" style="padding: 5px 12px; font-size: 0.8rem;" onclick="refreshData()">
-                        <i class="fas fa-sync-alt"></i> تحديث القائمة
-                    </button>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <button class="btn-secondary" style="padding: 5px 12px; font-size: 0.8rem;" onclick="exportMasterReport()">
+                            <i class="fas fa-file-export"></i> تصدير تقارير القسم (Excel)
+                        </button>
+                        <button class="btn-primary" style="padding: 5px 12px; font-size: 0.8rem;" onclick="refreshData()">
+                            <i class="fas fa-sync-alt"></i> تحديث القائمة
+                        </button>
+                    </div>
                 </div>
+
+                <!-- أزرار الفلترة السريعة (Quick Filter Pills) -->
+                <div class="filter-pills">
+                    <div class="filter-pill active" onclick="filterTable('all', this)">جميع الملفات</div>
+                    <div class="filter-pill" onclick="filterTable('excel', this)"><i class="fas fa-file-excel"></i> Excel</div>
+                    <div class="filter-pill" onclick="filterTable('word', this)"><i class="fas fa-file-word"></i> Word</div>
+                    <div class="filter-pill" onclick="filterTable('pdf', this)"><i class="fas fa-file-pdf"></i> PDF</div>
+                    <div class="filter-pill" onclick="filterTable('ppt', this)"><i class="fas fa-file-powerpoint"></i> PowerPoint</div>
+                </div>
+
                 <div style="overflow-x: auto;">
-                    <table class="enterprise-table">
+                    <table class="enterprise-table" id="reportsTable">
                         <thead>
                             <tr>
                                 <th>معرف التقرير</th>
@@ -682,11 +874,11 @@
                                 <th>نوع الملف (Format)</th>
                                 <th>القسم التابع</th>
                                 <th>الحالة</th>
-                                <th>الإجراءات (تحميل / تعديل / حذف)</th>
+                                <th>الإجراءات (معاينة / تحميل / تعديل / حذف)</th>
                             </tr>
                         </thead>
                         <tbody id="reportsTableBody">
-                            <tr>
+                            <tr data-type="excel">
                                 <td>#REP-501</td>
                                 <td>تقرير الأداء المالي والتشغيلي الربع سنوي</td>
                                 <td><span class="file-badge excel"><i class="fas fa-file-excel"></i> Excel (.xlsx)</span></td>
@@ -694,13 +886,14 @@
                                 <td><span class="status-pill active">معتمد</span></td>
                                 <td>
                                     <div class="action-icons">
+                                        <i class="fas fa-eye" title="معاينة سريعة" onclick="previewFile('تقرير الأداء المالي والتشغيلي الربع سنوي', 'Excel (.xlsx)', 'الشؤون المالية', 'معتمد')"></i>
                                         <i class="fas fa-download" title="تحميل الملف" onclick="downloadFile('تقرير الأداء المالي')"></i>
                                         <i class="fas fa-edit" title="تعديل" onclick="editRecord(this)"></i>
                                         <i class="fas fa-trash-alt" title="حذف" onclick="deleteRow(this)"></i>
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr data-type="word">
                                 <td>#REP-502</td>
                                 <td>دليل سياسات أمن المعلومات والصلاحيات</td>
                                 <td><span class="file-badge word"><i class="fas fa-file-word"></i> Word (.docx)</span></td>
@@ -708,13 +901,14 @@
                                 <td><span class="status-pill active">نشط</span></td>
                                 <td>
                                     <div class="action-icons">
+                                        <i class="fas fa-eye" title="معاينة سريعة" onclick="previewFile('دليل سياسات أمن المعلومات والصلاحيات', 'Word (.docx)', 'الأمن السيبراني', 'نشط')"></i>
                                         <i class="fas fa-download" title="تحميل الملف" onclick="downloadFile('دليل سياسات أمن المعلومات')"></i>
                                         <i class="fas fa-edit" title="تعديل" onclick="editRecord(this)"></i>
                                         <i class="fas fa-trash-alt" title="حذف" onclick="deleteRow(this)"></i>
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr data-type="pdf">
                                 <td>#REP-503</td>
                                 <td>مواصفات وتوثيق البنية التحتية للسيرفرات</td>
                                 <td><span class="file-badge pdf"><i class="fas fa-file-pdf"></i> PDF (.pdf)</span></td>
@@ -722,13 +916,14 @@
                                 <td><span class="status-pill active">محدث</span></td>
                                 <td>
                                     <div class="action-icons">
+                                        <i class="fas fa-eye" title="معاينة سريعة" onclick="previewFile('مواصفات وتوثيق البنية التحتية للسيرفرات', 'PDF (.pdf)', 'البنية التحتية', 'محدث')"></i>
                                         <i class="fas fa-download" title="تحميل الملف" onclick="downloadFile('توثيق البنية التحتية')"></i>
                                         <i class="fas fa-edit" title="تعديل" onclick="editRecord(this)"></i>
                                         <i class="fas fa-trash-alt" title="حذف" onclick="deleteRow(this)"></i>
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr data-type="ppt">
                                 <td>#REP-504</td>
                                 <td>عرض توضيحي لخطة التحول الرقمي والذكاء الاصطناعي</td>
                                 <td><span class="file-badge ppt"><i class="fas fa-file-powerpoint"></i> PowerPoint (.pptx)</span></td>
@@ -736,6 +931,7 @@
                                 <td><span class="status-pill warning">مسودة</span></td>
                                 <td>
                                     <div class="action-icons">
+                                        <i class="fas fa-eye" title="معاينة سريعة" onclick="previewFile('عرض توضيحي لخطة التحول الرقمي والذكاء الاصطناعي', 'PowerPoint (.pptx)', 'الذكاء الاصطناعي', 'مسودة')"></i>
                                         <i class="fas fa-download" title="تحميل الملف" onclick="downloadFile('خطة التحول الرقمي')"></i>
                                         <i class="fas fa-edit" title="تعديل" onclick="editRecord(this)"></i>
                                         <i class="fas fa-trash-alt" title="حذف" onclick="deleteRow(this)"></i>
@@ -749,7 +945,64 @@
         </main>
     </div>
 
-    <!-- نافذة رفع الملفات والتقارير (Excel, Word, PDF, PPT) -->
+    <!-- نافذة المعاينة السريعة للملف (Preview Modal) -->
+    <div class="modal-overlay" id="previewModalOverlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3><i class="fas fa-eye" style="color: var(--success-color);"></i> معاينة تفاصيل المستند</h3>
+                <i class="fas fa-times" id="closePreviewModalBtn" style="cursor: pointer; color: var(--text-secondary);"></i>
+            </div>
+            <div style="font-size: 0.9rem; line-height: 1.8;">
+                <p><strong>عنوان الملف:</strong> <span id="prevTitle">-</span></p>
+                <p><strong>نوع الصيغة:</strong> <span id="prevFormat">-</span></p>
+                <p><strong>القسم المسؤول:</strong> <span id="prevSection">-</span></p>
+                <p><strong>حالة الاعتماد:</strong> <span id="prevStatus">-</span></p>
+                <div style="margin-top: 15px; background: var(--bg-main); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.82rem; color: var(--text-secondary);">
+                    ملاحظة: هذا عرض مبدئي لبيانات السجل داخل قاعدة البيانات المؤسسية لشركة كايان. يمكنك تحميل الملف كاملاً أو تعديله حسب الصلاحيات الممنوحة لك.
+                </div>
+            </div>
+            <button class="btn-primary" style="width: 100%; justify-content: center; margin-top: 20px;" onclick="closePreview()">إغلاق المعاينة</button>
+        </div>
+    </div>
+
+    <!-- نافذة سجل التدقيق (Audit Trail Modal) -->
+    <div class="modal-overlay" id="auditModalOverlay">
+        <div class="modal-box" style="width: 600px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-clipboard-list" style="color: var(--accent-color);"></i> سجل نشاط النظام (Audit Trail)</h3>
+                <i class="fas fa-times" id="closeAuditModalBtn" style="cursor: pointer; color: var(--text-secondary);"></i>
+            </div>
+            <div style="max-height: 350px; overflow-y: auto;">
+                <table class="enterprise-table" style="font-size: 0.8rem;">
+                    <thead>
+                        <tr>
+                            <th>المستخدم</th>
+                            <th>الإجراء</th>
+                            <th>العنصر / التقرير</th>
+                            <th>التوقيت</th>
+                        </tr>
+                    </thead>
+                    <tbody id="auditLogTableBody">
+                        <tr>
+                            <td>محمد فيصل</td>
+                            <td><span style="color: var(--success-color);">رفع ملف</span></td>
+                            <td>تقرير الأداء المالي</td>
+                            <td>اليوم، 02:15 م</td>
+                        </tr>
+                        <tr>
+                            <td>محمد فيصل</td>
+                            <td><span style="color: var(--warning-color);">تعديل</span></td>
+                            <td>دليل سياسات أمن المعلومات</td>
+                            <td>اليوم، 01:30 م</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="btn-secondary" style="width: 100%; justify-content: center; margin-top: 15px;" onclick="document.getElementById('auditModalOverlay').classList.remove('active')">إغلاق السجل</button>
+        </div>
+    </div>
+
+    <!-- نافذة رفع التقارير -->
     <div class="modal-overlay" id="uploadModalOverlay">
         <div class="modal-box">
             <div class="modal-header">
@@ -793,7 +1046,7 @@
         </div>
     </div>
 
-    <!-- نافذة إضافة سجل جديد -->
+    <!-- نافذة إضافة سجل نصي -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box">
             <div class="modal-header">
@@ -820,6 +1073,34 @@
     </div>
 
     <script>
+        // تبديل الوضع (Dark / Light Theme)
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIcon = document.getElementById('themeIcon');
+        themeToggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            if(document.body.classList.contains('light-theme')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        });
+
+        // قائمة الإشعارات التفاعلية
+        const notifBtn = document.getElementById('notifBtn');
+        const notifDropdown = document.getElementById('notifDropdown');
+        notifBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notifDropdown.classList.toggle('active');
+        });
+        window.addEventListener('click', () => notifDropdown.classList.remove('active'));
+
+        function clearNotifications() {
+            document.getElementById('notifCountBadge').style.display = 'none';
+            alert('تم تحديد جميع الإشعارات كمقروءة.');
+        }
+
         // تفاعل القوائم المنسدلة الجانبية
         const dropdowns = document.querySelectorAll('.menu-dropdown > a');
         dropdowns.forEach(dropdown => {
@@ -839,7 +1120,6 @@
         menuItems.forEach(item => {
             item.addEventListener('click', (e) => {
                 e.stopPropagation();
-                
                 document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
                 const parentLi = item.closest('li');
                 if(parentLi) parentLi.classList.add('active');
@@ -853,23 +1133,46 @@
             });
         });
 
+        // نافذة المعاينة السريعة
+        const previewModalOverlay = document.getElementById('previewModalOverlay');
+        const closePreviewModalBtn = document.getElementById('closePreviewModalBtn');
+        closePreviewModalBtn.addEventListener('click', () => previewModalOverlay.classList.remove('active'));
+
+        function previewFile(title, format, section, status) {
+            document.getElementById('prevTitle').textContent = title;
+            document.getElementById('prevFormat').textContent = format;
+            document.getElementById('prevSection').textContent = section;
+            document.getElementById('prevStatus').textContent = status;
+            previewModalOverlay.classList.add('active');
+        }
+        function closePreview() { previewModalOverlay.classList.remove('active'); }
+
+        // نافذة سجل التدقيق
+        const auditModalOverlay = document.getElementById('auditModalOverlay');
+        document.getElementById('openAuditModalBtn').addEventListener('click', () => auditModalOverlay.classList.add('active'));
+        document.getElementById('closeAuditModalBtn').addEventListener('click', () => auditModalOverlay.classList.remove('active'));
+
+        function logAuditAction(actionName, itemName) {
+            const tbody = document.getElementById('auditLogTableBody');
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>محمد فيصل</td>
+                <td><span style="color: var(--accent-color);">${actionName}</span></td>
+                <td>${itemName}</td>
+                <td>الآن</td>
+            `;
+            tbody.prepend(tr);
+        }
+
         // نافذة رفع التقارير
         const uploadModalOverlay = document.getElementById('uploadModalOverlay');
-        const openUploadModalBtn = document.getElementById('openUploadModalBtn');
-        const closeUploadModalBtn = document.getElementById('closeUploadModalBtn');
+        document.getElementById('openUploadModalBtn').addEventListener('click', () => uploadModalOverlay.classList.add('active'));
+        document.getElementById('closeUploadModalBtn').addEventListener('click', () => uploadModalOverlay.classList.remove('active'));
 
-        openUploadModalBtn.addEventListener('click', () => uploadModalOverlay.classList.add('active'));
-        closeUploadModalBtn.addEventListener('click', () => uploadModalOverlay.classList.remove('active'));
-        uploadModalOverlay.addEventListener('click', (e) => { if(e.target === uploadModalOverlay) uploadModalOverlay.classList.remove('active'); });
-
-        // نافذة إضافة سجل
+        // نافذة إضافة سجل نصي
         const modalOverlay = document.getElementById('modalOverlay');
-        const openModalBtn = document.getElementById('openModalBtn');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-
-        openModalBtn.addEventListener('click', () => modalOverlay.classList.add('active'));
-        closeModalBtn.addEventListener('click', () => modalOverlay.classList.remove('active'));
-        modalOverlay.addEventListener('click', (e) => { if(e.target === modalOverlay) modalOverlay.classList.remove('active'); });
+        document.getElementById('openModalBtn').addEventListener('click', () => modalOverlay.classList.add('active'));
+        document.getElementById('closeModalBtn').addEventListener('click', () => modalOverlay.classList.remove('active'));
 
         // وظيفة رفع التقرير وإضافته للجدول
         function uploadReportFile() {
@@ -892,6 +1195,7 @@
             else if(fileType === 'ppt') badgeHTML = '<span class="file-badge ppt"><i class="fas fa-file-powerpoint"></i> PowerPoint (.pptx)</span>';
 
             const newRow = document.createElement('tr');
+            newRow.setAttribute('data-type', fileType);
             newRow.innerHTML = `
                 <td>${randomId}</td>
                 <td>${title}</td>
@@ -900,6 +1204,7 @@
                 <td><span class="status-pill active">جديد</span></td>
                 <td>
                     <div class="action-icons">
+                        <i class="fas fa-eye" title="معاينة" onclick="previewFile('${title}', '${fileType.toUpperCase()}', '${section}', 'جديد')"></i>
                         <i class="fas fa-download" title="تحميل الملف" onclick="downloadFile('${title}')"></i>
                         <i class="fas fa-edit" title="تعديل" onclick="editRecord(this)"></i>
                         <i class="fas fa-trash-alt" title="حذف" onclick="deleteRow(this)"></i>
@@ -911,7 +1216,10 @@
             uploadModalOverlay.classList.remove('active');
             document.getElementById('reportTitleInput').value = '';
             document.getElementById('fileBrowserInput').value = '';
-            alert('تم رفع الملف والتقرير بنجاح إلى النظام وإضافته للقائمة!');
+            
+            updateKPIs();
+            logAuditAction('رفع ملف جديد', title);
+            alert('تم رفع الملف والتقرير بنجاح وتحديث مؤشرات الأداء!');
         }
 
         // إضافة سجل نصي عادي
@@ -928,6 +1236,7 @@
             const randomId = '#KYN-' + Math.floor(1000 + Math.random() * 9000);
             
             const newRow = document.createElement('tr');
+            newRow.setAttribute('data-type', 'word');
             newRow.innerHTML = `
                 <td>${randomId}</td>
                 <td>${recordName}</td>
@@ -936,6 +1245,7 @@
                 <td><span class="status-pill active">نشط</span></td>
                 <td>
                     <div class="action-icons">
+                        <i class="fas fa-eye" title="معاينة" onclick="previewFile('${recordName}', 'سجل نصي', '${section}', 'نشط')"></i>
                         <i class="fas fa-download" title="تحميل" onclick="downloadFile('${recordName}')"></i>
                         <i class="fas fa-edit" title="تعديل" onclick="editRecord(this)"></i>
                         <i class="fas fa-trash-alt" title="حذف" onclick="deleteRow(this)"></i>
@@ -946,15 +1256,58 @@
             tbody.prepend(newRow);
             modalOverlay.classList.remove('active');
             document.getElementById('recordInput').value = '';
+            
+            updateKPIs();
+            logAuditAction('إضافة سجل', recordName);
             alert('تمت إضافة السجل بنجاح!');
+        }
+
+        // الفلترة السريعة للجدول
+        function filterTable(type, element) {
+            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+            element.classList.add('active');
+
+            const rows = document.querySelectorAll('#reportsTableBody tr');
+            rows.forEach(row => {
+                const rowType = row.getAttribute('data-type');
+                if(type === 'all' || rowType === type) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        // تحديث مؤشرات الأداء (KPIs) ديناميكياً
+        function updateKPIs() {
+            const rows = document.querySelectorAll('#reportsTableBody tr');
+            const total = rows.length;
+            let activeCount = 0;
+            let pendingCount = 0;
+
+            rows.forEach(row => {
+                const statusText = row.querySelector('.status-pill').textContent;
+                if(statusText.includes('معتمد') || statusText.includes('نشط') || statusText.includes('محدث')) {
+                    activeCount++;
+                } else {
+                    pendingCount++;
+                }
+            });
+
+            document.getElementById('kpiTotalReports').textContent = total;
+            document.getElementById('kpiActiveReports').textContent = activeCount;
+            document.getElementById('kpiPendingReports').textContent = pendingCount;
         }
 
         // وظائف الحذف، التعديل والتحميل
         function deleteRow(element) {
             if(confirm('هل أنت متأكد من حذف هذا التقرير أو السجل من النظام؟')) {
                 const row = element.closest('tr');
+                const title = row.cells[1].textContent;
                 row.remove();
-                alert('تم حذف السجل بنجاح.');
+                updateKPIs();
+                logAuditAction('حذف', title);
+                alert('تم حذف السجل بنجاح وتحديث المؤشرات.');
             }
         }
 
@@ -964,16 +1317,22 @@
             const newTitle = prompt('تعديل عنوان التقرير أو السجل:', titleCell.textContent);
             if(newTitle && newTitle.trim() !== '') {
                 titleCell.textContent = newTitle;
+                logAuditAction('تعديل', newTitle);
                 alert('تم تعديل السجل بنجاح.');
             }
         }
 
         function downloadFile(fileName) {
-            alert(`جاري تجهيز وتحميل ملف: "${fileName}" بصيغته الأصلية...`);
+            alert(`جاري تجهيز وتحميل الملف: "${fileName}" بصيغته الأصلية...`);
+        }
+
+        function exportMasterReport() {
+            alert('جاري تصدير تقارير القسم الحالي وتوليد ملف Excel مجمع للطباعة...');
         }
 
         function refreshData() {
-            alert('تم تحديث قائمة التقارير والملفات وعرض أحدث البيانات.');
+            updateKPIs();
+            alert('تم تحديث بيانات لوحة التحكم والتقارير بنجاح.');
         }
     </script>
 </body>
