@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم نظام كيان - Kayan ERP v6.5 (الشجرة التنظيمية الشاملة)</title>
+    <title>لوحة تحكم نظام كيان - Kayan ERP v7.0 (الشجرة التنظيمية الشاملة والموسعة)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -41,8 +41,8 @@
                 <i class="fa-solid fa-cube text-xl"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-wide">منصة كيان <span class="text-accentBlue text-xs px-2 py-0.5 bg-blue-900/50 rounded-full border border-blue-700">ERP v6.5</span></h1>
-                <p class="text-xs text-slate-400">نظام الإدارة المؤسسية الشامل لكافة قطاعات الأعمال</p>
+                <h1 class="text-xl font-bold tracking-wide">منصة كيان <span class="text-accentBlue text-xs px-2 py-0.5 bg-blue-900/50 rounded-full border border-blue-700">ERP v7.0</span></h1>
+                <p class="text-xs text-slate-400">نظام الإدارة المؤسسية الشامل لكافة قطاعات الأعمال والرقابة</p>
             </div>
         </div>
 
@@ -60,7 +60,7 @@
     </header>
 
     <div class="flex flex-1">
-        <!-- القائمة الجانبية والشجرة التنظيمية الشاملة -->
+        <!-- القائمة الجانبية والشجرة التنظيمية الشاملة والموسعة (16 إدارة) -->
         <aside class="w-80 bg-cardBg border-l border-slate-800 p-4 hidden md:flex flex-col justify-between overflow-y-auto max-h-[calc(100vh-73px)]">
             <nav class="space-y-2">
                 <!-- الرئيسية -->
@@ -69,7 +69,7 @@
                     <span class="font-medium text-sm">لوحة القيادة الرئيسية</span>
                 </a>
 
-                <div class="text-[11px] font-bold text-slate-400 px-3 pt-2 uppercase tracking-wider">القطاعات التشغيلية والشجرة</div>
+                <div class="text-[11px] font-bold text-slate-400 px-3 pt-2 uppercase tracking-wider">القطاعات التشغيلية والرقابية (16 إدارة)</div>
 
                 <!-- 1. المبيعات وعقود العملاء -->
                 <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
@@ -210,11 +210,59 @@
                     </div>
                 </div>
 
+                <!-- 13. الشؤون القانونية والامتثال (جديد) -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-legal')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-gavel ml-2 text-amber-400"></i> الشؤون القانونية والامتثال</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-legal"></i>
+                    </button>
+                    <div id="menu-legal" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('legal-contracts', 'عقود الشركة والاتفاقيات الرسمية', 'مراجعة وتوثيق العقود واللوائح الداخلية')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-amber-600/20 hover:text-amber-300">🔹 العقود والتوثيق القانوني</a>
+                        <a href="#" onclick="showContent('legal-disputes', 'القضايا والنزاعات العمالية', 'متابعة القضايا والنزاعات والشكاوى النظامية')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-amber-600/20 hover:text-amber-300">🔹 القضايا والنزاعات</a>
+                    </div>
+                </div>
+
+                <!-- 14. الأمن والسلامة المهنية (HSE) (جديد) -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-hse')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-shield-halved ml-2 text-emerald-500"></i> الأمن والسلامة المهنية (HSE)</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-hse"></i>
+                    </button>
+                    <div id="menu-hse" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('hse-safety', 'معايير الأمان ومعدات الوقاية', 'فحص طفايات الحريق، مخارج الطوارئ، ومعدات PPE')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-emerald-600/20 hover:text-emerald-300">🔹 معايير وأدوات السلامة</a>
+                        <a href="#" onclick="showContent('hse-incidents', 'سجل الحوادث وإصابات العمل', 'توثيق البلاغات وإجراءات السلامة الوقائية')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-emerald-600/20 hover:text-emerald-300">🔹 سجل الحوادث والإصابات</a>
+                    </div>
+                </div>
+
+                <!-- 15. إدارة الجودة وضمان المطابقة (جديد) -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-quality')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-award ml-2 text-sky-400"></i> الجودة وضمان المطابقة</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-quality"></i>
+                    </button>
+                    <div id="menu-quality" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('q-standards', 'معايير وسياسات الجودة', 'مراجعة دليل الإجراءات والمواصفات القياسية')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-sky-600/20 hover:text-sky-300">🔹 دليل ومواصفات الجودة</a>
+                        <a href="#" onclick="showContent('q-audits', 'فحص المطابقة والشكاوى', 'مراقبة جودة المنتجات والخدمات ومعالجة العيوب')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-sky-600/20 hover:text-sky-300">🔹 تقارير المطابقة والعيوب</a>
+                    </div>
+                </div>
+
+                <!-- 16. التدقيق الداخلي وإدارة المخاطر (جديد) -->
+                <div class="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40">
+                    <button onclick="toggleSubMenu('menu-audit')" class="w-full flex items-center justify-between px-3 py-2.5 text-slate-200 hover:bg-slate-800 transition text-xs font-semibold">
+                        <span class="flex items-center"><i class="fa-solid fa-file-shield ml-2 text-violet-400"></i> التدقيق الداخلي والمخاطر</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 transition-transform" id="arrow-menu-audit"></i>
+                    </button>
+                    <div id="menu-audit" class="hidden bg-slate-950/60 p-2 space-y-1 text-xs border-t border-slate-800">
+                        <a href="#" onclick="showContent('aud-financial', 'الراجع والتدقيق المالي والإداري', 'مراجعة الدورات المستندية والقيود المالية دورياً')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-violet-600/20 hover:text-violet-300">🔹 التدقيق المالي والإداري</a>
+                        <a href="#" onclick="showContent('aud-risks', 'سجل المخاطر التشغيلية', 'تحديد وتقييم المخاطر ووضع خطط الطوارئ والحلول')" class="block px-3 py-1.5 rounded text-slate-300 hover:bg-violet-600/20 hover:text-violet-300">🔹 سجل المخاطر والطوارئ</a>
+                    </div>
+                </div>
+
             </nav>
 
             <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 text-xs text-slate-400 text-center mt-6">
-                <p class="font-semibold text-slate-300">كيان ERP v6.5</p>
-                <p class="mt-1">جميع القطاعات مفصولة بالكامل © 2026</p>
+                <p class="font-semibold text-slate-300">كيان ERP v7.0</p>
+                <p class="mt-1">16 إدارة رئيسية متكاملة © 2026</p>
             </div>
         </aside>
 
@@ -225,14 +273,14 @@
                 <div class="flex justify-between items-center bg-cardBg p-4 rounded-2xl border border-slate-800 shadow-sm">
                     <div>
                         <h2 class="text-lg font-bold">لوحة القيادة الرئيسية الشاملة</h2>
-                        <p class="text-xs text-slate-400 mt-1">تمت إضافة وتهيئة كافة الإدارات الـ 12 بالكامل ضمن الشجرة التنظيمية التفاعلية.</p>
+                        <p class="text-xs text-slate-400 mt-1">تمت إضافة وتهيئة كافة الإدارات الـ 16 بالكامل ضمن الشجرة التنظيمية التفاعلية.</p>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow">
                         <p class="text-xs text-slate-400 font-medium">إجمالي الإدارات النشطة</p>
-                        <h3 class="text-2xl font-bold mt-1 text-emerald-400">12 إدارة رئيسية</h3>
+                        <h3 class="text-2xl font-bold mt-1 text-emerald-400">16 إدارة رئيسية</h3>
                         <p class="text-xs text-emerald-400 mt-4"><i class="fa-solid fa-circle-check ml-1"></i> تعمل بكفاءة كاملة</p>
                     </div>
                     <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow">
@@ -255,7 +303,8 @@
                 <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow">
                     <h3 class="font-bold text-sm mb-3 text-blue-400">دليل الاستخدام السريع:</h3>
                     <ul class="text-xs text-slate-300 space-y-2 list-disc list-inside">
-                        <li>تم فصل جميع الإدارات الـ 12 تماماً في القائمة الجانبية مع إمكانية فتح فروع كل إدارة على حدة.</li>
+                        <li>تم فصل جميع الإدارات الـ 16 تماماً في القائمة الجانبية مع إمكانية فتح فروع كل إدارة على حدة.</li>
+                        <li>تمت إضافة إدارات: الشؤون القانونية، الأمن والسلامة، الجودة، والتدقيق الداخلي.</li>
                         <li>انقر على أي بند فرعي لعرض لوحة التحكم الخاصة به مباشرة وتحديث سجلاته.</li>
                     </ul>
                 </div>
