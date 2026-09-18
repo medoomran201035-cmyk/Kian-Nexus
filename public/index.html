@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم نظام كيان - Kayan ERP</title>
+    <title>لوحة تحكم نظام كيان - Kayan ERP v3.0</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -38,8 +38,8 @@
                 <i class="fa-solid fa-cube text-xl"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-wide">منصة كيان <span class="text-accentBlue text-xs px-2 py-0.5 bg-blue-900/50 rounded-full border border-blue-700">ERP v2.0</span></h1>
-                <p class="text-xs text-slate-400">إدارة المبيعات، المخزون، المالية، والحضور</p>
+                <h1 class="text-xl font-bold tracking-wide">منصة كيان <span class="text-accentBlue text-xs px-2 py-0.5 bg-blue-900/50 rounded-full border border-blue-700">ERP v3.0</span></h1>
+                <p class="text-xs text-slate-400">إدارة شاملة لجميع إدارات وخدمات الشركة</p>
             </div>
         </div>
 
@@ -50,7 +50,8 @@
                 <select id="roleSelector" onchange="changeRole(this.value)" class="bg-transparent text-xs text-accentBlue font-semibold focus:outline-none cursor-pointer">
                     <option value="admin" class="bg-slate-900 text-white">مدير عام (Admin)</option>
                     <option value="accountant" class="bg-slate-900 text-white">محاسب (Accountant)</option>
-                    <option value="it" class="bg-slate-900 text-white">دعم تقني (IT Support)</option>
+                    <option value="it" class="bg-slate-900 text-white">دعم تقني وشبكات (IT Support)</option>
+                    <option value="hr" class="bg-slate-900 text-white">الموارد البشرية (HR)</option>
                 </select>
             </div>
 
@@ -68,32 +69,71 @@
     </header>
 
     <div class="flex flex-1">
-        <!-- القائمة الجانبية -->
-        <aside class="w-64 bg-cardBg border-l border-slate-800 p-4 hidden md:flex flex-col justify-between">
-            <nav class="space-y-1">
+        <!-- القائمة الجانبية والشجرة التنظيمية للإدارات والخدمات -->
+        <aside class="w-72 bg-cardBg border-l border-slate-800 p-4 hidden md:flex flex-col justify-between overflow-y-auto max-h-[calc(100vh-73px)]">
+            <nav class="space-y-2">
+                <!-- الرئيسية -->
                 <a href="#" onclick="switchTab('dashboard')" id="nav-dashboard" class="flex items-center space-x-3 space-x-reverse px-4 py-3 rounded-xl bg-blue-600 text-white transition shadow-md">
                     <i class="fa-solid fa-chart-pie w-5"></i>
-                    <span class="font-medium">لوحة القيادة</span>
+                    <span class="font-medium text-sm">لوحة القيادة الرئيسية</span>
                 </a>
-                <a href="#" onclick="switchTab('sales')" id="nav-sales" class="flex items-center space-x-3 space-x-reverse px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                    <i class="fa-solid fa-cash-register w-5"></i>
-                    <span class="font-medium">المبيعات والعملاء</span>
-                </a>
-                <a href="#" onclick="switchTab('inventory')" id="nav-inventory" class="flex items-center space-x-3 space-x-reverse px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                    <i class="fa-solid fa-boxes-stacked w-5"></i>
-                    <span class="font-medium">إدارة المخزون</span>
-                </a>
-                <a href="#" onclick="switchTab('finance')" id="nav-finance" class="flex items-center space-x-3 space-x-reverse px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                    <i class="fa-solid fa-wallet w-5"></i>
-                    <span class="font-medium">المالية والحسابات</span>
-                </a>
-                <a href="#" onclick="switchTab('attendance')" id="nav-attendance" class="flex items-center space-x-3 space-x-reverse px-4 py-3 rounded-xl text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                    <i class="fa-solid fa-fingerprint w-5"></i>
-                    <span class="font-medium">الحضور والانصراف</span>
-                </a>
+
+                <!-- 1. إدارة المبيعات والعملاء -->
+                <div class="space-y-1 pt-2">
+                    <div class="text-xs font-bold text-slate-400 px-3 uppercase tracking-wider"><i class="fa-solid fa-cash-register ml-1"></i> إدارة المبيعات والعملاء</div>
+                    <a href="#" onclick="switchTab('sales')" id="nav-sales" class="flex items-center justify-between px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition text-xs mr-3 border-r-2 border-transparent hover:border-blue-500">
+                        <span>فواتير وعقود العملاء</span>
+                        <i class="fa-solid fa-angle-left text-[10px]"></i>
+                    </a>
+                </div>
+
+                <!-- 2. إدارة المخزون والأصول -->
+                <div class="space-y-1 pt-2">
+                    <div class="text-xs font-bold text-slate-400 px-3 uppercase tracking-wider"><i class="fa-solid fa-boxes-stacked ml-1"></i> إدارة المخزون</div>
+                    <a href="#" onclick="switchTab('inventory')" id="nav-inventory" class="flex items-center justify-between px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition text-xs mr-3 border-r-2 border-transparent hover:border-blue-500">
+                        <span>مستودع الأجهزة والعهد</span>
+                        <i class="fa-solid fa-angle-left text-[10px]"></i>
+                    </a>
+                </div>
+
+                <!-- 3. المالية والحسابات -->
+                <div class="space-y-1 pt-2">
+                    <div class="text-xs font-bold text-slate-400 px-3 uppercase tracking-wider"><i class="fa-solid fa-wallet ml-1"></i> المالية والحسابات</div>
+                    <a href="#" onclick="switchTab('finance')" id="nav-finance" class="flex items-center justify-between px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition text-xs mr-3 border-r-2 border-transparent hover:border-blue-500">
+                        <span>الإيرادات والمصروفات</span>
+                        <i class="fa-solid fa-angle-left text-[10px]"></i>
+                    </a>
+                </div>
+
+                <!-- 4. الموارد البشرية والشؤون الإدارية -->
+                <div class="space-y-1 pt-2">
+                    <div class="text-xs font-bold text-slate-400 px-3 uppercase tracking-wider"><i class="fa-solid fa-users-gear ml-1"></i> الموارد البشرية (HR)</div>
+                    <a href="#" onclick="switchTab('hr')" id="nav-hr" class="flex items-center justify-between px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition text-xs mr-3 border-r-2 border-transparent hover:border-blue-500">
+                        <span>ملفات الموظفين والرواتب</span>
+                        <i class="fa-solid fa-angle-left text-[10px]"></i>
+                    </a>
+                </div>
+
+                <!-- 5. الدعم الفني وتقنية المعلومات -->
+                <div class="space-y-1 pt-2">
+                    <div class="text-xs font-bold text-slate-400 px-3 uppercase tracking-wider"><i class="fa-solid fa-network-wired ml-1"></i> تقنية المعلومات (IT)</div>
+                    <a href="#" onclick="switchTab('it')" id="nav-it" class="flex items-center justify-between px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition text-xs mr-3 border-r-2 border-transparent hover:border-blue-500">
+                        <span>الشبكات، السيرفرات والكاميرات</span>
+                        <i class="fa-solid fa-angle-left text-[10px]"></i>
+                    </a>
+                </div>
+
+                <!-- 6. الحضور والانصراف -->
+                <div class="space-y-1 pt-2">
+                    <div class="text-xs font-bold text-slate-400 px-3 uppercase tracking-wider"><i class="fa-solid fa-fingerprint ml-1"></i> الأجهزة والبصمة</div>
+                    <a href="#" onclick="switchTab('attendance')" id="nav-attendance" class="flex items-center justify-between px-4 py-2 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition text-xs mr-3 border-r-2 border-transparent hover:border-blue-500">
+                        <span>سجلات ZKTeco للبصمة</span>
+                        <i class="fa-solid fa-angle-left text-[10px]"></i>
+                    </a>
+                </div>
             </nav>
 
-            <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 text-xs text-slate-400 text-center">
+            <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 text-xs text-slate-400 text-center mt-6">
                 <p class="font-semibold text-slate-300">كيان للتكنولوجيا والأعمال</p>
                 <p class="mt-1">جميع الحقوق محفوظة © 2026</p>
             </div>
@@ -104,18 +144,16 @@
 
             <!-- تبويب: لوحة القيادة (Dashboard) -->
             <div id="tab-dashboard" class="space-y-6">
-                <!-- الفلتر الزمني السريع -->
                 <div class="flex flex-wrap justify-between items-center bg-cardBg p-4 rounded-2xl border border-slate-800 shadow-sm">
                     <div>
-                        <h2 class="text-lg font-bold">نظرة عامة على الأداء</h2>
-                        <p class="text-xs text-slate-400">تحليل مؤشرات الأداء الحية للشركة</p>
+                        <h2 class="text-lg font-bold">نظرة عامة على الأداء الشامل</h2>
+                        <p class="text-xs text-slate-400">مؤشرات الأداء الموحدة لكافة إدارات الشركة</p>
                     </div>
                     <div class="flex items-center space-x-2 space-x-reverse mt-2 sm:mt-0">
                         <select id="dateRangeFilter" onchange="filterDataByDate(this.value)" class="bg-slate-900 border border-slate-700 text-xs rounded-lg px-3 py-2 text-slate-200 focus:outline-none">
                             <option value="today">بيانات اليوم</option>
                             <option value="week" selected>آخر 7 أيام</option>
                             <option value="month">الشهر الحالي</option>
-                            <option value="year">السنة الحالية</option>
                         </select>
                         <button onclick="exportTableToCSV('kpi-summary-table', 'kayan_summary.csv')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs px-3 py-2 rounded-lg transition flex items-center space-x-1 space-x-reverse shadow">
                             <i class="fa-solid fa-download"></i>
@@ -126,137 +164,52 @@
 
                 <!-- مربعات مؤشرات الأداء (KPI Cards) -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow relative overflow-hidden">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="text-xs text-slate-400 font-medium">إجمالي المبيعات</p>
-                                <h3 class="text-2xl font-bold mt-1 text-emerald-400">142,500 ر.س</h3>
-                            </div>
-                            <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl">
-                                <i class="fa-solid fa-arrow-trend-up text-lg"></i>
-                            </div>
-                        </div>
-                        <p class="text-xs text-emerald-400 mt-4 flex items-center"><i class="fa-solid fa-plus ml-1"></i> 12% مقارنة بالفترة السابقة</p>
+                    <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow relative">
+                        <p class="text-xs text-slate-400 font-medium">إجمالي المبيعات</p>
+                        <h3 class="text-2xl font-bold mt-1 text-emerald-400">142,500 ر.س</h3>
+                        <p class="text-xs text-emerald-400 mt-4"><i class="fa-solid fa-plus ml-1"></i> نمو بنسبة 12%</p>
                     </div>
-
-                    <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow relative overflow-hidden">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="text-xs text-slate-400 font-medium">الطلبات النشطة</p>
-                                <h3 class="text-2xl font-bold mt-1 text-blue-400">384 طلب</h3>
-                            </div>
-                            <div class="p-3 bg-blue-500/10 text-blue-400 rounded-xl">
-                                <i class="fa-solid fa-cart-shopping text-lg"></i>
-                            </div>
-                        </div>
-                        <p class="text-xs text-blue-400 mt-4 flex items-center"><i class="fa-solid fa-rotate ml-1"></i> قيد المعالجة والتجهيز</p>
+                    <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow relative">
+                        <p class="text-xs text-slate-400 font-medium">الموظفون النشطون</p>
+                        <h3 class="text-2xl font-bold mt-1 text-blue-400">48 موظف</h3>
+                        <p class="text-xs text-blue-400 mt-4"><i class="fa-solid fa-user-check ml-1"></i> نسبة الحضور 96.4%</p>
                     </div>
-
-                    <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow relative overflow-hidden">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="text-xs text-slate-400 font-medium">حالة المخزون</p>
-                                <h3 class="text-2xl font-bold mt-1 text-amber-400">1,240 صنف</h3>
-                            </div>
-                            <div class="p-3 bg-amber-500/10 text-amber-400 rounded-xl">
-                                <i class="fa-solid fa-warehouse text-lg"></i>
-                            </div>
-                        </div>
-                        <p class="text-xs text-amber-400 mt-4 flex items-center"><i class="fa-solid fa-triangle-exclamation ml-1"></i> 3 أصناف منخفضة المخزون</p>
+                    <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow relative">
+                        <p class="text-xs text-slate-400 font-medium">أصناف المخزون</p>
+                        <h3 class="text-2xl font-bold mt-1 text-amber-400">1,240 صنف</h3>
+                        <p class="text-xs text-amber-400 mt-4"><i class="fa-solid fa-warehouse ml-1"></i> مستودع الأجهزة والشبكات</p>
                     </div>
-
-                    <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow relative overflow-hidden">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <p class="text-xs text-slate-400 font-medium">نسبة الحضور اليومي</p>
-                                <h3 class="text-2xl font-bold mt-1 text-purple-400">96.4%</h3>
-                            </div>
-                            <div class="p-3 bg-purple-500/10 text-purple-400 rounded-xl">
-                                <i class="fa-solid fa-user-check text-lg"></i>
-                            </div>
-                        </div>
-                        <p class="text-xs text-purple-400 mt-4 flex items-center"><i class="fa-solid fa-clock ml-1"></i> 4 حالات تأخير مسجلة</p>
+                    <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow relative">
+                        <p class="text-xs text-slate-400 font-medium">تذاكر الدعم الفني</p>
+                        <h3 class="text-2xl font-bold mt-1 text-purple-400">14 تذكرة</h3>
+                        <p class="text-xs text-purple-400 mt-4"><i class="fa-solid fa-headset ml-1"></i> 12 محلولة، 2 قيد المعالجة</p>
                     </div>
                 </div>
 
-                <!-- الرسوم البيانية التفاعلية (Chart.js) -->
+                <!-- الرسوم البيانية -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow lg:col-span-2">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-sm">منحنى نمو المبيعات الأسبوعي</h3>
-                            <span class="text-xs text-slate-400">تحديث تلقائي</span>
-                        </div>
-                        <div class="h-64">
-                            <canvas id="salesChart"></canvas>
-                        </div>
+                        <h3 class="font-bold text-sm mb-4">منحنى نمو الأداء والعمليات</h3>
+                        <div class="h-64"><canvas id="salesChart"></canvas></div>
                     </div>
-
                     <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-sm">توزيع استهلاك الأقسام</h3>
-                        </div>
-                        <div class="h-64 flex justify-center items-center">
-                            <canvas id="expensesChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- جدول العمليات الحديثة مع ميزة النقر والتفاصيل -->
-                <div class="bg-cardBg p-5 rounded-2xl border border-slate-800 shadow">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-sm">أحدث المعاملات المالية وطلبkات النظام</h3>
-                        <span class="text-xs text-slate-400">انقر على أي صف لعرض التفاصيل وتعديل الحالة</span>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table id="kpi-summary-table" class="w-full text-right text-xs">
-                            <thead>
-                                <tr class="text-slate-400 border-b border-slate-700">
-                                    <th class="py-3 px-4">رقم المعاملة</th>
-                                    <th class="py-3 px-4">العميل / الموظف</th>
-                                    <th class="py-3 px-4">القسم</th>
-                                    <th class="py-3 px-4">القيمة</th>
-                                    <th class="py-3 px-4">الحالة</th>
-                                    <th class="py-3 px-4">التاريخ</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-800">
-                                <tr onclick="openRecordModal('TRX-9821', 'شركة الأفق للاستشارات', 'المبيعات', '14,200 ر.س', 'مكتمل', '2026-09-18')" class="hover:bg-slate-800/50 cursor-pointer transition">
-                                    <td class="py-3 px-4 font-mono text-accentBlue">#TRX-9821</td>
-                                    <td class="py-3 px-4 font-medium">شركة الأفق للاستشارات</td>
-                                    <td class="py-3 px-4">المبيعات</td>
-                                    <td class="py-3 px-4 font-semibold">14,200 ر.س</td>
-                                    <td class="py-3 px-4"><span class="px-2 py-1 bg-emerald-900/50 text-emerald-400 rounded-md border border-emerald-700">مكتمل</span></td>
-                                    <td class="py-3 px-4 text-slate-400">اليوم، 04:30 م</td>
-                                </tr>
-                                <tr onclick="openRecordModal('TRX-9820', 'مؤسسة النور التجارية', 'المبيعات', '8,500 ر.س', 'قيد المعالجة', '2026-09-18')" class="hover:bg-slate-800/50 cursor-pointer transition">
-                                    <td class="py-3 px-4 font-mono text-accentBlue">#TRX-9820</td>
-                                    <td class="py-3 px-4 font-medium">مؤسسة النور التجارية</td>
-                                    <td class="py-3 px-4">المبيعات</td>
-                                    <td class="py-3 px-4 font-semibold">8,500 ر.س</td>
-                                    <td class="py-3 px-4"><span class="px-2 py-1 bg-amber-900/50 text-amber-400 rounded-md border border-amber-700">قيد المعالجة</span></td>
-                                    <td class="py-3 px-4 text-slate-400">اليوم، 02:15 م</td>
-                                </tr>
-                                <tr onclick="openRecordModal('TRX-9819', 'أحمد خالد (صيانة)', 'الدعم الفني', '1,200 ر.س', 'مكتمل', '2026-09-17')" class="hover:bg-slate-800/50 cursor-pointer transition">
-                                    <td class="py-3 px-4 font-mono text-accentBlue">#TRX-9819</td>
-                                    <td class="py-3 px-4 font-medium">أحمد خالد (صيانة)</td>
-                                    <td class="py-3 px-4">الدعم الفني</td>
-                                    <td class="py-3 px-4 font-semibold">1,200 ر.س</td>
-                                    <td class="py-3 px-4"><span class="px-2 py-1 bg-emerald-900/50 text-emerald-400 rounded-md border border-emerald-700">مكتمل</span></td>
-                                    <td class="py-3 px-4 text-slate-400">أمس</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <h3 class="font-bold text-sm mb-4">توزيع مصاريف الأقسام</h3>
+                        <div class="h-64 flex justify-center items-center"><canvas id="expensesChart"></canvas></div>
                     </div>
                 </div>
             </div>
 
-            <!-- تبويب: المبيعات (Sales) -->
+            <!-- تبويب: 1. المبيعات والعملاء -->
             <div id="tab-sales" class="space-y-6 hidden">
                 <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow">
-                    <h2 class="text-lg font-bold mb-2">إدارة المبيعات والعملاء</h2>
-                    <p class="text-xs text-slate-400 mb-4">عرض وتتبع العقود وفواتير العملاء النشطة.</p>
-                    <button onclick="exportTableToCSV('sales-table', 'sales_report.csv')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-2 rounded-lg transition shadow">تصدير بيانات المبيعات CSV</button>
-                    <div class="overflow-x-auto mt-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <h2 class="text-lg font-bold">إدارة المبيعات والعملاء (Sales & CRM)</h2>
+                            <p class="text-xs text-slate-400">خدمات إصدار الفواتير، عقود العملاء، وعروض الأسعار.</p>
+                        </div>
+                        <button onclick="exportTableToCSV('sales-table', 'sales_data.csv')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-3 py-2 rounded-lg shadow">تصدير المبيعات</button>
+                    </div>
+                    <div class="overflow-x-auto">
                         <table id="sales-table" class="w-full text-right text-xs">
                             <thead>
                                 <tr class="text-slate-400 border-b border-slate-700">
@@ -268,12 +221,19 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-800">
-                                <tr>
-                                    <td class="py-3 px-4 font-mono text-blue-400">INV-2026-01</td>
+                                <tr class="hover:bg-slate-800/50">
+                                    <td class="py-3 px-4 font-mono text-blue-400">#INV-2026-01</td>
                                     <td class="py-3 px-4 font-medium">شركة الأفق للاستشارات</td>
-                                    <td class="py-3 px-4">باقات الدعم الفني السنوي</td>
+                                    <td class="py-3 px-4">باقات الدعم الفني السنوي للشبكات</td>
                                     <td class="py-3 px-4 font-semibold">14,200 ر.س</td>
                                     <td class="py-3 px-4 text-emerald-400">مسددة</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50">
+                                    <td class="py-3 px-4 font-mono text-blue-400">#INV-2026-02</td>
+                                    <td class="py-3 px-4 font-medium">مؤسسة النور التجارية</td>
+                                    <td class="py-3 px-4">توريد أجهزة راوتر MikroTik وكاميرات Dahua</td>
+                                    <td class="py-3 px-4 font-semibold">8,500 ر.س</td>
+                                    <td class="py-3 px-4 text-amber-400">قيد التحصيل</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -281,89 +241,136 @@
                 </div>
             </div>
 
-            <!-- تبويب: المخزون (Inventory) -->
+            <!-- تبويب: 2. المخزون والأصول -->
             <div id="tab-inventory" class="space-y-6 hidden">
                 <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow">
-                    <h2 class="text-lg font-bold mb-2">مستودع الأجهزة والعهد</h2>
-                    <p class="text-xs text-slate-400 mb-4">متابعة الأجهزة المتوفرة، أجهزة التوجيه (Routers)، وكاميرات المراقبة.</p>
-                    <div class="p-4 bg-slate-900 rounded-xl border border-slate-700 text-sm">
-                        <p><i class="fa-solid fa-circle-info text-blue-400 ml-2"></i> قسم المخزون متصل بنظام الأصول والأجهزة. إجمالي الأصناف المسجلة: <strong>1,240 صنف</strong>.</p>
+                    <h2 class="text-lg font-bold mb-2">إدارة المخزون والأصول (Inventory & Assets)</h2>
+                    <p class="text-xs text-slate-400 mb-4">خدمات إدارة عهد الموظفين، أجهزة الشبكات، وتتبع الأصناف.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                            <p class="font-bold text-accentBlue mb-1"><i class="fa-solid fa-server ml-1"></i> مستودع أجهزة الشبكات</p>
+                            <p class="text-slate-400">أجهزة MikroTik، Switches، وعمليات Port Security وسيرفرات Hyper-V.</p>
+                        </div>
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                            <p class="font-bold text-accentEmerald mb-1"><i class="fa-solid fa-video ml-1"></i> مستودع المراقبة CCTV</p>
+                            <p class="text-slate-400">كاميرات Dahua و Hikvision وأجهزة NVR عبر SmartPSS و iVMS-4200.</p>
+                        </div>
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                            <p class="font-bold text-amber-400 mb-1"><i class="fa-solid fa-laptop ml-1"></i> عهد الحواسيب وأجهزة الموظفين</p>
+                            <p class="text-slate-400">متابعة أجهزة الكمبيوتر المحمولة والطابعات وصيانتها.</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- تبويب: المالية (Finance) -->
+            <!-- تبويب: 3. المالية والحسابات -->
             <div id="tab-finance" class="space-y-6 hidden">
                 <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow">
-                    <h2 class="text-lg font-bold mb-2">الحسابات والتقارير المالية</h2>
-                    <p class="text-xs text-slate-400 mb-4">ميزانية الأقسام، المصروفات والإيرادات الشهرية.</p>
+                    <h2 class="text-lg font-bold mb-2">المالية والحسابات (Finance & Accounts)</h2>
+                    <p class="text-xs text-slate-400 mb-4">خدمات ميزانية الأقسام، المصروفات والإيرادات الشهرية، وسندات الصرف والقبض.</p>
+                    <div class="p-4 bg-slate-900 rounded-xl border border-slate-700 text-xs">
+                        <p class="text-slate-300 font-semibold mb-2"><i class="fa-solid fa-chart-line text-emerald-400 ml-1"></i> ملخص الميزانية العامة للشركة:</p>
+                        <ul class="list-disc list-inside space-y-1 text-slate-400">
+                            <li>إجمالي الإيرادات المحققة: 142,500 ر.س</li>
+                            <li>إجمالي المصروفات التشغيلية: 85,000 ر.س</li>
+                            <li>صافي الأرباح التشغيلية: 57,500 ر.س</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
-            <!-- تبويب: الحضور والانصراف (Attendance) -->
+            <!-- تبويب: 4. الموارد البشرية (HR) -->
+            <div id="tab-hr" class="space-y-6 hidden">
+                <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow">
+                    <h2 class="text-lg font-bold mb-2">الموارد البشرية والشؤون الإدارية (HR & Admin)</h2>
+                    <p class="text-xs text-slate-400 mb-4">خدمات ملفات الموظفين، هيكل الرواتب، وإدارة الإجازات والطلبات.</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs">
+                            <thead>
+                                <tr class="text-slate-400 border-b border-slate-700">
+                                    <th class="py-3 px-4">اسم الموظف</th>
+                                    <th class="py-3 px-4">المسمى الوظيفي</th>
+                                    <th class="py-3 px-4">القسم</th>
+                                    <th class="py-3 px-4">حالة الدوام</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800">
+                                <tr class="hover:bg-slate-800/50">
+                                    <td class="py-3 px-4 font-medium">محمد فيصل</td>
+                                    <td class="py-3 px-4">أخصائي IT وعلاقات عملاء</td>
+                                    <td class="py-3 px-4">تقنية المعلومات</td>
+                                    <td class="py-3 px-4 text-emerald-400">على رأس العمل</td>
+                                </tr>
+                                <tr class="hover:bg-slate-800/50">
+                                    <td class="py-3 px-4 font-medium">أحمد خالد</td>
+                                    <td class="py-3 px-4">محاسب أول</td>
+                                    <td class="py-3 px-4">المالية</td>
+                                    <td class="py-3 px-4 text-emerald-400">على رأس العمل</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب: 5. الدعم الفني وتقنية المعلومات (IT Support) -->
+            <div id="tab-it" class="space-y-6 hidden">
+                <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow space-y-4">
+                    <div>
+                        <h2 class="text-lg font-bold">الدعم الفني وإدارة الشبكات (IT Support & Networks)</h2>
+                        <p class="text-xs text-slate-400">إدارة شبكات MikroTik، Active Directory، صيانة الأجهزة وكاميرات المراقبة.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-2">
+                            <p class="font-bold text-accentBlue text-sm"><i class="fa-solid fa-server ml-1"></i> إدارة الشبكة والسيرفرات</p>
+                            <p class="text-slate-400">ضبط إعدادات MikroTik عبر WinBox، إنشاء VLANs، وDHCP Servers وFirewall ACLs.</p>
+                            <p class="text-slate-400">إدارة Active Directory Users and Computers وGroup Policy Objects (GPOs).</p>
+                        </div>
+                        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-2">
+                            <p class="font-bold text-accentEmerald text-sm"><i class="fa-solid fa-shield-halved ml-1"></i> الأنظمة الأمنية وبرمجيات الصيانة</p>
+                            <p class="text-slate-400">مراقبة وتشغيل انظمة Dahua و Hikvision عبر iVMS-4200 و SmartPSS.</p>
+                            <p class="text-slate-400">الصيانة باستخدام Hiren's BootCD PE، Ventoy، وبرامج استعادة النظام.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب: 6. الحضور والانصراف (ZKTeco) -->
             <div id="tab-attendance" class="space-y-6 hidden">
                 <div class="bg-cardBg p-6 rounded-2xl border border-slate-800 shadow">
-                    <h2 class="text-lg font-bold mb-2">سجلات البصمة والحضور (ZKTeco Integration)</h2>
-                    <p class="text-xs text-slate-400 mb-4">متابعة أوقات الدخول والانصراف للموظفين.</p>
+                    <h2 class="text-lg font-bold mb-2">إدارة الحضور والانصراف (ZKTeco Integration)</h2>
+                    <p class="text-xs text-slate-400 mb-4">ربط أجهزة البصمة (مثل MB2000) واستخراج تقارير التأخير والانصراف.</p>
+                    <div class="p-4 bg-slate-900 rounded-xl border border-slate-700 text-xs text-slate-300">
+                        <p><i class="fa-solid fa-fingerprint text-purple-400 ml-1"></i> تم مزامنة أجهزة البصمة بنجاح. معدل الانضباط اليومي العام للموظفين: <strong>96.4%</strong>.</p>
+                    </div>
                 </div>
             </div>
 
         </main>
     </div>
 
-    <!-- نافذة منبثقة لتفاصيل وتعديل السجل (Modal) -->
-    <div id="recordModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex justify-center items-center p-4">
-        <div class="bg-cardBg border border-slate-700 w-full max-w-md rounded-2xl p-6 shadow-2xl relative space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-                <h3 class="font-bold text-base text-accentBlue" id="modalTitle">تفاصيل المعاملة</h3>
-                <button onclick="closeRecordModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <div class="space-y-3 text-xs">
-                <div>
-                    <label class="text-slate-400 block mb-1">معرف السجل:</label>
-                    <input type="text" id="modalId" readonly class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-300 font-mono">
-                </div>
-                <div>
-                    <label class="text-slate-400 block mb-1">اسم العميل / الجهة:</label>
-                    <input type="text" id="modalClient" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
-                </div>
-                <div>
-                    <label class="text-slate-400 block mb-1">القيمة المالية:</label>
-                    <input type="text" id="modalAmount" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
-                </div>
-                <div>
-                    <label class="text-slate-400 block mb-1">حالة المعاملة:</label>
-                    <select id="modalStatus" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100">
-                        <option value="مكتمل">مكتمل</option>
-                        <option value="قيد المعالجة">قيد المعالجة</option>
-                        <option value="ملغي">ملغي</option>
-                    </select>
-                </div>
-            </div>
-            <div class="flex justify-end space-x-2 space-x-reverse pt-2 border-t border-slate-700">
-                <button onclick="closeRecordModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs transition">إلغاء</button>
-                <button onclick="saveRecordChanges()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs transition shadow">حفظ التغييرات</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- كود الجافاسكريبت المتقدم للتفاعلات -->
+    <!-- كود الجافاسكريبت للتنقل والتحكم -->
     <script>
-        // تبديل التبويبات (Tabs Switching)
         function switchTab(tabId) {
-            const tabs = ['dashboard', 'sales', 'inventory', 'finance', 'attendance'];
+            const tabs = ['dashboard', 'sales', 'inventory', 'finance', 'hr', 'it', 'attendance'];
             tabs.forEach(t => {
-                document.getElementById('tab-' + t).classList.add('hidden');
-                document.getElementById('nav-' + t).classList.remove('bg-blue-600', 'text-white', 'shadow-md');
-                document.getElementById('nav-' + t).classList.add('text-slate-300', 'hover:bg-slate-800', 'hover:text-white');
+                const tabEl = document.getElementById('tab-' + t);
+                const navEl = document.getElementById('nav-' + t);
+                if(tabEl) tabEl.classList.add('hidden');
+                if(navEl) {
+                    navEl.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
+                    navEl.classList.add('text-slate-300', 'hover:bg-slate-800', 'hover:text-white');
+                }
             });
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            const activeTab = document.getElementById('tab-' + tabId);
             const activeNav = document.getElementById('nav-' + tabId);
-            activeNav.classList.remove('text-slate-300', 'hover:bg-slate-800', 'hover:text-white');
-            activeNav.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+            if(activeTab) activeTab.classList.remove('hidden');
+            if(activeNav) {
+                activeNav.classList.remove('text-slate-300', 'hover:bg-slate-800', 'hover:text-white');
+                activeNav.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+            }
         }
 
-        // نظام تصدير البيانات إلى ملف CSV حقيقي
         function exportTableToCSV(tableId, filename = 'report.csv') {
             const table = document.getElementById(tableId);
             if (!table) return;
@@ -379,95 +386,68 @@
             downloadLink.href = URL.createObjectURL(csvFile);
             downloadLink.download = filename;
             downloadLink.click();
-            
-            // إشعار بسيط بالنجاح
             alert("تم توليد وتنزيل ملف الـ CSV بنجاح!");
         }
 
-        // إبداء نافذة تعديل السجل المنبثقة
-        function openRecordModal(id, client, dept, amount, status, date) {
-            document.getElementById('modalTitle').innerText = 'تعديل المعاملة: ' + id;
-            document.getElementById('modalId').value = id;
-            document.getElementById('modalClient').value = client;
-            document.getElementById('modalAmount').value = amount;
-            document.getElementById('modalStatus').value = status;
-            document.getElementById('recordModal').classList.remove('hidden');
-        }
-
-        function closeRecordModal() {
-            document.getElementById('recordModal').classList.add('hidden');
-        }
-
-        function saveRecordChanges() {
-            alert("تم حفظ التعديلات وتحديث سجل النشاطات (Audit Trail) بنجاح!");
-            closeRecordModal();
-        }
-
-        // نظام الأدوار والصلاحيات (Role-Based UI Control)
         function changeRole(role) {
-            if (role === 'accountant') {
-                alert("تم التحويل إلى دور [محاسب]: تم إبراز الأقسام المالية وتقييد صلاحيات التعديل التقني.");
-            } else if (role === 'it') {
-                alert("تم التحويل إلى دور [مسؤول تقنية معلومات]: تم التركيز على لوحة الدعم الفني والمستودع.");
-            } else {
-                alert("تم التحويل إلى دور [مدير عام]: صلاحيات كاملة على كافة وحدات النظام.");
-            }
+            alert("تم تطبيق صلاحيات الدور المختار على واجهات الإدارات بنجاح.");
         }
 
-        // فلترة البيانات حسب النطاق الزمني
         function filterDataByDate(range) {
-            console.log("تم تطبيق الفلتر الزمني على:", range);
+            console.log("تم تطبيق الفلتر:", range);
         }
 
-        // تهيئة الرسوم البيانية باستخدام Chart.js
+        // تهيئة الرسوم البيانية
         window.addEventListener('DOMContentLoaded', () => {
-            // رسم خطي للمبيعات
-            const ctxSales = document.getElementById('salesChart').getContext('2d');
-            new Chart(ctxSales, {
-                type: 'line',
-                data: {
-                    labels: ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'],
-                    datasets: [{
-                        label: 'المبيعات (ر.س)',
-                        data: [12000, 19000, 15000, 22000, 28000, 24000, 32000],
-                        borderColor: '#3b82f6',
-                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
-                        x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+            const ctxSales = document.getElementById('salesChart');
+            if(ctxSales) {
+                new Chart(ctxSales.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['السبت', 'الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'],
+                        datasets: [{
+                            label: 'الأداء العام',
+                            data: [12000, 19000, 15000, 22000, 28000, 24000, 32000],
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+                            x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                        }
                     }
-                }
-            });
+                });
+            }
 
-            // رسم دائري لتوزيع المصروفات
-            const ctxExpenses = document.getElementById('expensesChart').getContext('2d');
-            new Chart(ctxExpenses, {
-                type: 'doughnut',
-                data: {
-                    labels: ['التشغيل', 'الصيانة', 'الرواتب', 'التسويق'],
-                    datasets: [{
-                        data: [40, 25, 20, 15],
-                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 11 } } }
+            const ctxExpenses = document.getElementById('expensesChart');
+            if(ctxExpenses) {
+                newChart = new Chart(ctxExpenses.getContext('2d'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['التشغيل', 'الرواتب', 'الصيانة', 'التسويق'],
+                        datasets: [{
+                            data: [40, 30, 20, 10],
+                            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 11 } } }
+                        }
                     }
-                }
-            });
+                });
+            }
         });
     </script>
 </body>
